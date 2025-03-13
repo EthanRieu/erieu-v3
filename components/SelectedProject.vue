@@ -13,7 +13,7 @@
         <div class="w-128 font-medium">
           {{ description }}
         </div>
-        <div class="text-4xl font-semibold secondary-color underline cursor-pointer w-fit" @click="onTitleClick">
+        <div class="text-4xl font-semibold secondary-color smooth-underline-xl cursor-pointer w-fit" @click="onTitleClick">
           {{ titre }}
         </div>
       </div>

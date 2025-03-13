@@ -4,16 +4,15 @@
         <img class="w-full max-w-7xl" src="/assets/img/logo.svg" alt="Logo ERIEU">
         <div class="line-container relative w-full">
             <!-- Placeholder text on the left -->
-            <div class="absolute left-4 sm:left-12 md:left-24 lg:left-48 top-1/6 z-10">
+            <!-- <div class="absolute left-4 sm:left-12 md:left-24 lg:left-48 top-1/6 z-10">
                 <div
                     class="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg text-sm sm:text-base md:text-lg text-black">
                     Lorem, ipsum dolor sit amet consectetur adipisicing elit. Explicabo eos nulla minus animi ea ipsam
                     doloremque quam officia velit tempore culpa, natus laudantium similique ex eaque nisi beatae, sint
                     accusamus!
                 </div>
-            </div>
+            </div> -->
 
-            <!-- SVG path with scroll indicator -->
             <svg class="svg-container h-auto" viewBox="0 0 1839 887" preserveAspectRatio="xMidYMid meet" fill="none"
                 xmlns="http://www.w3.org/2000/svg">
                 <path ref="path"
@@ -28,11 +27,6 @@
                     </linearGradient>
                 </defs>
             </svg>
-
-            <!-- Scroll indicator text - position it with classes
-            <div class="scroll-indicator absolute text-black text-xs sm:text-sm md:text-md" :class="scrollClass">
-                (Scroll)
-            </div> -->
 
             <!-- Presentation Section -->
 
@@ -69,7 +63,7 @@
                             identity is the key to turning your visibility into concrete
                             business opportunities.
                         </div>
-                        <div class="font-semibold underline cursor-pointer w-fit">
+                        <div class="font-semibold smooth-underline cursor-pointer w-fit">
                             Learn more about our approach
                         </div>
                     </div>
@@ -97,13 +91,13 @@
                 </div>
 
                 <div class="flex justify-end w-9/10 mt-16">
-                    <div class="text-5xl font-medium underline cursor-pointer w-fit">
+                    <div class="text-5xl font-medium  cursor-pointer w-fit smooth-underline-xl">
                         <NuxtLink to="/projects">-> See all projects</NuxtLink>
                     </div>
                 </div>
 
                 <!-- About me Section -->
-                <div class="flex">
+                <div class="flex my-46">
                     <div class="w-1/5">
                         <!-- SVG -->
                     </div>
@@ -179,6 +173,19 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Contact Section -->
+                <div class="mb-16">
+                    <div class="secondary-color text-[200px] font-bold">
+                        Let's Work !
+                    </div>
+                    <div class="text-6xl font-semibold secondary-color cursor-pointer w-fit mb-16 smooth-underline-xl">
+                        <a href="mailto:contact@erieu.fr">contact@erieu.fr</a>
+                    </div>
+                    <div class="font-bold">Currently available for <br/> freelance projects</div>
+                </div>
+
+                <Footer/>
             </div>
         </div>
     </div>
@@ -186,6 +193,7 @@
 
 <script>
 import Header from '~/components/header.vue'
+import Footer from '~/components/footer.vue'
 import SelectedProject from '~/components/SelectedProject.vue'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
@@ -369,25 +377,6 @@ export default {
     max-width: calc(100vw + 20px);
     margin-left: 0;
     margin-right: -10px;
-}
-
-/* Responsive position classes for the scroll indicator */
-.scroll-mobile {
-    top: 40% !important;
-    right: 10% !important;
-    transform: translateY(-50%) !important;
-}
-
-.scroll-tablet {
-    top: 45% !important;
-    right: 15% !important;
-    transform: translateY(-50%) !important;
-}
-
-.scroll-desktop {
-    top: 55% !important;
-    right: 16% !important;
-    transform: translateY(-50%) !important;
 }
 
 .bg-secondary {
