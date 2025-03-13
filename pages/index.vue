@@ -102,6 +102,83 @@
                     </div>
                 </div>
 
+                <!-- About me Section -->
+                <div class="flex">
+                    <div class="w-1/5">
+                        <!-- SVG -->
+                    </div>
+
+                    <!-- Main Section -->
+                    <div class="w-4/5 flex flex-col items-start">
+                        <div class="secondary-color text-[200px] font-bold">
+                            About me
+                        </div>
+                        <div class="text-6xl mb-16">
+                            I'm a creative full-stack developer and I train myself in the latest
+                            technologies to create web applications that blend aesthetics,
+                            interactivity and practicality.
+                        </div>
+
+                        <!-- Core tool section -->
+                        <div class="grid grid-cols-3 gap-4 w-full">
+                            <div>
+                                <div class="text-4xl font-semibold mb-4">Nuxt.js</div>
+                                <div>
+                                    Nuxt.js is positioned as a sophisticated development framework for the creation
+                                    of modern web applications, building on the power of Vue.js. It simplifies the
+                                    implementation of advanced features such as static site generation, automated
+                                    routing and performance optimization, enabling developers to create robust,
+                                    scalable web experiences.
+                                </div>
+                            </div>
+                            <div>
+                                <div class="text-4xl font-semibold mb-4">Node.js</div>
+                                <div>
+                                    Node.js is a server-side JavaScript runtime environment designed for
+                                    scalable network applications. It enables the creation of fast, high-performance
+                                    web applications thanks to its non-blocking architecture and vast ecosystem of
+                                    modules.
+                                </div>
+                            </div>
+                            <div>
+                                <div class="text-4xl font-semibold mb-4">GSAP</div>
+                                <div>
+                                    GSAP (GreenSock Animation Platform) has established itself as JavaScript
+                                    library for the creation of high-performance web animations.
+                                    It offers precise control over the animation of HTML elements, enabling
+                                    smooth transitions and complex visual effects.
+                                </div>
+                            </div>
+                            <div>
+                                <div class="text-4xl font-semibold mb-4">Figma</div>
+                                <div>
+                                    Figma has established itself as the benchmark platform for digital
+                                    interface design and real-time collaboration. It offers powerful
+                                    design and prototyping tools, enabling teams to create and share
+                                    interactive mock-ups in an intuitive web interface.
+                                </div>
+                            </div>
+                            <div>
+                                <div class="text-4xl font-semibold mb-4">TailwindCSS</div>
+                                <div>
+                                    TailwindCSS emerges as a utility-first CSS framework that revolutionizes web styling
+                                    through its atomic approach. It provides a comprehensive set of pre-built classes
+                                    for rapid interface development, enabling developers to design responsive layouts
+                                    without leaving their HTML.
+                                </div>
+                            </div>
+                            <div>
+                                <div class="text-4xl font-semibold mb-4">PostgreSQL</div>
+                                <div>
+                                    PostgreSQL stands as a robust open-source relational database management
+                                    system known for its reliability and extensibility. It offers advanced data
+                                    handling features like ACID compliance and complex queries, making it ideal for
+                                    enterprise applications requiring data integrity.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
