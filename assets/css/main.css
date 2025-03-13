@@ -1,0 +1,47 @@
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Schibsted+Grotesk:ital,wght@0,400..900;1,400..900&display=swap');
+
+
+
+/* Bright Theme */
+
+.bg-color{
+    background-color: #EEEEEE;
+}
+
+.primay-color{
+    color: #000000;
+}
+
+.secondary-color{
+    color: #2F4A4F;
+}
+
+.link-color{
+    color: #899EA2;
+}
+
+/* Dark Theme */
+
+.bg-color-dark{
+    background-color: #1A1A1A;
+}
+
+.primay-color-dark{
+    color: #EEEEEE;
+}
+.secondary-color-dark{
+    color: #8B4B4B;
+}
+
+.link-color-dark{
+    color: #B09696;
+}
+
+/* General */
+
+.title{
+    font-size: 64px;
+    font-weight: bold;
+}
+
