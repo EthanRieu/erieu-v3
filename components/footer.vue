@@ -24,13 +24,34 @@
                 </div>
             </div>
         </div>
-        <div class="flex flex-row justify-between items-center mt-8">
+        <div class="hidden md:visible md:flex flex-row justify-between items-center mt-8">
             <img src="/assets/img/logo.svg" alt="Logo ERIEU" class="w-2/5" />
-            <div class="smooth-underline font-bold cursor-pointer w-fit">Back on top ↑</div>
+            <div @click="scrollToTop" class="smooth-underline font-bold cursor-pointer w-fit">Back on top ↑</div>
             <div class="font-bold">Copyright © ERIEU 2025</div>
+        </div>
+        <div class="visible md:hidden flex flex-col justify-between items-center mt-8">
+            <img src="/assets/img/logo.svg" alt="Logo ERIEU" class="w-2/5" />
+            <div class="flex flex-row justify-center space-x-4">
+                <div @click="scrollToTop" class="text-sm smooth-underline font-bold cursor-pointer w-fit">Back on top ↑
+                </div>
+                <div class="text-sm font-bold">Copyright © ERIEU 2025</div>
+            </div>
         </div>
     </footer>
 </template>
+
+<script>
+export default {
+    methods: {
+        scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+    }
+}
+</script>
 
 <style scoped>
 .hover-effect {
@@ -42,5 +63,4 @@
     color: var(--secondary-color);
     transition: color 0.3s ease-in-out;
 }
-
 </style>

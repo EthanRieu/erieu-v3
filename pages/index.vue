@@ -3,16 +3,6 @@
     <div class="flex flex-col items-center">
         <img class="w-full max-w-7xl" src="/assets/img/logo.svg" alt="Logo ERIEU">
         <div class="line-container relative w-full">
-            <!-- Placeholder text on the left -->
-            <!-- <div class="absolute left-4 sm:left-12 md:left-24 lg:left-48 top-1/6 z-10">
-                <div
-                    class="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg text-sm sm:text-base md:text-lg text-black">
-                    Lorem, ipsum dolor sit amet consectetur adipisicing elit. Explicabo eos nulla minus animi ea ipsam
-                    doloremque quam officia velit tempore culpa, natus laudantium similique ex eaque nisi beatae, sint
-                    accusamus!
-                </div>
-            </div> -->
-
             <svg class="svg-container h-auto" viewBox="0 0 1839 887" preserveAspectRatio="xMidYMid meet" fill="none"
                 xmlns="http://www.w3.org/2000/svg">
                 <path ref="path"
@@ -29,41 +19,47 @@
             </svg>
 
             <!-- Presentation Section -->
-
-            <div class="p-24 space-y-16">
-                <div class="text-6xl w-4/5">
+            <div class="p-8 sm:p-24 space-y-16">
+                <div class="text-2xl sm:text-3xl md:text-4xl xl:text-6xl md:w-4/5 reveal-text">
                     Defining the digital future: shaping, developing
                     and expressing the essence of brands through
                     contemporary media
                 </div>
-                <div class="flex flex-row justify-between space-x-64 items-center">
-                    <div>
-                        <!-- <img src="" alt=""> -->
-                        <div class="bg-slate-300 w-114 h-64 rounded-lg"></div>
+
+                <!-- Conteneur flexible -->
+                <div class="flex flex-col space-y-8 md:space-y-12 xl:flex-row xl:space-y-0 xl:space-x-16 items-center">
+                    <!-- Conteneur de la box graphique -->
+                    <div class="w-full flex justify-center mb-8 xl:mb-0 reveal-element">
+                        <div
+                            class="bg-slate-300 w-full sm:w-4/5 md:w-3/4 xl:w-full max-w-md h-48 sm:h-56 md:h-64 rounded-lg">
+                        </div>
                     </div>
-                    <div class="space-y-10 text-2xl">
-                        <div class="font-semibold">
+
+                    <!-- Contenu texte -->
+                    <div class="space-y-6 sm:space-y-8 md:space-y-10 text-base sm:text-lg md:text-xl xl:text-2xl">
+                        <div class="font-semibold reveal-text-staggered">
                             The media world is constantly evolving, and digital
                             presence has become a fundamental pillar of business
                             success.
                         </div>
-                        <div>
+                        <div class="reveal-text-staggered">
                             Brands must continually evolve their strategy to maintain
                             their visibility and relevance in the modern media ecosystem.
                         </div>
-                        <div>
+                        <div class="reveal-text-staggered">
                             A robust and sophisticated web presence is no longer
                             simply an asset, but an absolute necessity to stand out
                             from the competition and establish a lasting connection
                             with your audience.
                         </div>
-                        <div>
+                        <div class="reveal-text-staggered">
                             In an age when consumers routinely begin their purchasing
                             journey online, having a professional and engaging digital
                             identity is the key to turning your visibility into concrete
                             business opportunities.
                         </div>
-                        <div class="font-semibold smooth-underline cursor-pointer w-fit">
+                        <div
+                            class="font-semibold smooth-underline cursor-pointer w-fit reveal-text-staggered reveal-cta">
                             Learn more about our approach
                         </div>
                     </div>
@@ -71,28 +67,30 @@
             </div>
 
             <!-- Selected projects section -->
-            <div class="px-24 py-16">
+            <div class="px-8 sm:px-24 py-16">
                 <!-- Title -->
-                <div class="mb-16 secondary-color text-[200px] font-bold tracking-tighter leading-[0.8]">Selected <br />
+                <div
+                    class="mb-16 secondary-color text-[80px] sm:text-[100px] md:text-[140px] lg:text-[170px] xl:text-[200px] font-bold tracking-tighter leading-[0.8] reveal-title">
+                    Selected <br />
                     Works
                 </div>
                 <!-- Divider Component-->
-                <div class="w-full h-[2px] bg-secondary my-8"></div>
+                <div class="w-full h-[2px] bg-secondary my-8 reveal-divider"></div>
 
                 <!-- Projects Components -->
-                <div v-for="project in selectedProjects" :key="project.id">
+                <div v-for="(project, index) in selectedProjects" :key="project.id" :class="'reveal-project-' + index">
                     <!-- Projet -->
                     <SelectedProject :id="project.id" :datePrincipal="project.datePrincipal" :annee="project.annee"
                         :services="project.services" :description="project.description" :titre="project.titre"
                         :imageUrl="project.imageUrl" secondaryColor="#2F4A4F" @project-click="navigateToProject" />
 
-                    <div class="w-full h-[2px] bg-secondary my-8"></div>
-
+                    <div class="w-full h-[2px] bg-secondary lg:my-8 reveal-divider"></div>
                 </div>
 
                 <div class="flex justify-end w-9/10 mt-16">
-                    <div class="text-5xl font-medium  cursor-pointer w-fit smooth-underline-xl">
-                        <NuxtLink to="/projects">-> See all projects</NuxtLink>
+                    <div class="text-5xl font-medium cursor-pointer w-fit smooth-underline-xl reveal-cta">
+                        <NuxtLink to="/projects" class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl">-> See all
+                            projects</NuxtLink>
                     </div>
                 </div>
 
@@ -103,20 +101,21 @@
                     </div>
 
                     <!-- Main Section -->
-                    <div class="w-4/5 flex flex-col items-start">
-                        <div class="secondary-color text-[200px] font-bold">
+                    <div class="lg:w-4/5 flex flex-col items-start">
+                        <div
+                            class="secondary-color text-[60px] sm:text-[90px] md:text-[120px] lg:text-[150px] xl:text-[200px] font-bold leading-[0.8] reveal-title">
                             About me
                         </div>
-                        <div class="text-6xl mb-16">
+                        <div class="text-2xl sm:text-3xl md:text-4xl lg:text-6xl my-4 sm:my-8 lg:my-16 reveal-text">
                             I'm a creative full-stack developer and I train myself in the latest
                             technologies to create web applications that blend aesthetics,
                             interactivity and practicality.
                         </div>
 
                         <!-- Core tool section -->
-                        <div class="grid grid-cols-3 gap-4 w-full">
-                            <div>
-                                <div class="text-4xl font-semibold mb-4">Nuxt.js</div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-full">
+                            <div class="reveal-tool">
+                                <div class="text-3xl md:text-4xl font-semibold mb-4">Nuxt.js</div>
                                 <div>
                                     Nuxt.js is positioned as a sophisticated development framework for the creation
                                     of modern web applications, building on the power of Vue.js. It simplifies the
@@ -125,8 +124,8 @@
                                     scalable web experiences.
                                 </div>
                             </div>
-                            <div>
-                                <div class="text-4xl font-semibold mb-4">Node.js</div>
+                            <div class="reveal-tool">
+                                <div class="text-3xl md:text-4xl font-semibold mb-4">Node.js</div>
                                 <div>
                                     Node.js is a server-side JavaScript runtime environment designed for
                                     scalable network applications. It enables the creation of fast, high-performance
@@ -134,8 +133,8 @@
                                     modules.
                                 </div>
                             </div>
-                            <div>
-                                <div class="text-4xl font-semibold mb-4">GSAP</div>
+                            <div class="reveal-tool">
+                                <div class="text-3xl md:text-4xl font-semibold mb-4">GSAP</div>
                                 <div>
                                     GSAP (GreenSock Animation Platform) has established itself as JavaScript
                                     library for the creation of high-performance web animations.
@@ -143,8 +142,8 @@
                                     smooth transitions and complex visual effects.
                                 </div>
                             </div>
-                            <div>
-                                <div class="text-4xl font-semibold mb-4">Figma</div>
+                            <div class="reveal-tool">
+                                <div class="text-3xl md:text-4xl font-semibold mb-4">Figma</div>
                                 <div>
                                     Figma has established itself as the benchmark platform for digital
                                     interface design and real-time collaboration. It offers powerful
@@ -152,8 +151,8 @@
                                     interactive mock-ups in an intuitive web interface.
                                 </div>
                             </div>
-                            <div>
-                                <div class="text-4xl font-semibold mb-4">TailwindCSS</div>
+                            <div class="reveal-tool">
+                                <div class="text-3xl md:text-4xl font-semibold mb-4">TailwindCSS</div>
                                 <div>
                                     TailwindCSS emerges as a utility-first CSS framework that revolutionizes web styling
                                     through its atomic approach. It provides a comprehensive set of pre-built classes
@@ -161,8 +160,8 @@
                                     without leaving their HTML.
                                 </div>
                             </div>
-                            <div>
-                                <div class="text-4xl font-semibold mb-4">PostgreSQL</div>
+                            <div class="reveal-tool">
+                                <div class="text-3xl md:text-4xl font-semibold mb-4">PostgreSQL</div>
                                 <div>
                                     PostgreSQL stands as a robust open-source relational database management
                                     system known for its reliability and extensibility. It offers advanced data
@@ -176,16 +175,19 @@
 
                 <!-- Contact Section -->
                 <div class="mb-16">
-                    <div class="secondary-color text-[200px] font-bold">
+                    <div
+                        class="secondary-color text-[50px] sm:text-[80px] md:text-[110px] lg:text-[150px] xl:text-[200px] font-bold reveal-title">
                         Let's Work !
                     </div>
-                    <div class="text-6xl font-semibold secondary-color cursor-pointer w-fit mb-16 smooth-underline-xl">
+                    <div
+                        class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-semibold secondary-color cursor-pointer w-fit mb-4 sm:mb-8 md:mb-16 smooth-underline-xl reveal-cta">
                         <a href="mailto:contact@erieu.fr">contact@erieu.fr</a>
                     </div>
-                    <div class="font-bold">Currently available for <br/> freelance projects</div>
+                    <div class="text-sm sm:text-md font-bold reveal-text">Currently available for <br /> freelance
+                        projects</div>
                 </div>
 
-                <Footer/>
+                <Footer />
             </div>
         </div>
     </div>
@@ -197,17 +199,17 @@ import Footer from '~/components/footer.vue'
 import SelectedProject from '~/components/SelectedProject.vue'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { TextPlugin } from 'gsap/TextPlugin'
 
 export default {
     components: {
         Header,
-        SelectedProject
+        SelectedProject,
+        Footer
     },
     data() {
         return {
-            // Class-based positioning for scroll indicator that adapts to screen size
             scrollClass: 'scroll-responsive',
-            // Animation settings for different device sizes
             animationSettings: {
                 mobile: {
                     start: "top 20%",
@@ -226,7 +228,8 @@ export default {
                 start: "top 50%",
                 end: "top"
             },
-            scrollTriggerInstance: null,
+            scrollTriggerInstances: [], // Stocker toutes les instances pour un nettoyage facile
+            isAnimationInitialized: false,
             // Données des projets sélectionnés
             selectedProjects: [
                 {
@@ -236,7 +239,7 @@ export default {
                     services: 'Interactive Design <br /> Full Development',
                     description: 'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quos quisquam omnis architecto neque minus soluta! Fuga laudantium perferendis, explicabo modi similique reprehenderit! Quae et reprehenderit quaerat facilis voluptate, dolorum pariatur!',
                     titre: 'Mouvements & Harmonie',
-                    imageUrl: '/assets/img/projects/MouvementEtHarmonie.jpg'
+                    // imageUrl: '/assets/img/projects/MouvementEtHarmonie.jpg'
                 },
                 {
                     id: 'projet-2',
@@ -245,78 +248,197 @@ export default {
                     services: 'Interactive Design <br /> Full Development',
                     description: 'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quos quisquam omnis architecto neque minus soluta! Fuga laudantium perferendis, explicabo modi similique reprehenderit! Quae et reprehenderit quaerat facilis voluptate, dolorum pariatur!',
                     titre: 'So\'Deco',
-                    imageUrl: '/assets/img/projects/project2.jpg'
+                    // imageUrl: '/assets/img/projects/project2.jpg'
                 }
             ]
         }
     },
     mounted() {
-        gsap.registerPlugin(ScrollTrigger)
+        // Enregistrer les plugins GSAP une seule fois
+        if (process.client) {
+            gsap.registerPlugin(ScrollTrigger, TextPlugin);
 
-        this.setupResponsive()
-        window.addEventListener('resize', this.setupResponsive)
+            // Utiliser le hook onMounted de Vue pour s'assurer que ça ne se lance qu'une fois
+            this.$nextTick(() => {
+                // Nettoyer tout d'abord
+                this.cleanupAnimations();
+                // Puis initialiser
+                this.initializeAnimations();
 
-        this.initAnimation()
+                // Ajouter le gestionnaire d'événement resize
+                window.addEventListener('resize', this.handleResize);
+            });
+        }
+    },
+    beforeDestroy() {
+        // Nettoyer les événements et les ScrollTriggers
+        this.cleanupAnimations();
+        window.removeEventListener('resize', this.handleResize);
     },
     methods: {
+        initializeAnimations() {
+            // Vérifier si on est côté client
+            if (!process.client) return;
+
+            // Vérifier si les animations sont déjà initialisées pour éviter la double initialisation
+            if (this.isAnimationInitialized) {
+                console.log('Animations already initialized, skipping');
+                return;
+            }
+
+            console.log('Initializing animations');
+
+            // Configuration responsive
+            this.setupResponsive();
+
+            // Pré-cacher tous les éléments animés avec GSAP pour éviter le flash
+            this.preHideAnimatedElements();
+
+            // Initialiser les animations en fonction de la taille de l'écran
+            this.setupPathAnimation();
+            this.initTextAnimations();
+
+            this.isAnimationInitialized = true;
+        },
+
+        // Nouvelle méthode pour pré-cacher les éléments
+        preHideAnimatedElements() {
+            if (!process.client) return;
+
+            // Cacher les éléments avec un titre de grand format
+            gsap.set('.reveal-title', { y: 100, opacity: 0, skewY: 5 });
+
+            // Cacher les textes
+            gsap.set('.reveal-text', { y: 30, opacity: 0 });
+
+            // Cacher les textes en cascade
+            gsap.set('.reveal-text-staggered', { y: 20, opacity: 0 });
+
+            // Cacher les dividers
+            gsap.set('.reveal-divider', { scaleX: 0, transformOrigin: "left center" });
+
+            // Cacher les éléments
+            gsap.set('.reveal-element', { scale: 0.9, opacity: 0 });
+
+            // Cacher les projets
+            document.querySelectorAll('[class^="reveal-project-"]').forEach((project, index) => {
+                gsap.set(project, { x: index % 2 === 0 ? -50 : 50, opacity: 0 });
+            });
+
+            // Cacher les outils
+            gsap.set('.reveal-tool', { y: 30, opacity: 0 });
+
+            // Cacher les CTA
+            gsap.set('.reveal-cta', { y: 20, opacity: 0 });
+        },
+
+        // Nettoyer toutes les animations
+        cleanupAnimations() {
+            // Tuer toutes les instances ScrollTrigger
+            if (this.scrollTriggerInstances && this.scrollTriggerInstances.length) {
+                this.scrollTriggerInstances.forEach(instance => {
+                    if (instance && instance.kill) {
+                        instance.kill();
+                    }
+                });
+
+                this.scrollTriggerInstances = [];
+            }
+
+            // Tuer tous les tweens
+            gsap.killTweensOf("*");
+
+            // Réinitialiser les données
+            this.isAnimationInitialized = false;
+        },
+
+        // Gérer le redimensionnement
+        handleResize() {
+            // Débouncer pour éviter de multiples exécutions
+            if (this.resizeTimeout) {
+                clearTimeout(this.resizeTimeout);
+            }
+
+            this.resizeTimeout = setTimeout(() => {
+                this.setupResponsive();
+                this.refreshAnimation();
+            }, 200);
+        },
+
         // Méthode pour naviguer vers la page détaillée d'un projet
         navigateToProject(projectId) {
-            this.$router.push(`/projets/${projectId}`)
-            console.log(`Navigation vers le projet: ${projectId}`)
+            this.$router.push(`/projets/${projectId}`);
         },
 
         setupResponsive() {
-            const width = window.innerWidth
+            if (!process.client) return;
 
-            // Update scroll indicator position
+            const width = window.innerWidth;
+
+            // Mise à jour de la classe de scroll selon la taille d'écran
             if (width < 640) { // Mobile
-                this.scrollClass = 'scroll-mobile'
-                this.currentAnimSettings = this.animationSettings.mobile
+                this.scrollClass = 'scroll-mobile';
+                this.currentAnimSettings = this.animationSettings.mobile;
             } else if (width < 1024) { // Tablet
-                this.scrollClass = 'scroll-tablet'
-                this.currentAnimSettings = this.animationSettings.tablet
+                this.scrollClass = 'scroll-tablet';
+                this.currentAnimSettings = this.animationSettings.tablet;
             } else { // Desktop
-                this.scrollClass = 'scroll-desktop'
-                this.currentAnimSettings = this.animationSettings.desktop
+                this.scrollClass = 'scroll-desktop';
+                this.currentAnimSettings = this.animationSettings.desktop;
             }
-
-            // Refresh the animation with new settings
-            this.refreshAnimation()
         },
 
-        initAnimation() {
-            const path = this.$refs.path
-            const pathLength = path.getTotalLength()
+        // Configurer l'animation du chemin SVG
+        setupPathAnimation() {
+            if (!process.client) return;
+
+            const path = this.$refs.path;
+            if (!path) return;
+
+            const pathLength = path.getTotalLength();
 
             // Configurer le chemin SVG pour l'animation
             gsap.set(path, {
                 strokeDasharray: pathLength,
                 strokeDashoffset: pathLength,
-                opacity: 1,
-                onComplete: function () {
-                    path.classList.remove('invisible-path');
-                }
-            })
+                opacity: 1
+            });
 
-            // Créer l'animation qui dessine le chemin
-            this.createScrollTrigger(path, pathLength)
+            // Supprimer la classe invisible-path
+            path.classList.remove('invisible-path');
+
+            // Sur xl+, créer l'animation qui dessine le chemin au scroll
+            if (window.innerWidth >= 1280) {
+                this.setupScrollAnimation(path, pathLength);
+            } else {
+                // Sinon, lancer l'animation automatiquement
+                this.playAutoAnimation(path, pathLength);
+            }
         },
 
-        createScrollTrigger(path, pathLength) {
-            // Kill previous instance if it exists
-            if (this.scrollTriggerInstance) {
-                this.scrollTriggerInstance.kill()
-            }
+        playAutoAnimation(path, pathLength) {
+            if (!path) return;
 
-            // Create new animation with current settings
+            // Animation automatique sans ScrollTrigger
+            const tween = gsap.to(path, {
+                strokeDashoffset: 0,
+                duration: 2.5,
+                ease: "power2.out"
+            });
+        },
+
+        setupScrollAnimation(path, pathLength) {
+            if (!path) return;
+
+            // Créer une nouvelle animation avec les paramètres actuels
             const tween = gsap.to(path, {
                 strokeDashoffset: 0,
                 duration: 2,
                 ease: "power2.out"
-            })
+            });
 
-            // Create ScrollTrigger and store the instance
-            this.scrollTriggerInstance = ScrollTrigger.create({
+            // Créer ScrollTrigger et stocker l'instance
+            const instance = ScrollTrigger.create({
                 animation: tween,
                 trigger: ".line-container",
                 start: this.currentAnimSettings.start,
@@ -327,34 +449,354 @@ export default {
                     if (self.progress === 0) {
                         gsap.set(path, {
                             strokeDashoffset: pathLength
-                        })
+                        });
                     }
                 }
-            })
+            });
+
+            // Stocker l'instance pour nettoyage ultérieur
+            this.scrollTriggerInstances.push(instance);
         },
 
         refreshAnimation() {
-            // Get path element
-            const path = this.$refs.path
+            if (!process.client) return;
 
-            // Only proceed if path exists and ScrollTrigger is initialized
-            if (path && this.scrollTriggerInstance) {
-                // Update the ScrollTrigger with new settings
-                this.scrollTriggerInstance.vars.start = this.currentAnimSettings.start
-                this.scrollTriggerInstance.vars.end = this.currentAnimSettings.end
+            // Nettoyer et réinitialiser les animations
+            this.cleanupAnimations();
+            setTimeout(() => {
+                this.initializeAnimations();
+            }, 100);
+        },
 
-                // Refresh the ScrollTrigger to apply changes
-                this.scrollTriggerInstance.refresh()
-            }
-        }
-    },
-    beforeDestroy() {
-        // Clean up event listener
-        window.removeEventListener('resize', this.setupResponsive)
+        // Initialiser toutes les animations de texte avec des protections contre les erreurs DOM
+        initTextAnimations() {
+            if (!process.client) return;
 
-        // Kill ScrollTrigger instance
-        if (this.scrollTriggerInstance) {
-            this.scrollTriggerInstance.kill()
+            // Exécuter les animations en séquence avec un délai
+            setTimeout(() => {
+                this.animateBigTitles();
+
+                setTimeout(() => {
+                    this.animateTexts();
+
+                    setTimeout(() => {
+                        this.animateStaggeredTexts();
+
+                        setTimeout(() => {
+                            this.animateDividers();
+
+                            setTimeout(() => {
+                                this.animateElements();
+
+                                setTimeout(() => {
+                                    this.animateProjects();
+
+                                    setTimeout(() => {
+                                        this.animateTools();
+
+                                        setTimeout(() => {
+                                            this.animateCTAs();
+                                        }, 100);
+                                    }, 100);
+                                }, 100);
+                            }, 100);
+                        }, 100);
+                    }, 100);
+                }, 100);
+            }, 100);
+        },
+
+        // Animation pour les grands titres (Selected Works, About me, Let's Work!)
+        animateBigTitles() {
+            if (!process.client) return;
+
+            const titles = document.querySelectorAll('.reveal-title');
+            if (!titles.length) return;
+
+            titles.forEach(title => {
+                if (!title) return;
+
+                const instance = ScrollTrigger.create({
+                    trigger: title,
+                    start: "top 85%",
+                    onEnter: () => {
+                        gsap.fromTo(title,
+                            {
+                                y: 100,
+                                opacity: 0,
+                                skewY: 5
+                            },
+                            {
+                                y: 0,
+                                opacity: 1,
+                                skewY: 0,
+                                duration: 1.2,
+                                ease: "power3.out"
+                            }
+                        );
+                    },
+                    once: true
+                });
+
+                this.scrollTriggerInstances.push(instance);
+            });
+        },
+
+        // Animation pour les textes standard
+        animateTexts() {
+            if (!process.client) return;
+
+            const texts = document.querySelectorAll('.reveal-text');
+            if (!texts.length) return;
+
+            texts.forEach(text => {
+                if (!text) return;
+
+                const instance = ScrollTrigger.create({
+                    trigger: text,
+                    start: "top 90%",
+                    onEnter: () => {
+                        gsap.fromTo(text,
+                            {
+                                y: 30,
+                                opacity: 0
+                            },
+                            {
+                                y: 0,
+                                opacity: 1,
+                                duration: 0.8,
+                                ease: "power2.out"
+                            }
+                        );
+                    },
+                    once: true
+                });
+
+                this.scrollTriggerInstances.push(instance);
+            });
+        },
+
+        // Animation pour les textes en cascade
+        animateStaggeredTexts() {
+            if (!process.client) return;
+
+            const textGroups = document.querySelectorAll('.space-y-6, .space-y-8, .space-y-10');
+            if (!textGroups.length) return;
+
+            textGroups.forEach(group => {
+                if (!group) return;
+
+                const staggeredTexts = group.querySelectorAll('.reveal-text-staggered');
+                if (!staggeredTexts.length) return;
+
+                const instance = ScrollTrigger.create({
+                    trigger: group,
+                    start: "top 85%",
+                    onEnter: () => {
+                        gsap.fromTo(staggeredTexts,
+                            {
+                                y: 20,
+                                opacity: 0
+                            },
+                            {
+                                y: 0,
+                                opacity: 1,
+                                duration: 0.6,
+                                stagger: 0.15,
+                                ease: "power2.out"
+                            }
+                        );
+                    },
+                    once: true
+                });
+
+                this.scrollTriggerInstances.push(instance);
+            });
+        },
+
+        // Animation pour les séparateurs
+        animateDividers() {
+            if (!process.client) return;
+
+            const dividers = document.querySelectorAll('.reveal-divider');
+            if (!dividers.length) return;
+
+            dividers.forEach(divider => {
+                if (!divider) return;
+
+                const instance = ScrollTrigger.create({
+                    trigger: divider,
+                    start: "top 90%",
+                    onEnter: () => {
+                        gsap.fromTo(divider,
+                            {
+                                scaleX: 0,
+                                transformOrigin: "left center"
+                            },
+                            {
+                                scaleX: 1,
+                                duration: 1,
+                                ease: "power3.inOut"
+                            }
+                        );
+                    },
+                    once: true
+                });
+
+                this.scrollTriggerInstances.push(instance);
+            });
+        },
+
+        // Animation pour les images et éléments visuels
+        animateElements() {
+            if (!process.client) return;
+
+            const elements = document.querySelectorAll('.reveal-element');
+            if (!elements.length) return;
+
+            elements.forEach(element => {
+                if (!element) return;
+
+                const instance = ScrollTrigger.create({
+                    trigger: element,
+                    start: "top 85%",
+                    onEnter: () => {
+                        gsap.fromTo(element,
+                            {
+                                scale: 0.9,
+                                opacity: 0
+                            },
+                            {
+                                scale: 1,
+                                opacity: 1,
+                                duration: 0.8,
+                                ease: "back.out(1.5)"
+                            }
+                        );
+                    },
+                    once: true
+                });
+
+                this.scrollTriggerInstances.push(instance);
+            });
+        },
+
+        // Animation pour les projets
+        animateProjects() {
+            if (!process.client) return;
+
+            const projects = document.querySelectorAll('[class^="reveal-project-"]');
+            if (!projects.length) return;
+
+            projects.forEach((project, index) => {
+                if (!project) return;
+
+                const instance = ScrollTrigger.create({
+                    trigger: project,
+                    start: "top 85%",
+                    onEnter: () => {
+                        gsap.fromTo(project,
+                            {
+                                x: index % 2 === 0 ? -50 : 50,
+                                opacity: 0
+                            },
+                            {
+                                x: 0,
+                                opacity: 1,
+                                duration: 0.8,
+                                ease: "power2.out"
+                            }
+                        );
+                    },
+                    once: true
+                });
+
+                this.scrollTriggerInstances.push(instance);
+            });
+        },
+
+        // Animation pour les outils
+        animateTools() {
+            if (!process.client) return;
+
+            const tools = document.querySelectorAll('.reveal-tool');
+            if (!tools.length) return;
+
+            const instance = ScrollTrigger.create({
+                trigger: tools[0],
+                start: "top 85%",
+                onEnter: () => {
+                    gsap.fromTo(tools,
+                        {
+                            y: 30,
+                            opacity: 0
+                        },
+                        {
+                            y: 0,
+                            opacity: 1,
+                            duration: 0.6,
+                            stagger: 0.1,
+                            ease: "power2.out"
+                        }
+                    );
+                },
+                once: true
+            });
+
+            this.scrollTriggerInstances.push(instance);
+        },
+
+        // Animation pour les CTA
+        animateCTAs() {
+            if (!process.client) return;
+
+            const ctas = document.querySelectorAll('.reveal-cta');
+            if (!ctas.length) return;
+
+            ctas.forEach(cta => {
+                if (!cta) return;
+
+                const instance = ScrollTrigger.create({
+                    trigger: cta,
+                    start: "top 90%",
+                    onEnter: () => {
+                        gsap.fromTo(cta,
+                            {
+                                y: 20,
+                                opacity: 0
+                            },
+                            {
+                                y: 0,
+                                opacity: 1,
+                                duration: 1,
+                                ease: "back.out(1.7)"
+                            }
+                        );
+                    },
+                    once: true
+                });
+
+                this.scrollTriggerInstances.push(instance);
+
+                // Ajouter les interactions au survol
+                if (process.client) {
+                    cta.addEventListener('mouseenter', () => {
+                        gsap.to(cta, {
+                            scale: 1.05,
+                            duration: 0.3,
+                            ease: "power1.out"
+                        });
+                    });
+
+                    cta.addEventListener('mouseleave', () => {
+                        gsap.to(cta, {
+                            scale: 1,
+                            duration: 0.3,
+                            ease: "power1.out"
+                        });
+                    });
+                }
+            });
         }
     }
 }
