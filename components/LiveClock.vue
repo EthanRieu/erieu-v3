@@ -1,5 +1,5 @@
 <template>
-    <div class="text-xl font-medium secondary-color">
+    <div class="text-xl font-medium clock-color">
         Reims, France | {{ time }}
     </div>
 </template>
@@ -35,3 +35,9 @@ export default {
     }
 };
 </script>
+
+<style scoped>
+.clock-color{
+    color: var(--current-header-link-color)
+}
+</style>

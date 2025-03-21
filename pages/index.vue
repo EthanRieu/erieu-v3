@@ -1,7 +1,23 @@
 <template>
     <Header />
     <div class="flex flex-col items-center">
-        <img class="w-full max-w-7xl" src="/assets/img/logo.svg" alt="Logo ERIEU">
+        <div class="w-full max-w-7xl">
+            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1500 500"
+                shape-rendering="geometricPrecision" text-rendering="geometricPrecision">
+
+                <!-- ERIEU Text -->
+                <text dx="0" dy="0" font-family="'Schibsted Grotesk', sans-serif" font-size="75" font-weight="800"
+                    transform="matrix(5 0 0 5 109.262384 384.859102)" class="theme-text" stroke-width="0">
+                    <tspan y="0" font-weight="800" stroke-width="0">ERIEU</tspan>
+                </text>
+
+                <!-- TM Text -->
+                <text dx="0" dy="0" font-family="'Schibsted Grotesk', sans-serif" font-size="75" font-weight="800"
+                    transform="translate(1266.074934 142.194716)" class="theme-text" stroke-width="0">
+                    <tspan y="0" font-weight="800" stroke-width="0">TM</tspan>
+                </text>
+            </svg>
+        </div>
         <div class="line-container relative w-full">
             <svg class="svg-container h-auto" viewBox="0 0 1839 887" preserveAspectRatio="xMidYMid meet" fill="none"
                 xmlns="http://www.w3.org/2000/svg">
@@ -12,15 +28,15 @@
                 <defs>
                     <linearGradient id="paint0_linear_14_78" x1="1823.5" y1="14.9984" x2="123.498" y2="314.999"
                         gradientUnits="userSpaceOnUse">
-                        <stop stop-color="#2F4A4F" />
-                        <stop offset="1" stop-color="#899EA2" />
+                        <stop id="svg-gradient-start" />
+                        <stop id="svg-gradient-end" offset="1" />
                     </linearGradient>
                 </defs>
             </svg>
 
             <!-- Presentation Section -->
             <div class="p-8 sm:p-24 space-y-16">
-                <div class="text-2xl sm:text-3xl md:text-4xl xl:text-6xl md:w-4/5 reveal-text">
+                <div class="text-2xl sm:text-3xl md:text-4xl xl:text-6xl md:w-4/5 primary-color reveal-text">
                     Defining the digital future: shaping, developing
                     and expressing the essence of brands through
                     contemporary media
@@ -28,15 +44,24 @@
 
                 <!-- Conteneur flexible -->
                 <div class="flex flex-col space-y-8 md:space-y-12 xl:flex-row xl:space-y-0 xl:space-x-16 items-center">
-                    <!-- Conteneur de la box graphique -->
+                    <!-- Conteneur de la box graphique avec Vanilla Tilt -->
                     <div class="w-full flex justify-center mb-8 xl:mb-0 reveal-element">
-                        <div
-                            class="bg-slate-300 w-full sm:w-4/5 md:w-3/4 xl:w-full max-w-md h-48 sm:h-56 md:h-64 rounded-lg">
+                        <div ref="tiltBox"
+                            class="bg-gradient-to-br from-slate-200 to-slate-400 w-full sm:w-4/5 md:w-3/4 xl:w-full max-w-md h-48 sm:h-56 md:h-64 rounded-lg tilt-box">
+                            <div
+                                class="flex flex-col justify-center items-center h-full text-lg sm:text-xl md:text-2xl font-semibold text-gray-800">
+                                <span>Expérience interactive</span>
+                                <div class="text-sm mt-2 text-gray-600">Survolez pour explorer</div>
+                                <div
+                                    class="absolute w-16 h-16 rounded-full bg-white/20 blur-xl transition-all duration-700 mix-blend-overlay">
+                                </div>
+                            </div>
                         </div>
                     </div>
 
                     <!-- Contenu texte -->
-                    <div class="space-y-6 sm:space-y-8 md:space-y-10 text-base sm:text-lg md:text-xl xl:text-2xl">
+                    <div
+                        class="space-y-6 primary-color sm:space-y-8 md:space-y-10 text-base sm:text-lg md:text-xl xl:text-2xl">
                         <div class="font-semibold reveal-text-staggered">
                             The media world is constantly evolving, and digital
                             presence has become a fundamental pillar of business
@@ -75,7 +100,7 @@
                     Works
                 </div>
                 <!-- Divider Component-->
-                <div class="w-full h-[2px] bg-secondary my-8 reveal-divider"></div>
+                <div class="w-full h-[2px] divider my-8 reveal-divider"></div>
 
                 <!-- Projects Components -->
                 <div v-for="(project, index) in selectedProjects" :key="project.id" :class="'reveal-project-' + index">
@@ -84,12 +109,12 @@
                         :services="project.services" :description="project.description" :titre="project.titre"
                         :imageUrl="project.imageUrl" secondaryColor="#2F4A4F" @project-click="navigateToProject" />
 
-                    <div class="w-full h-[2px] bg-secondary lg:my-8 reveal-divider"></div>
+                    <div class="w-full h-[2px] divider lg:my-8 reveal-divider"></div>
                 </div>
 
                 <div class="flex justify-end w-9/10 mt-16">
-                    <div class="text-5xl font-medium cursor-pointer w-fit smooth-underline-xl reveal-cta">
-                        <NuxtLink to="/projects" class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl">-> See all
+                    <div class="primary-color text-5xl font-medium cursor-pointer w-fit smooth-underline-xl reveal-cta">
+                        <NuxtLink to="/projects" class=" text-4xl sm:text-5xl md:text-6xl lg:text-7xl">-> See all
                             projects</NuxtLink>
                     </div>
                 </div>
@@ -106,14 +131,15 @@
                             class="secondary-color text-[60px] sm:text-[90px] md:text-[120px] lg:text-[150px] xl:text-[200px] font-bold leading-[0.8] reveal-title">
                             About me
                         </div>
-                        <div class="text-2xl sm:text-3xl md:text-4xl lg:text-6xl my-4 sm:my-8 lg:my-16 reveal-text">
+                        <div
+                            class="primary-color text-2xl sm:text-3xl md:text-4xl lg:text-6xl my-4 sm:my-8 lg:my-16 reveal-text">
                             I'm a creative full-stack developer and I train myself in the latest
                             technologies to create web applications that blend aesthetics,
                             interactivity and practicality.
                         </div>
 
                         <!-- Core tool section -->
-                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-full">
+                        <div class="primary-color grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-full">
                             <div class="reveal-tool">
                                 <div class="text-3xl md:text-4xl font-semibold mb-4">Nuxt.js</div>
                                 <div>
@@ -183,7 +209,8 @@
                         class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-semibold secondary-color cursor-pointer w-fit mb-4 sm:mb-8 md:mb-16 smooth-underline-xl reveal-cta">
                         <a href="mailto:contact@erieu.fr">contact@erieu.fr</a>
                     </div>
-                    <div class="text-sm sm:text-md font-bold reveal-text">Currently available for <br /> freelance
+                    <div class="primary-color text-sm sm:text-md font-bold reveal-text">Currently available for <br />
+                        freelance
                         projects</div>
                 </div>
 
@@ -201,11 +228,19 @@ import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { TextPlugin } from 'gsap/TextPlugin'
 
+
 export default {
     components: {
         Header,
         SelectedProject,
         Footer
+    },
+    head() {
+        return {
+            script: [
+                { src: 'https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.7.2/vanilla-tilt.min.js', body: true }
+            ]
+        }
     },
     data() {
         return {
@@ -230,6 +265,7 @@ export default {
             },
             scrollTriggerInstances: [], // Stocker toutes les instances pour un nettoyage facile
             isAnimationInitialized: false,
+            tiltInstance: null, // Pour stocker l'instance de vanilla-tilt
             // Données des projets sélectionnés
             selectedProjects: [
                 {
@@ -264,6 +300,8 @@ export default {
                 this.cleanupAnimations();
                 // Puis initialiser
                 this.initializeAnimations();
+                // Initialiser Vanilla Tilt
+                this.initializeTilt();
 
                 // Ajouter le gestionnaire d'événement resize
                 window.addEventListener('resize', this.handleResize);
@@ -273,9 +311,55 @@ export default {
     beforeDestroy() {
         // Nettoyer les événements et les ScrollTriggers
         this.cleanupAnimations();
+        // Nettoyer vanilla-tilt
+        this.cleanupTilt();
         window.removeEventListener('resize', this.handleResize);
     },
     methods: {
+        // Initialiser vanilla-tilt
+        initializeTilt() {
+            if (!process.client) return;
+
+            // S'assurer que VanillaTilt est chargé et que l'élément existe
+            if (window.VanillaTilt && this.$refs.tiltBox) {
+                // Détruire l'instance précédente si elle existe
+                this.cleanupTilt();
+
+                // Configurer vanilla-tilt avec un effet plus prononcé et un suivi de souris
+                this.tiltInstance = window.VanillaTilt.init(this.$refs.tiltBox, {
+                    max: 25,               // Inclinaison maximale augmentée pour plus de réactivité
+                    speed: 300,            // Vitesse légèrement plus rapide pour un suivi plus réactif
+                    glare: true,           // Activer l'effet de brillance
+                    "max-glare": 0.6,      // Intensité de brillance augmentée
+                    scale: 1.1,            // Effet de zoom plus prononcé
+                    perspective: 1000,      // Perspective plus forte pour un effet 3D amélioré
+                    transition: true,      // Animation de transition
+                    gyroscope: true,       // Activer le gyroscope sur mobile
+                    gyroscopeMinAngleX: -45, // Limites du gyroscope élargies
+                    gyroscopeMaxAngleX: 45,  // pour plus d'effet sur mobile
+                    gyroscopeMinAngleY: -45,
+                    gyroscopeMaxAngleY: 45,
+                    reset: true,           // Réinitialiser l'effet quand la souris quitte l'élément
+                    mouse: true,           // Suivre la souris
+                    "full-page-listening": false, // Limiter la détection aux mouvements sur l'élément
+                    "mouse-event-element": this.$refs.tiltBox // Élément qui détecte les événements de souris
+                });
+            } else {
+                // Si VanillaTilt n'est pas encore chargé, réessayer après un court délai
+                setTimeout(() => {
+                    this.initializeTilt();
+                }, 500);
+            }
+        },
+
+        // Nettoyer l'instance de vanilla-tilt
+        cleanupTilt() {
+            if (this.tiltInstance && this.tiltInstance.destroy) {
+                this.tiltInstance.destroy();
+                this.tiltInstance = null;
+            }
+        },
+
         initializeAnimations() {
             // Vérifier si on est côté client
             if (!process.client) return;
@@ -362,6 +446,8 @@ export default {
             this.resizeTimeout = setTimeout(() => {
                 this.setupResponsive();
                 this.refreshAnimation();
+                // Réinitialiser vanilla-tilt pour s'adapter au nouveau format d'écran
+                this.initializeTilt();
             }, 200);
         },
 
@@ -670,7 +756,21 @@ export default {
                                 scale: 1,
                                 opacity: 1,
                                 duration: 0.8,
-                                ease: "back.out(1.5)"
+                                ease: "back.out(1.5)",
+                                onComplete: () => {
+                                    // Une fois l'élément révélé, initialiser Vanilla Tilt
+                                    // Cela s'applique spécifiquement aux éléments qui contiennent la classe tilt-box
+                                    const tiltElement = element.querySelector('.tilt-box');
+                                    if (tiltElement && window.VanillaTilt) {
+                                        window.VanillaTilt.init(tiltElement, {
+                                            max: 15,
+                                            speed: 400,
+                                            glare: true,
+                                            "max-glare": 0.5,
+                                            scale: 1.05
+                                        });
+                                    }
+                                }
                             }
                         );
                     },
@@ -821,7 +921,28 @@ export default {
     margin-right: -10px;
 }
 
-.bg-secondary {
-    background-color: #2F4A4F;
+/* Styles pour vanilla-tilt */
+.tilt-box {
+    transform-style: preserve-3d;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.tilt-box:hover {
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+}
+
+/* Ajout d'un effet subtil de déplacement des éléments internes pour renforcer l'effet 3D */
+.tilt-box>* {
+    transform: translateZ(20px);
+    transition: transform 0.3s ease;
+}
+
+/* Style pour l'effet de glare (brillance) */
+.js-tilt-glare {
+    border-radius: 8px;
 }
 </style>

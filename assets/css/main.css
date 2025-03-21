@@ -7,44 +7,62 @@
   --primary-color: #000000;
   --secondary-color: #2F4A4F;
   --link-color: #899EA2;
+  --divider: #2F4A4F;
+  --logo-color: #2F4A4F;
+  --header-link-color: #2F4A4F;
 
   /* Dark Theme - À utiliser avec un système de toggle de thème */
   --bg-color-dark: #1A1A1A;
   --primary-color-dark: #EEEEEE;
   --secondary-color-dark: #8B4B4B;
   --link-color-dark: #B09696;
+  --divider-dark: #8B4B4B;
+  --logo-color-dark: #EEEEEE;
+  --header-link-color-dark: #EEEEEE;
+  
+  /* Variables dynamiques qui changent selon le thème */
+  --current-bg-color: var(--bg-color);
+  --current-primary-color: var(--primary-color);
+  --current-secondary-color: var(--secondary-color);
+  --current-link-color: var(--link-color);
+  --current-divider: var(--divider);
+  --current-logo-color: var(--logo-color);
+  --current-header-link-color: var(var(--header-link-color));
 }
 
 .bg-color {
-  background-color: var(--bg-color);
+  background-color: var(--current-bg-color);
 }
 
 .primary-color {
-  color: var(--primary-color);
+  color: var(--current-primary-color);
 }
 
 .secondary-color {
-  color: var(--secondary-color);
+  color: var(--current-secondary-color);
 }
 
 .link-color {
-  color: var(--link-color);
+  color: var(--current-link-color);
 }
 
-.bg-color-dark {
-  background-color: var(--bg-color-dark);
+.divider {
+  background-color: var(--current-divider);
 }
 
-.primary-color-dark {
-  color: var(--primary-color-dark);
+#svg-gradient-start {
+  stop-color: var(--current-secondary-color);
 }
 
-.secondary-color-dark {
-  color: var(--secondary-color-dark);
+#svg-gradient-end {
+  stop-color: var(--current-link-color);
 }
 
-.link-color-dark {
-  color: var(--link-color-dark);
+.theme-text {
+  fill: var(--current-secondary-color);
+}
+.header-theme-text{
+  fill: var(--current-logo-color);
 }
 
 /* General */
@@ -58,11 +76,12 @@
     font-family: 'Schibsted Grotesk', sans-serif;
 }
 
+/* Rest of your CSS remains the same */
 .smooth-underline-xl {
     position: relative;
-  }
+}
   
-  .smooth-underline-xl::after {
+.smooth-underline-xl::after {
     content: '';
     position: absolute;
     width: 100%;
@@ -73,14 +92,14 @@
     transform: scaleX(1);
     transform-origin: bottom left;
     transition: transform 0.3s ease-out;
-  }
+}
   
-  .smooth-underline-xl:hover::after {
+.smooth-underline-xl:hover::after {
     transform: scaleX(0);
     transform-origin: bottom right;
-  }
+}
   
-  .smooth-underline-xl::before {
+.smooth-underline-xl::before {
     content: '';
     position: absolute;
     width: 100%;
@@ -91,18 +110,18 @@
     transform: scaleX(0);
     transform-origin: bottom left;
     transition: transform 0.3s ease-out 0.3s;
-  }
+}
   
-  .smooth-underline-xl:hover::before {
+.smooth-underline-xl:hover::before {
     transform: scaleX(1);
     transform-origin: bottom left;
-  }
+}
 
-  .smooth-underline {
+.smooth-underline {
     position: relative;
-  }
+}
   
-  .smooth-underline::after {
+.smooth-underline::after {
     content: '';
     position: absolute;
     width: 100%;
@@ -113,14 +132,14 @@
     transform: scaleX(1);
     transform-origin: bottom left;
     transition: transform 0.3s ease-out;
-  }
+}
   
-  .smooth-underline:hover::after {
+.smooth-underline:hover::after {
     transform: scaleX(0);
     transform-origin: bottom right;
-  }
+}
   
-  .smooth-underline::before {
+.smooth-underline::before {
     content: '';
     position: absolute;
     width: 100%;
@@ -131,9 +150,9 @@
     transform: scaleX(0);
     transform-origin: bottom left;
     transition: transform 0.3s ease-out 0.3s;
-  }
+}
   
-  .smooth-underline:hover::before {
+.smooth-underline:hover::before {
     transform: scaleX(1);
     transform-origin: bottom left;
-  }
+}

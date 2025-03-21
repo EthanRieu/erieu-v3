@@ -8,10 +8,10 @@
           <div class="text-sm sm:text-lg secondary-color font-semibold">
             {{ annee }}
           </div>
-          <div class="text-sm sm:text-lg font-medium" v-html="services"></div>
+          <div class="primary-color text-sm sm:text-lg font-medium" v-html="services"></div>
         </div>
       </div>
-      <div class="mt-8 text-sm sm:text-lg lg:w-100 xl:w-128 font-medium project-description">
+      <div class="primary-color mt-8 text-sm sm:text-lg lg:w-100 xl:w-128 font-medium project-description">
         {{ description }}
       </div>
       <div
@@ -237,29 +237,6 @@ export default {
 </script>
 
 <style scoped>
-.secondary-color {
-  color: #2F4A4F;
-}
-
-.smooth-underline-xl {
-  position: relative;
-  display: inline-block;
-}
-
-.smooth-underline-xl::after {
-  content: '';
-  position: absolute;
-  width: 0;
-  height: 3px;
-  bottom: 0;
-  left: 0;
-  background-color: #2F4A4F;
-  transition: width 0.3s ease;
-}
-
-.smooth-underline-xl:hover::after {
-  width: 100%;
-}
 
 .project-card {
   transition: transform 0.3s ease;
