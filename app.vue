@@ -1,5 +1,5 @@
 <template>
-  <div :class="themeClass" class="min-h-screen">
+  <div :class="themeClass" :style="themeStyles" class="min-h-screen">
     <NuxtLayout>
       <NuxtPage />
     </NuxtLayout>
@@ -9,5 +9,5 @@
 <script setup>
 import { useTheme } from '~/utils/useTheme';
 
-const { isDarkMode, themeClass, toggleTheme } = useTheme();
+const { isDarkMode, themeClass, themeStyles, toggleTheme } = useTheme();
 </script>
