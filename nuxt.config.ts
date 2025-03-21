@@ -13,5 +13,11 @@ export default defineNuxtConfig({
       tailwindcss(),
     ],
   },
+  modules: [
+    '@pinia/nuxt',
+  ],
+  pinia: {
+    autoImports: ['defineStore', 'acceptHMRUpdate'],
+  },
 
 });

@@ -103,7 +103,7 @@
                 <div class="w-full h-[2px] divider my-8 reveal-divider"></div>
 
                 <!-- Projects Components -->
-                <div v-for="(project, index) in selectedProjects" :key="project.id" :class="'reveal-project-' + index">
+                <div v-for="(project, index) in featuredProjects" :key="project.id" :class="'reveal-project-' + index">
                     <!-- Projet -->
                     <SelectedProject :id="project.id" :datePrincipal="project.datePrincipal" :annee="project.annee"
                         :services="project.services" :description="project.description" :titre="project.titre"
@@ -227,7 +227,7 @@ import SelectedProject from '~/components/SelectedProject.vue'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { TextPlugin } from 'gsap/TextPlugin'
-
+import { useProjectStore } from '~/stores/projectStore'
 
 export default {
     components: {
@@ -266,28 +266,23 @@ export default {
             scrollTriggerInstances: [], // Stocker toutes les instances pour un nettoyage facile
             isAnimationInitialized: false,
             tiltInstance: null, // Pour stocker l'instance de vanilla-tilt
-            // Données des projets sélectionnés
-            selectedProjects: [
-                {
-                    id: 'projet-1',
-                    datePrincipal: '01/02',
-                    annee: '2024-2025',
-                    services: 'Interactive Design <br /> Full Development',
-                    description: 'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quos quisquam omnis architecto neque minus soluta! Fuga laudantium perferendis, explicabo modi similique reprehenderit! Quae et reprehenderit quaerat facilis voluptate, dolorum pariatur!',
-                    titre: 'Mouvements & Harmonie',
-                    // imageUrl: '/assets/img/projects/MouvementEtHarmonie.jpg'
-                },
-                {
-                    id: 'projet-2',
-                    datePrincipal: '02/02',
-                    annee: '2025',
-                    services: 'Interactive Design <br /> Full Development',
-                    description: 'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quos quisquam omnis architecto neque minus soluta! Fuga laudantium perferendis, explicabo modi similique reprehenderit! Quae et reprehenderit quaerat facilis voluptate, dolorum pariatur!',
-                    titre: 'So\'Deco',
-                    // imageUrl: '/assets/img/projects/project2.jpg'
-                }
-            ]
         }
+    },
+    computed: {
+        // Utiliser le store Pinia pour récupérer les projets mis en avant
+        featuredProjects() {
+            const projectStore = useProjectStore()
+            return projectStore.getFeaturedProjects
+        }
+    },
+    created() {
+        // Configurer les projets à afficher sur la page d'accueil
+        // Ces IDs sont définis dans le store, mais on pourrait aussi les définir ici
+        /* 
+        Exemple pour personnaliser les projets affichés :
+        const projectStore = useProjectStore()
+        projectStore.setFeaturedProjects(['projet-1', 'projet-3'])
+        */
     },
     mounted() {
         // Enregistrer les plugins GSAP une seule fois
@@ -316,6 +311,16 @@ export default {
         window.removeEventListener('resize', this.handleResize);
     },
     methods: {
+        // Méthode pour naviguer vers la page détaillée d'un projet
+        navigateToProject(projectId) {
+            // Stocker l'ID du projet sélectionné dans le store Pinia
+            const projectStore = useProjectStore()
+            projectStore.selectProject(projectId)
+
+            // Naviguer vers la page du projet
+            this.$router.push(`/projets/${projectId}`);
+        },
+
         // Initialiser vanilla-tilt
         initializeTilt() {
             if (!process.client) return;
@@ -449,11 +454,6 @@ export default {
                 // Réinitialiser vanilla-tilt pour s'adapter au nouveau format d'écran
                 this.initializeTilt();
             }, 200);
-        },
-
-        // Méthode pour naviguer vers la page détaillée d'un projet
-        navigateToProject(projectId) {
-            this.$router.push(`/projets/${projectId}`);
         },
 
         setupResponsive() {
