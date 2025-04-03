@@ -4,25 +4,28 @@
             <!-- Logo et Location/Hour -->
             <div class="flex items-center space-x-4 md:space-x-8 lg:space-x-16">
                 <!-- Logo -->
-                <div class="w-28 md:w-32 lg:w-40">
-                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-                        viewBox="0 0 1500 500" shape-rendering="geometricPrecision" text-rendering="geometricPrecision">
+                <NuxtLink to="/" class="router-link">
+                    <div class="w-28 md:w-32 lg:w-40">
+                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                            viewBox="0 0 1500 500" shape-rendering="geometricPrecision"
+                            text-rendering="geometricPrecision">
 
-                        <!-- ERIEU Text -->
-                        <text dx="0" dy="0" font-family="'Schibsted Grotesk', sans-serif" font-size="75"
-                            font-weight="800" transform="matrix(5 0 0 5 109.262384 384.859102)" class="header-theme-text"
-                            stroke-width="0">
-                            <tspan y="0" font-weight="800" stroke-width="0">ERIEU</tspan>
-                        </text>
+                            <!-- ERIEU Text -->
+                            <text dx="0" dy="0" font-family="'Schibsted Grotesk', sans-serif" font-size="75"
+                                font-weight="800" transform="matrix(5 0 0 5 109.262384 384.859102)"
+                                class="header-theme-text" stroke-width="0">
+                                <tspan y="0" font-weight="800" stroke-width="0">ERIEU</tspan>
+                            </text>
 
-                        <!-- TM Text -->
-                        <text dx="0" dy="0" font-family="'Schibsted Grotesk', sans-serif" font-size="75"
-                            font-weight="800" transform="translate(1266.074934 142.194716)" class="header-theme-text"
-                            stroke-width="0">
-                            <tspan y="0" font-weight="800" stroke-width="0">TM</tspan>
-                        </text>
-                    </svg>
-                </div>
+                            <!-- TM Text -->
+                            <text dx="0" dy="0" font-family="'Schibsted Grotesk', sans-serif" font-size="75"
+                                font-weight="800" transform="translate(1266.074934 142.194716)"
+                                class="header-theme-text" stroke-width="0">
+                                <tspan y="0" font-weight="800" stroke-width="0">TM</tspan>
+                            </text>
+                        </svg>
+                    </div>
+                </NuxtLink>
 
                 <!-- Location and Hour - caché sur mobile -->
                 <div class="hidden md:block">
