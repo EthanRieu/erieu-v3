@@ -53,27 +53,10 @@
                         </NuxtLink>
                     </ul>
                 </nav>
-
-                <!-- Toggle Light/Dark mode -->
-                <div @click="toggleTheme" class="cursor-pointer">
-                    <img v-if="!isDarkMode" class="w-10 lg:w-12 rotate-z-180 rotate-45" src="/assets/img/moon.svg"
-                        alt="Moon icon for toggle theme">
-                    <img v-else class="w-10 lg:w-12 rotate-z-180 rotate-45" src="/assets/img/Sun.svg"
-                        alt="Sun icon for toggle theme">
-                </div>
             </div>
 
             <!-- Bouton burger menu visible uniquement sur mobile/tablette -->
             <div class="flex md:hidden items-center space-x-4">
-                <!-- Toggle Light/Dark mode sur mobile -->
-                <div @click="toggleTheme" class="cursor-pointer">
-                    <img v-if="!isDarkMode" class="w-8 rotate-z-180 rotate-45" src="/assets/img/moon.svg"
-                        alt="Moon icon for toggle theme">
-                    <img v-else class="w-10 lg:w-12 rotate-z-180 rotate-45" src="/assets/img/moon.svg"
-                        alt="Sun icon for toggle theme">
-                </div>
-
-                <!-- Bouton burger avec animation -->
                 <button @click="toggleMobileMenu" class="focus:outline-none burger-button">
                     <div class="burger-icon-container">
                         <svg v-show="!mobileMenuOpen" xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 burger-icon"

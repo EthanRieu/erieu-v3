@@ -2,7 +2,7 @@
 @import "tailwindcss";
 
 :root {
-  /* Bright Theme */
+  /* Couleurs du thème (light uniquement) */
   --bg-color: #EEEEEE;
   --primary-color: #000000;
   --secondary-color: #2F4A4F;
@@ -10,149 +10,149 @@
   --divider: #2F4A4F;
   --logo-color: #2F4A4F;
   --header-link-color: #2F4A4F;
-
-  /* Dark Theme - À utiliser avec un système de toggle de thème */
-  --bg-color-dark: #1A1A1A;
-  --primary-color-dark: #EEEEEE;
-  --secondary-color-dark: #8B4B4B;
-  --link-color-dark: #B09696;
-  --divider-dark: #8B4B4B;
-  --logo-color-dark: #EEEEEE;
-  --header-link-color-dark: #EEEEEE;
-  
-  /* Variables dynamiques qui changent selon le thème */
-  --current-bg-color: var(--bg-color);
-  --current-primary-color: var(--primary-color);
-  --current-secondary-color: var(--secondary-color);
-  --current-link-color: var(--link-color);
-  --current-divider: var(--divider);
-  --current-logo-color: var(--logo-color);
-  --current-header-link-color: var(var(--header-link-color));
 }
 
-.bg-color {
-  background-color: var(--current-bg-color);
+/* Classes utilitaires de base */
+.bg-color { background-color: var(--bg-color); }
+.primary-color { color: var(--primary-color); }
+.secondary-color { color: var(--secondary-color); }
+.link-color { color: var(--link-color); }
+.divider { background-color: var(--divider); }
+
+/* Styles pour les SVG */
+#svg-gradient-start { stop-color: var(--secondary-color); }
+#svg-gradient-end { stop-color: var(--link-color); }
+.theme-text { fill: var(--secondary-color); }
+.header-theme-text { fill: var(--logo-color); }
+
+/* Styles généraux */
+.title {
+  font-size: 64px;
+  font-weight: bold;
 }
 
-.primary-color {
-  color: var(--current-primary-color);
+.body {
+  font-family: 'Schibsted Grotesk', sans-serif;
 }
 
-.secondary-color {
-  color: var(--current-secondary-color);
+/* Styles pour les animations et interactions */
+.line-container {
+  width: 100%;
+  overflow: hidden;
+  position: relative;
 }
 
-.link-color {
-  color: var(--current-link-color);
+.invisible-path {
+  visibility: hidden;
 }
 
-.divider {
-  background-color: var(--current-divider);
+.svg-container {
+  width: calc(100% + 20px);
+  max-width: calc(100vw + 20px);
+  margin-left: 0;
+  margin-right: -10px;
 }
 
-#svg-gradient-start {
-  stop-color: var(--current-secondary-color);
+/* Styles pour vanilla-tilt */
+.tilt-box {
+  transform-style: preserve-3d;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
 }
 
-#svg-gradient-end {
-  stop-color: var(--current-link-color);
+.tilt-box:hover {
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
 }
 
-.theme-text {
-  fill: var(--current-secondary-color);
-}
-.header-theme-text{
-  fill: var(--current-logo-color);
+.tilt-box > * {
+  transform: translateZ(20px);
+  transition: transform 0.3s ease;
 }
 
-/* General */
-
-.title{
-    font-size: 64px;
-    font-weight: bold;
+.js-tilt-glare {
+  border-radius: 8px;
 }
 
-.body{
-    font-family: 'Schibsted Grotesk', sans-serif;
-}
-
-/* Rest of your CSS remains the same */
+/* Styles pour les effets d'underline */
 .smooth-underline-xl {
-    position: relative;
+  position: relative;
 }
   
 .smooth-underline-xl::after {
-    content: '';
-    position: absolute;
-    width: 100%;
-    height: 4px;
-    bottom: 0;
-    left: 0;
-    background-color: currentColor;
-    transform: scaleX(1);
-    transform-origin: bottom left;
-    transition: transform 0.3s ease-out;
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 4px;
+  bottom: 0;
+  left: 0;
+  background-color: currentColor;
+  transform: scaleX(1);
+  transform-origin: bottom left;
+  transition: transform 0.3s ease-out;
 }
   
 .smooth-underline-xl:hover::after {
-    transform: scaleX(0);
-    transform-origin: bottom right;
+  transform: scaleX(0);
+  transform-origin: bottom right;
 }
   
 .smooth-underline-xl::before {
-    content: '';
-    position: absolute;
-    width: 100%;
-    height: 4px;
-    bottom: 0;
-    left: 0;
-    background-color: currentColor;
-    transform: scaleX(0);
-    transform-origin: bottom left;
-    transition: transform 0.3s ease-out 0.3s;
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 4px;
+  bottom: 0;
+  left: 0;
+  background-color: currentColor;
+  transform: scaleX(0);
+  transform-origin: bottom left;
+  transition: transform 0.3s ease-out 0.3s;
 }
   
 .smooth-underline-xl:hover::before {
-    transform: scaleX(1);
-    transform-origin: bottom left;
+  transform: scaleX(1);
+  transform-origin: bottom left;
 }
 
 .smooth-underline {
-    position: relative;
+  position: relative;
 }
   
 .smooth-underline::after {
-    content: '';
-    position: absolute;
-    width: 100%;
-    height: 2px;
-    bottom: 0;
-    left: 0;
-    background-color: currentColor;
-    transform: scaleX(1);
-    transform-origin: bottom left;
-    transition: transform 0.3s ease-out;
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 2px;
+  bottom: 0;
+  left: 0;
+  background-color: currentColor;
+  transform: scaleX(1);
+  transform-origin: bottom left;
+  transition: transform 0.3s ease-out;
 }
   
 .smooth-underline:hover::after {
-    transform: scaleX(0);
-    transform-origin: bottom right;
+  transform: scaleX(0);
+  transform-origin: bottom right;
 }
   
 .smooth-underline::before {
-    content: '';
-    position: absolute;
-    width: 100%;
-    height: 2px;
-    bottom: 0;
-    left: 0;
-    background-color: currentColor;
-    transform: scaleX(0);
-    transform-origin: bottom left;
-    transition: transform 0.3s ease-out 0.3s;
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 2px;
+  bottom: 0;
+  left: 0;
+  background-color: currentColor;
+  transform: scaleX(0);
+  transform-origin: bottom left;
+  transition: transform 0.3s ease-out 0.3s;
 }
   
 .smooth-underline:hover::before {
-    transform: scaleX(1);
-    transform-origin: bottom left;
+  transform: scaleX(1);
+  transform-origin: bottom left;
 }

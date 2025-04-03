@@ -5,9 +5,3 @@
     </NuxtLayout>
   </div>
 </template>
-
-<script setup>
-import { useTheme } from '~/utils/useTheme';
-
-const { isDarkMode, themeClass, themeStyles, toggleTheme } = useTheme();
-</script>
