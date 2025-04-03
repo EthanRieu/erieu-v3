@@ -220,7 +220,9 @@
     </div>
 </template>
 
-<script>
+<script setup>
+import { ref, reactive, computed, onMounted, onBeforeUnmount, nextTick } from 'vue'
+import { useRouter } from 'vue-router'
 import Header from '~/components/header.vue'
 import Footer from '~/components/footer.vue'
 import SelectedProject from '~/components/SelectedProject.vue'
@@ -229,604 +231,387 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { TextPlugin } from 'gsap/TextPlugin'
 import { useProjectStore } from '~/stores/projectStore'
 
-export default {
-    components: {
-        Header,
-        SelectedProject,
-        Footer
+// Router
+const router = useRouter()
+
+// Refs for DOM elements
+const path = ref(null)
+const tiltBox = ref(null)
+
+// State variables
+const scrollClass = ref('scroll-responsive')
+const isAnimationInitialized = ref(false)
+const isCompleteRefreshNeeded = ref(false)
+let tiltInstance = null
+let scrollTriggerInstances = []
+let resizeTimeout = null
+
+// Animation settings
+const animationSettings = reactive({
+    mobile: {
+        start: "top 20%",
+        end: "top"
     },
-    head() {
-        return {
-            script: [
-                { src: 'https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.7.2/vanilla-tilt.min.js', body: true }
-            ]
+    tablet: {
+        start: "top 40%",
+        end: "top"
+    },
+    desktop: {
+        start: "top 50%",
+        end: "top"
+    }
+})
+
+const currentAnimSettings = reactive({
+    start: "top 50%",
+    end: "top"
+})
+
+// Computed properties
+const projectStore = useProjectStore()
+const featuredProjects = computed(() => projectStore.getFeaturedProjects)
+
+// Add script to the head
+useHead({
+    script: [
+        { src: 'https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.7.2/vanilla-tilt.min.js', body: true }
+    ]
+})
+
+// Methods
+const navigateToProject = (projectId) => {
+    projectStore.selectProject(projectId)
+    router.push(`/projets/${projectId}`)
+}
+
+const initializeTilt = () => {
+    if (!process.client) return
+
+    if (window.VanillaTilt && tiltBox.value) {
+        // Détruire l'instance précédente si elle existe
+        cleanupTilt()
+
+        // Configurer vanilla-tilt
+        tiltInstance = window.VanillaTilt.init(tiltBox.value, {
+            max: 25,
+            speed: 300,
+            glare: true,
+            "max-glare": 0.6,
+            scale: 1.1,
+            perspective: 1000,
+            transition: true,
+            gyroscope: true,
+            gyroscopeMinAngleX: -45,
+            gyroscopeMaxAngleX: 45,
+            gyroscopeMinAngleY: -45,
+            gyroscopeMaxAngleY: 45,
+            reset: true,
+            mouse: true,
+            "full-page-listening": false,
+            "mouse-event-element": tiltBox.value
+        })
+    } else {
+        // Si VanillaTilt n'est pas encore chargé, réessayer après un court délai
+        setTimeout(() => {
+            initializeTilt()
+        }, 500)
+    }
+}
+
+const cleanupTilt = () => {
+    if (tiltInstance && tiltInstance.destroy) {
+        tiltInstance.destroy()
+        tiltInstance = null
+    }
+}
+
+const initializeAnimations = () => {
+    if (!process.client) return
+
+    if (isAnimationInitialized.value) {
+        console.log('Animations already initialized, skipping')
+        return
+    }
+
+    console.log('Initializing animations')
+
+    // Configuration responsive
+    setupResponsive()
+
+    // Pré-cacher tous les éléments animés avec GSAP pour éviter le flash
+    preHideAnimatedElements()
+
+    // Initialiser les animations en fonction de la taille de l'écran
+    setupPathAnimation()
+    initTextAnimations()
+
+    // Si sur mobile, ajouter des optimisations spécifiques
+    if (window.innerWidth < 640) {
+        setupMobileAnimations()
+    }
+
+    isAnimationInitialized.value = true
+}
+
+const preHideAnimatedElements = () => {
+    if (!process.client) return
+
+    // Cacher les éléments avec un titre de grand format
+    gsap.set('.reveal-title', { y: 100, opacity: 0, skewY: 5 })
+
+    // Cacher les textes
+    gsap.set('.reveal-text', { y: 30, opacity: 0 })
+
+    // Cacher les textes en cascade
+    gsap.set('.reveal-text-staggered', { y: 20, opacity: 0 })
+
+    // Cacher les dividers
+    gsap.set('.reveal-divider', { scaleX: 0, transformOrigin: "left center" })
+
+    // Cacher les éléments
+    gsap.set('.reveal-element', { scale: 0.9, opacity: 0 })
+
+    // Cacher les projets
+    document.querySelectorAll('[class^="reveal-project-"]').forEach((project, index) => {
+        gsap.set(project, { x: index % 2 === 0 ? -50 : 50, opacity: 0 })
+    })
+
+    // Cacher les outils
+    gsap.set('.reveal-tool', { y: 30, opacity: 0 })
+
+    // Cacher les CTA
+    gsap.set('.reveal-cta', { y: 20, opacity: 0 })
+}
+
+const cleanupAnimations = () => {
+    // Tuer toutes les instances ScrollTrigger
+    if (scrollTriggerInstances && scrollTriggerInstances.length) {
+        scrollTriggerInstances.forEach(instance => {
+            if (instance && instance.kill) {
+                instance.kill()
+            }
+        })
+
+        scrollTriggerInstances = []
+    }
+
+    // Tuer tous les tweens
+    gsap.killTweensOf("*")
+
+    // Réinitialiser les données
+    isAnimationInitialized.value = false
+}
+
+const handleResize = () => {
+    // Débouncer pour éviter de multiples exécutions
+    if (resizeTimeout) {
+        clearTimeout(resizeTimeout)
+    }
+
+    resizeTimeout = setTimeout(() => {
+        // Sur mobile, ne pas réinitialiser complètement les animations
+        // car cela provoque les rechargements indésirables
+        if (window.innerWidth < 640) {
+            // Ajuster simplement les paramètres selon la taille d'écran
+            setupResponsive()
+
+            // Réinitialiser seulement vanilla-tilt si nécessaire
+            initializeTilt()
+
+            // Rafraîchir les ScrollTrigger sans tout réinitialiser
+            ScrollTrigger.refresh()
+        } else {
+            // Sur desktop/tablette, on peut faire une réinitialisation complète
+            setupResponsive()
+            refreshAnimation()
+            initializeTilt()
         }
-    },
-    data() {
-        return {
-            scrollClass: 'scroll-responsive',
-            animationSettings: {
-                mobile: {
-                    start: "top 20%",
-                    end: "top"
-                },
-                tablet: {
-                    start: "top 40%",
-                    end: "top"
-                },
-                desktop: {
-                    start: "top 50%",
-                    end: "top"
+    }, 300) // Augmenter le délai pour réduire la fréquence des réinitialisations
+}
+
+const setupResponsive = () => {
+    if (!process.client) return
+
+    const width = window.innerWidth
+
+    // Mise à jour de la classe de scroll selon la taille d'écran
+    if (width < 640) { // Mobile
+        scrollClass.value = 'scroll-mobile'
+        Object.assign(currentAnimSettings, animationSettings.mobile)
+    } else if (width < 1024) { // Tablet
+        scrollClass.value = 'scroll-tablet'
+        Object.assign(currentAnimSettings, animationSettings.tablet)
+    } else { // Desktop
+        scrollClass.value = 'scroll-desktop'
+        Object.assign(currentAnimSettings, animationSettings.desktop)
+    }
+}
+
+const setupPathAnimation = () => {
+    if (!process.client) return
+
+    if (!path.value) return
+
+    const pathLength = path.value.getTotalLength()
+
+    // Configurer le chemin SVG pour l'animation
+    gsap.set(path.value, {
+        strokeDasharray: pathLength,
+        strokeDashoffset: pathLength,
+        opacity: 1
+    })
+
+    // Supprimer la classe invisible-path
+    path.value.classList.remove('invisible-path')
+
+    // Sur xl+, créer l'animation qui dessine le chemin au scroll
+    if (window.innerWidth >= 1280) {
+        setupScrollAnimation(path.value, pathLength)
+    } else {
+        // Sinon, lancer l'animation automatiquement
+        playAutoAnimation(path.value, pathLength)
+    }
+}
+
+const playAutoAnimation = (pathElement, pathLength) => {
+    if (!pathElement) return
+
+    // Animation automatique sans ScrollTrigger pour mobile et tablette
+    const tween = gsap.to(pathElement, {
+        strokeDashoffset: 0,
+        duration: 2.5,
+        ease: "power2.out"
+    })
+}
+
+const setupScrollAnimation = (pathElement, pathLength) => {
+    if (!pathElement) return
+
+    // Créer une nouvelle animation avec les paramètres actuels
+    const tween = gsap.to(pathElement, {
+        strokeDashoffset: 0,
+        duration: 2,
+        ease: "power2.out"
+    })
+
+    // Créer ScrollTrigger et stocker l'instance
+    const instance = ScrollTrigger.create({
+        animation: tween,
+        trigger: ".line-container",
+        start: currentAnimSettings.start,
+        end: currentAnimSettings.end,
+        scrub: 3,
+        markers: false,
+        onRefresh: self => {
+            if (self.progress === 0) {
+                gsap.set(pathElement, {
+                    strokeDashoffset: pathLength
+                })
+            }
+        }
+    })
+
+    // Stocker l'instance pour nettoyage ultérieur
+    scrollTriggerInstances.push(instance)
+}
+
+const refreshAnimation = () => {
+    if (!process.client) return
+
+    // Plutôt que de tout nettoyer et réinitialiser
+    // simplement actualiser les ScrollTriggers existants
+    ScrollTrigger.refresh()
+
+    // Ne réinitialiser complètement que si c'est nécessaire
+    if (isCompleteRefreshNeeded.value) {
+        cleanupAnimations()
+        setTimeout(() => {
+            initializeAnimations()
+        }, 100)
+        isCompleteRefreshNeeded.value = false
+    }
+}
+
+const initTextAnimations = () => {
+    if (!process.client) return
+
+    // Animation des grands titres
+    animateBigTitles()
+
+    // Animation des textes (tous types)
+    animateTexts()
+    animateStaggeredTexts()
+
+    // Animation des dividers
+    animateDividers()
+
+    // Animation des éléments et projets
+    animateElements()
+    animateProjects()
+
+    // Animation des outils et CTA
+    animateTools()
+    animateCTAs()
+}
+
+const animateBigTitles = () => {
+    if (!process.client) return
+
+    const titles = document.querySelectorAll('.reveal-title')
+    if (!titles.length) return
+
+    titles.forEach(title => {
+        if (!title) return
+
+        const instance = ScrollTrigger.create({
+            trigger: title,
+            start: "top 90%", // Démarrer plus tôt pour éviter les déclenchements multiples
+            onEnter: () => {
+                // N'animer que si ce n'est pas déjà animé
+                if (!title.classList.contains('animated')) {
+                    gsap.fromTo(title,
+                        {
+                            y: 100,
+                            opacity: 0,
+                            skewY: 5
+                        },
+                        {
+                            y: 0,
+                            opacity: 1,
+                            skewY: 0,
+                            duration: 1.2,
+                            ease: "power3.out",
+                            onComplete: () => {
+                                // Marquer comme animé
+                                title.classList.add('animated')
+                            }
+                        }
+                    )
                 }
             },
-            currentAnimSettings: {
-                start: "top 50%",
-                end: "top"
-            },
-            scrollTriggerInstances: [], // Stocker toutes les instances pour un nettoyage facile
-            isAnimationInitialized: false,
-            tiltInstance: null, // Pour stocker l'instance de vanilla-tilt
-        }
-    },
-    computed: {
-        // Utiliser le store Pinia pour récupérer les projets mis en avant
-        featuredProjects() {
-            const projectStore = useProjectStore()
-            return projectStore.getFeaturedProjects
-        }
-    },
-    created() {
-        // Configurer les projets à afficher sur la page d'accueil
-        // Ces IDs sont définis dans le store, mais on pourrait aussi les définir ici
-        /* 
-        Exemple pour personnaliser les projets affichés :
-        const projectStore = useProjectStore()
-        projectStore.setFeaturedProjects(['projet-1', 'projet-3'])
-        */
-    },
-    mounted() {
-        // Enregistrer les plugins GSAP une seule fois
-        if (process.client) {
-            gsap.registerPlugin(ScrollTrigger, TextPlugin);
-
-            // Utiliser le hook onMounted de Vue pour s'assurer que ça ne se lance qu'une fois
-            this.$nextTick(() => {
-                // Nettoyer tout d'abord
-                this.cleanupAnimations();
-                // Puis initialiser
-                this.initializeAnimations();
-                // Initialiser Vanilla Tilt
-                this.initializeTilt();
-
-                // Ajouter le gestionnaire d'événement resize
-                window.addEventListener('resize', this.handleResize);
-            });
-        }
-    },
-    beforeDestroy() {
-        // Nettoyer les événements et les ScrollTriggers
-        this.cleanupAnimations();
-        // Nettoyer vanilla-tilt
-        this.cleanupTilt();
-        window.removeEventListener('resize', this.handleResize);
-    },
-    methods: {
-        // Méthode pour naviguer vers la page détaillée d'un projet
-        navigateToProject(projectId) {
-            // Stocker l'ID du projet sélectionné dans le store Pinia
-            const projectStore = useProjectStore()
-            projectStore.selectProject(projectId)
-
-            // Naviguer vers la page du projet
-            this.$router.push(`/projets/${projectId}`);
-        },
-
-        // Initialiser vanilla-tilt
-        initializeTilt() {
-            if (!process.client) return;
-
-            // S'assurer que VanillaTilt est chargé et que l'élément existe
-            if (window.VanillaTilt && this.$refs.tiltBox) {
-                // Détruire l'instance précédente si elle existe
-                this.cleanupTilt();
-
-                // Configurer vanilla-tilt avec un effet plus prononcé et un suivi de souris
-                this.tiltInstance = window.VanillaTilt.init(this.$refs.tiltBox, {
-                    max: 25,               // Inclinaison maximale augmentée pour plus de réactivité
-                    speed: 300,            // Vitesse légèrement plus rapide pour un suivi plus réactif
-                    glare: true,           // Activer l'effet de brillance
-                    "max-glare": 0.6,      // Intensité de brillance augmentée
-                    scale: 1.1,            // Effet de zoom plus prononcé
-                    perspective: 1000,      // Perspective plus forte pour un effet 3D amélioré
-                    transition: true,      // Animation de transition
-                    gyroscope: true,       // Activer le gyroscope sur mobile
-                    gyroscopeMinAngleX: -45, // Limites du gyroscope élargies
-                    gyroscopeMaxAngleX: 45,  // pour plus d'effet sur mobile
-                    gyroscopeMinAngleY: -45,
-                    gyroscopeMaxAngleY: 45,
-                    reset: true,           // Réinitialiser l'effet quand la souris quitte l'élément
-                    mouse: true,           // Suivre la souris
-                    "full-page-listening": false, // Limiter la détection aux mouvements sur l'élément
-                    "mouse-event-element": this.$refs.tiltBox // Élément qui détecte les événements de souris
-                });
-            } else {
-                // Si VanillaTilt n'est pas encore chargé, réessayer après un court délai
-                setTimeout(() => {
-                    this.initializeTilt();
-                }, 500);
-            }
-        },
-
-        // Nettoyer l'instance de vanilla-tilt
-        cleanupTilt() {
-            if (this.tiltInstance && this.tiltInstance.destroy) {
-                this.tiltInstance.destroy();
-                this.tiltInstance = null;
-            }
-        },
-
-        initializeAnimations() {
-            // Vérifier si on est côté client
-            if (!process.client) return;
-
-            // Vérifier si les animations sont déjà initialisées pour éviter la double initialisation
-            if (this.isAnimationInitialized) {
-                console.log('Animations already initialized, skipping');
-                return;
-            }
-
-            console.log('Initializing animations');
-
-            // Configuration responsive
-            this.setupResponsive();
-
-            // Pré-cacher tous les éléments animés avec GSAP pour éviter le flash
-            this.preHideAnimatedElements();
-
-            // Initialiser les animations en fonction de la taille de l'écran
-            this.setupPathAnimation();
-            this.initTextAnimations();
-
-            this.isAnimationInitialized = true;
-        },
-
-        // Nouvelle méthode pour pré-cacher les éléments
-        preHideAnimatedElements() {
-            if (!process.client) return;
-
-            // Cacher les éléments avec un titre de grand format
-            gsap.set('.reveal-title', { y: 100, opacity: 0, skewY: 5 });
-
-            // Cacher les textes
-            gsap.set('.reveal-text', { y: 30, opacity: 0 });
-
-            // Cacher les textes en cascade
-            gsap.set('.reveal-text-staggered', { y: 20, opacity: 0 });
-
-            // Cacher les dividers
-            gsap.set('.reveal-divider', { scaleX: 0, transformOrigin: "left center" });
-
-            // Cacher les éléments
-            gsap.set('.reveal-element', { scale: 0.9, opacity: 0 });
-
-            // Cacher les projets
-            document.querySelectorAll('[class^="reveal-project-"]').forEach((project, index) => {
-                gsap.set(project, { x: index % 2 === 0 ? -50 : 50, opacity: 0 });
-            });
-
-            // Cacher les outils
-            gsap.set('.reveal-tool', { y: 30, opacity: 0 });
-
-            // Cacher les CTA
-            gsap.set('.reveal-cta', { y: 20, opacity: 0 });
-        },
-
-        // Nettoyer toutes les animations
-        cleanupAnimations() {
-            // Tuer toutes les instances ScrollTrigger
-            if (this.scrollTriggerInstances && this.scrollTriggerInstances.length) {
-                this.scrollTriggerInstances.forEach(instance => {
-                    if (instance && instance.kill) {
-                        instance.kill();
-                    }
-                });
-
-                this.scrollTriggerInstances = [];
-            }
-
-            // Tuer tous les tweens
-            gsap.killTweensOf("*");
-
-            // Réinitialiser les données
-            this.isAnimationInitialized = false;
-        },
-
-        // Gérer le redimensionnement
-        handleResize() {
-            // Débouncer pour éviter de multiples exécutions
-            if (this.resizeTimeout) {
-                clearTimeout(this.resizeTimeout);
-            }
-
-            this.resizeTimeout = setTimeout(() => {
-                this.setupResponsive();
-                this.refreshAnimation();
-                // Réinitialiser vanilla-tilt pour s'adapter au nouveau format d'écran
-                this.initializeTilt();
-            }, 200);
-        },
-
-        setupResponsive() {
-            if (!process.client) return;
-
-            const width = window.innerWidth;
-
-            // Mise à jour de la classe de scroll selon la taille d'écran
-            if (width < 640) { // Mobile
-                this.scrollClass = 'scroll-mobile';
-                this.currentAnimSettings = this.animationSettings.mobile;
-            } else if (width < 1024) { // Tablet
-                this.scrollClass = 'scroll-tablet';
-                this.currentAnimSettings = this.animationSettings.tablet;
-            } else { // Desktop
-                this.scrollClass = 'scroll-desktop';
-                this.currentAnimSettings = this.animationSettings.desktop;
-            }
-        },
-
-        // Configurer l'animation du chemin SVG
-        setupPathAnimation() {
-            if (!process.client) return;
-
-            const path = this.$refs.path;
-            if (!path) return;
-
-            const pathLength = path.getTotalLength();
-
-            // Configurer le chemin SVG pour l'animation
-            gsap.set(path, {
-                strokeDasharray: pathLength,
-                strokeDashoffset: pathLength,
-                opacity: 1
-            });
-
-            // Supprimer la classe invisible-path
-            path.classList.remove('invisible-path');
-
-            // Sur xl+, créer l'animation qui dessine le chemin au scroll
-            if (window.innerWidth >= 1280) {
-                this.setupScrollAnimation(path, pathLength);
-            } else {
-                // Sinon, lancer l'animation automatiquement
-                this.playAutoAnimation(path, pathLength);
-            }
-        },
-
-        playAutoAnimation(path, pathLength) {
-            if (!path) return;
-
-            // Animation automatique sans ScrollTrigger
-            const tween = gsap.to(path, {
-                strokeDashoffset: 0,
-                duration: 2.5,
-                ease: "power2.out"
-            });
-        },
-
-        setupScrollAnimation(path, pathLength) {
-            if (!path) return;
-
-            // Créer une nouvelle animation avec les paramètres actuels
-            const tween = gsap.to(path, {
-                strokeDashoffset: 0,
-                duration: 2,
-                ease: "power2.out"
-            });
-
-            // Créer ScrollTrigger et stocker l'instance
-            const instance = ScrollTrigger.create({
-                animation: tween,
-                trigger: ".line-container",
-                start: this.currentAnimSettings.start,
-                end: this.currentAnimSettings.end,
-                scrub: 3,
-                markers: false,
-                onRefresh: self => {
-                    if (self.progress === 0) {
-                        gsap.set(path, {
-                            strokeDashoffset: pathLength
-                        });
-                    }
-                }
-            });
-
-            // Stocker l'instance pour nettoyage ultérieur
-            this.scrollTriggerInstances.push(instance);
-        },
-
-        refreshAnimation() {
-            if (!process.client) return;
-
-            // Nettoyer et réinitialiser les animations
-            this.cleanupAnimations();
-            setTimeout(() => {
-                this.initializeAnimations();
-            }, 100);
-        },
-
-        // Initialiser toutes les animations de texte avec des protections contre les erreurs DOM
-        initTextAnimations() {
-            if (!process.client) return;
-
-            // Exécuter les animations en séquence avec un délai
-            setTimeout(() => {
-                this.animateBigTitles();
-
-                setTimeout(() => {
-                    this.animateTexts();
-
-                    setTimeout(() => {
-                        this.animateStaggeredTexts();
-
-                        setTimeout(() => {
-                            this.animateDividers();
-
-                            setTimeout(() => {
-                                this.animateElements();
-
-                                setTimeout(() => {
-                                    this.animateProjects();
-
-                                    setTimeout(() => {
-                                        this.animateTools();
-
-                                        setTimeout(() => {
-                                            this.animateCTAs();
-                                        }, 100);
-                                    }, 100);
-                                }, 100);
-                            }, 100);
-                        }, 100);
-                    }, 100);
-                }, 100);
-            }, 100);
-        },
-
-        // Animation pour les grands titres (Selected Works, About me, Let's Work!)
-        animateBigTitles() {
-            if (!process.client) return;
-
-            const titles = document.querySelectorAll('.reveal-title');
-            if (!titles.length) return;
-
-            titles.forEach(title => {
-                if (!title) return;
-
-                const instance = ScrollTrigger.create({
-                    trigger: title,
-                    start: "top 85%",
-                    onEnter: () => {
-                        gsap.fromTo(title,
-                            {
-                                y: 100,
-                                opacity: 0,
-                                skewY: 5
-                            },
-                            {
-                                y: 0,
-                                opacity: 1,
-                                skewY: 0,
-                                duration: 1.2,
-                                ease: "power3.out"
-                            }
-                        );
-                    },
-                    once: true
-                });
-
-                this.scrollTriggerInstances.push(instance);
-            });
-        },
-
-        // Animation pour les textes standard
-        animateTexts() {
-            if (!process.client) return;
-
-            const texts = document.querySelectorAll('.reveal-text');
-            if (!texts.length) return;
-
-            texts.forEach(text => {
-                if (!text) return;
-
-                const instance = ScrollTrigger.create({
-                    trigger: text,
-                    start: "top 90%",
-                    onEnter: () => {
-                        gsap.fromTo(text,
-                            {
-                                y: 30,
-                                opacity: 0
-                            },
-                            {
-                                y: 0,
-                                opacity: 1,
-                                duration: 0.8,
-                                ease: "power2.out"
-                            }
-                        );
-                    },
-                    once: true
-                });
-
-                this.scrollTriggerInstances.push(instance);
-            });
-        },
-
-        // Animation pour les textes en cascade
-        animateStaggeredTexts() {
-            if (!process.client) return;
-
-            const textGroups = document.querySelectorAll('.space-y-6, .space-y-8, .space-y-10');
-            if (!textGroups.length) return;
-
-            textGroups.forEach(group => {
-                if (!group) return;
-
-                const staggeredTexts = group.querySelectorAll('.reveal-text-staggered');
-                if (!staggeredTexts.length) return;
-
-                const instance = ScrollTrigger.create({
-                    trigger: group,
-                    start: "top 85%",
-                    onEnter: () => {
-                        gsap.fromTo(staggeredTexts,
-                            {
-                                y: 20,
-                                opacity: 0
-                            },
-                            {
-                                y: 0,
-                                opacity: 1,
-                                duration: 0.6,
-                                stagger: 0.15,
-                                ease: "power2.out"
-                            }
-                        );
-                    },
-                    once: true
-                });
-
-                this.scrollTriggerInstances.push(instance);
-            });
-        },
-
-        // Animation pour les séparateurs
-        animateDividers() {
-            if (!process.client) return;
-
-            const dividers = document.querySelectorAll('.reveal-divider');
-            if (!dividers.length) return;
-
-            dividers.forEach(divider => {
-                if (!divider) return;
-
-                const instance = ScrollTrigger.create({
-                    trigger: divider,
-                    start: "top 90%",
-                    onEnter: () => {
-                        gsap.fromTo(divider,
-                            {
-                                scaleX: 0,
-                                transformOrigin: "left center"
-                            },
-                            {
-                                scaleX: 1,
-                                duration: 1,
-                                ease: "power3.inOut"
-                            }
-                        );
-                    },
-                    once: true
-                });
-
-                this.scrollTriggerInstances.push(instance);
-            });
-        },
-
-        // Animation pour les images et éléments visuels
-        animateElements() {
-            if (!process.client) return;
-
-            const elements = document.querySelectorAll('.reveal-element');
-            if (!elements.length) return;
-
-            elements.forEach(element => {
-                if (!element) return;
-
-                const instance = ScrollTrigger.create({
-                    trigger: element,
-                    start: "top 85%",
-                    onEnter: () => {
-                        gsap.fromTo(element,
-                            {
-                                scale: 0.9,
-                                opacity: 0
-                            },
-                            {
-                                scale: 1,
-                                opacity: 1,
-                                duration: 0.8,
-                                ease: "back.out(1.5)",
-                                onComplete: () => {
-                                    // Une fois l'élément révélé, initialiser Vanilla Tilt
-                                    // Cela s'applique spécifiquement aux éléments qui contiennent la classe tilt-box
-                                    const tiltElement = element.querySelector('.tilt-box');
-                                    if (tiltElement && window.VanillaTilt) {
-                                        window.VanillaTilt.init(tiltElement, {
-                                            max: 15,
-                                            speed: 400,
-                                            glare: true,
-                                            "max-glare": 0.5,
-                                            scale: 1.05
-                                        });
-                                    }
-                                }
-                            }
-                        );
-                    },
-                    once: true
-                });
-
-                this.scrollTriggerInstances.push(instance);
-            });
-        },
-
-        // Animation pour les projets
-        animateProjects() {
-            if (!process.client) return;
-
-            const projects = document.querySelectorAll('[class^="reveal-project-"]');
-            if (!projects.length) return;
-
-            projects.forEach((project, index) => {
-                if (!project) return;
-
-                const instance = ScrollTrigger.create({
-                    trigger: project,
-                    start: "top 85%",
-                    onEnter: () => {
-                        gsap.fromTo(project,
-                            {
-                                x: index % 2 === 0 ? -50 : 50,
-                                opacity: 0
-                            },
-                            {
-                                x: 0,
-                                opacity: 1,
-                                duration: 0.8,
-                                ease: "power2.out"
-                            }
-                        );
-                    },
-                    once: true
-                });
-
-                this.scrollTriggerInstances.push(instance);
-            });
-        },
-
-        // Animation pour les outils
-        animateTools() {
-            if (!process.client) return;
-
-            const tools = document.querySelectorAll('.reveal-tool');
-            if (!tools.length) return;
-
-            const instance = ScrollTrigger.create({
-                trigger: tools[0],
-                start: "top 85%",
-                onEnter: () => {
-                    gsap.fromTo(tools,
+            once: true // Garantir que l'animation ne se joue qu'une seule fois
+        })
+
+        scrollTriggerInstances.push(instance)
+    })
+}
+
+const animateTexts = () => {
+    if (!process.client) return
+
+    const texts = document.querySelectorAll('.reveal-text')
+    if (!texts.length) return
+
+    texts.forEach(text => {
+        if (!text) return
+
+        const instance = ScrollTrigger.create({
+            trigger: text,
+            start: "top 95%", // Démarrer encore plus tôt sur mobile
+            onEnter: () => {
+                // N'animer que si ce n'est pas déjà animé
+                if (!text.classList.contains('animated')) {
+                    gsap.fromTo(text,
                         {
                             y: 30,
                             opacity: 0
@@ -834,72 +619,337 @@ export default {
                         {
                             y: 0,
                             opacity: 1,
-                            duration: 0.6,
-                            stagger: 0.1,
-                            ease: "power2.out"
-                        }
-                    );
-                },
-                once: true
-            });
-
-            this.scrollTriggerInstances.push(instance);
-        },
-
-        // Animation pour les CTA
-        animateCTAs() {
-            if (!process.client) return;
-
-            const ctas = document.querySelectorAll('.reveal-cta');
-            if (!ctas.length) return;
-
-            ctas.forEach(cta => {
-                if (!cta) return;
-
-                const instance = ScrollTrigger.create({
-                    trigger: cta,
-                    start: "top 90%",
-                    onEnter: () => {
-                        gsap.fromTo(cta,
-                            {
-                                y: 20,
-                                opacity: 0
-                            },
-                            {
-                                y: 0,
-                                opacity: 1,
-                                duration: 1,
-                                ease: "back.out(1.7)"
+                            duration: 0.8,
+                            ease: "power2.out",
+                            onComplete: () => {
+                                // Marquer comme animé
+                                text.classList.add('animated')
                             }
-                        );
-                    },
-                    once: true
-                });
-
-                this.scrollTriggerInstances.push(instance);
-
-                // Ajouter les interactions au survol
-                if (process.client) {
-                    cta.addEventListener('mouseenter', () => {
-                        gsap.to(cta, {
-                            scale: 1.05,
-                            duration: 0.3,
-                            ease: "power1.out"
-                        });
-                    });
-
-                    cta.addEventListener('mouseleave', () => {
-                        gsap.to(cta, {
-                            scale: 1,
-                            duration: 0.3,
-                            ease: "power1.out"
-                        });
-                    });
+                        }
+                    )
                 }
-            });
-        }
-    }
+            },
+            once: true
+        })
+
+        scrollTriggerInstances.push(instance)
+    })
 }
+
+const animateStaggeredTexts = () => {
+    if (!process.client) return
+
+    const textGroups = document.querySelectorAll('.space-y-6, .space-y-8, .space-y-10')
+    if (!textGroups.length) return
+
+    textGroups.forEach(group => {
+        if (!group) return
+
+        const staggeredTexts = group.querySelectorAll('.reveal-text-staggered')
+        if (!staggeredTexts.length) return
+
+        const instance = ScrollTrigger.create({
+            trigger: group,
+            start: "top 95%", // Commencer l'animation plus tôt
+            onEnter: () => {
+                // Vérifier si le groupe a déjà été animé
+                if (!group.classList.contains('animated')) {
+                    gsap.fromTo(staggeredTexts,
+                        {
+                            y: 20,
+                            opacity: 0
+                        },
+                        {
+                            y: 0,
+                            opacity: 1,
+                            duration: 0.6,
+                            stagger: 0.15,
+                            ease: "power2.out",
+                            onComplete: () => {
+                                // Marquer le groupe comme animé
+                                group.classList.add('animated')
+                            }
+                        }
+                    )
+                }
+            },
+            once: true
+        })
+
+        scrollTriggerInstances.push(instance)
+    })
+}
+
+const animateDividers = () => {
+    if (!process.client) return
+
+    const dividers = document.querySelectorAll('.reveal-divider')
+    if (!dividers.length) return
+
+    dividers.forEach(divider => {
+        if (!divider) return
+
+        const instance = ScrollTrigger.create({
+            trigger: divider,
+            start: "top 95%", // Commencer l'animation plus tôt
+            onEnter: () => {
+                // Vérifier si le divider a déjà été animé
+                if (!divider.classList.contains('animated')) {
+                    gsap.fromTo(divider,
+                        {
+                            scaleX: 0,
+                            transformOrigin: "left center"
+                        },
+                        {
+                            scaleX: 1,
+                            duration: 1,
+                            ease: "power3.inOut",
+                            onComplete: () => {
+                                // Marquer comme animé
+                                divider.classList.add('animated')
+                            }
+                        }
+                    )
+                }
+            },
+            once: true
+        })
+
+        scrollTriggerInstances.push(instance)
+    })
+}
+
+const animateElements = () => {
+    if (!process.client) return
+
+    const elements = document.querySelectorAll('.reveal-element')
+    if (!elements.length) return
+
+    elements.forEach(element => {
+        if (!element) return
+
+        const instance = ScrollTrigger.create({
+            trigger: element,
+            start: "top 95%", // Commencer l'animation plus tôt
+            onEnter: () => {
+                // Vérifier si l'élément a déjà été animé
+                if (!element.classList.contains('animated')) {
+                    gsap.fromTo(element,
+                        {
+                            scale: 0.9,
+                            opacity: 0
+                        },
+                        {
+                            scale: 1,
+                            opacity: 1,
+                            duration: 0.8,
+                            ease: "back.out(1.5)",
+                            onComplete: () => {
+                                // Marquer comme animé
+                                element.classList.add('animated')
+
+                                // Une fois l'élément révélé, initialiser Vanilla Tilt
+                                const tiltElement = element.querySelector('.tilt-box')
+                                if (tiltElement && window.VanillaTilt) {
+                                    window.VanillaTilt.init(tiltElement, {
+                                        max: 15,
+                                        speed: 400,
+                                        glare: true,
+                                        "max-glare": 0.5,
+                                        scale: 1.05
+                                    })
+                                }
+                            }
+                        }
+                    )
+                }
+            },
+            once: true
+        })
+
+        scrollTriggerInstances.push(instance)
+    })
+}
+
+const animateProjects = () => {
+    if (!process.client) return
+
+    const projects = document.querySelectorAll('[class^="reveal-project-"]')
+    if (!projects.length) return
+
+    projects.forEach((project, index) => {
+        if (!project) return
+
+        const instance = ScrollTrigger.create({
+            trigger: project,
+            start: "top 95%", // Commencer l'animation plus tôt
+            onEnter: () => {
+                // Vérifier si le projet a déjà été animé
+                if (!project.classList.contains('animated')) {
+                    gsap.fromTo(project,
+                        {
+                            x: index % 2 === 0 ? -50 : 50,
+                            opacity: 0
+                        },
+                        {
+                            x: 0,
+                            opacity: 1,
+                            duration: 0.8,
+                            ease: "power2.out",
+                            onComplete: () => {
+                                // Marquer comme animé
+                                project.classList.add('animated')
+                            }
+                        }
+                    )
+                }
+            },
+            once: true
+        })
+
+        scrollTriggerInstances.push(instance)
+    })
+}
+
+const animateTools = () => {
+    if (!process.client) return
+
+    const tools = document.querySelectorAll('.reveal-tool')
+    if (!tools.length) return
+
+    const instance = ScrollTrigger.create({
+        trigger: tools[0],
+        start: "top 95%", // Commencer l'animation plus tôt
+        onEnter: () => {
+            // Vérifier si déjà animé (utiliser un attribut data pour marquer le groupe)
+            if (!tools[0].parentElement.classList.contains('animated')) {
+                gsap.fromTo(tools,
+                    {
+                        y: 30,
+                        opacity: 0
+                    },
+                    {
+                        y: 0,
+                        opacity: 1,
+                        duration: 0.6,
+                        stagger: 0.1,
+                        ease: "power2.out",
+                        onComplete: () => {
+                            // Marquer le parent comme animé pour éviter les doublons
+                            tools[0].parentElement.classList.add('animated')
+                        }
+                    }
+                )
+            }
+        },
+        once: true
+    })
+
+    scrollTriggerInstances.push(instance)
+}
+
+const animateCTAs = () => {
+    if (!process.client) return
+
+    const ctas = document.querySelectorAll('.reveal-cta')
+    if (!ctas.length) return
+
+    ctas.forEach(cta => {
+        if (!cta) return
+
+        const instance = ScrollTrigger.create({
+            trigger: cta,
+            start: "top 95%", // Commencer l'animation plus tôt
+            onEnter: () => {
+                // Vérifier si le CTA a déjà été animé
+                if (!cta.classList.contains('animated')) {
+                    gsap.fromTo(cta,
+                        {
+                            y: 20,
+                            opacity: 0
+                        },
+                        {
+                            y: 0,
+                            opacity: 1,
+                            duration: 1,
+                            ease: "back.out(1.7)",
+                            onComplete: () => {
+                                // Marquer comme animé
+                                cta.classList.add('animated')
+                            }
+                        }
+                    )
+                }
+            },
+            once: true
+        })
+
+        scrollTriggerInstances.push(instance)
+
+        // Ajouter les interactions au survol
+        if (process.client) {
+            cta.addEventListener('mouseenter', () => {
+                gsap.to(cta, {
+                    scale: 1.05,
+                    duration: 0.3,
+                    ease: "power1.out"
+                })
+            })
+
+            cta.addEventListener('mouseleave', () => {
+                gsap.to(cta, {
+                    scale: 1,
+                    duration: 0.3,
+                    ease: "power1.out"
+                })
+            })
+        }
+    })
+}
+
+const setupMobileAnimations = () => {
+    if (!process.client || window.innerWidth >= 640) return
+
+    // Sur mobile, simplifier les animations
+    if (path.value) {
+        // Sur mobile, accélérer le dessin du chemin sans dépendre du scroll
+        gsap.to(path.value, {
+            strokeDashoffset: 0,
+            duration: 1.5,
+            ease: "power2.out",
+            delay: 0.5 // Bref délai pour laisser la page se charger
+        })
+    }
+
+    // Réduire le décalage pour les textes sur mobile
+    gsap.set('.reveal-text-staggered', { y: 10 }) // Moins de décalage initial
+    gsap.set('.reveal-text', { y: 15 }) // Moins de décalage initial
+
+    // Réduire l'ampleur des animations des projets sur mobile
+    document.querySelectorAll('[class^="reveal-project-"]').forEach((project, index) => {
+        gsap.set(project, { x: index % 2 === 0 ? -20 : 20, opacity: 0 }) // Moins de décalage
+    })
+}
+
+// Lifecycle hooks
+onMounted(() => {
+    if (process.client) {
+        gsap.registerPlugin(ScrollTrigger, TextPlugin)
+
+        nextTick(() => {
+            cleanupAnimations()
+            initializeAnimations()
+            initializeTilt()
+            window.addEventListener('resize', handleResize)
+        })
+    }
+})
+
+onBeforeUnmount(() => {
+    cleanupAnimations()
+    cleanupTilt()
+    window.removeEventListener('resize', handleResize)
+})
 </script>
 
 <style>

@@ -125,16 +125,6 @@ export default {
             mobileMenuHeight: 0
         }
     },
-    setup() {
-        // Injecter les variables et fonctions du thème depuis useTheme.js
-        const isDarkMode = inject('isDarkMode')
-        const toggleTheme = inject('toggleTheme')
-
-        return {
-            isDarkMode,
-            toggleTheme
-        }
-    },
     methods: {
         toggleMobileMenu() {
             this.mobileMenuOpen = !this.mobileMenuOpen
