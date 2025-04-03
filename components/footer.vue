@@ -6,10 +6,11 @@
                 <div class="secondary-color mb-6">Site map</div>
                 <nav>
                     <ul class="flex flex-col space-y-4">
-                        <NuxtLink to="/" class="hover-effect cursor-pointer w-fit">Home</NuxtLink>
-                        <NuxtLink to="/projects" class="hover-effect cursor-pointer w-fit">Projects</NuxtLink>
-                        <NuxtLink to="/about" class="hover-effect cursor-pointer w-fit">About</NuxtLink>
-                        <NuxtLink to="/contact" class="hover-effect cursor-pointer w-fit">Contact</NuxtLink>
+                        <NuxtLink to="/" class="link-color hover-effect cursor-pointer w-fit">Home</NuxtLink>
+                        <NuxtLink to="/projects" class="link-color hover-effect cursor-pointer w-fit">Projects
+                        </NuxtLink>
+                        <NuxtLink to="/about" class="link-color hover-effect cursor-pointer w-fit">About</NuxtLink>
+                        <NuxtLink to="/contact" class="link-color hover-effect cursor-pointer w-fit">Contact</NuxtLink>
                     </ul>
                 </nav>
             </div>
@@ -17,10 +18,19 @@
             <!-- Socials -->
             <div>
                 <div class="secondary-color mb-6">Socials</div>
-                <div class="space-y-4">
-                    <div class="hover-effect cursor-pointer w-fit">LinkedIn</div>
-                    <div class="hover-effect cursor-pointer w-fit">Instagram</div>
-                    <div class="hover-effect cursor-pointer w-fit">GitHub</div>
+                <div class="space-y-4 flex flex-col">
+                    <a href="https://www.linkedin.com/in/ethan-rieu-19431626b/" target="_blank"
+                        class="link-color hover-effect cursor-pointer w-fit">
+                        LinkedIn
+                    </a>
+                    <a href="https://www.instagram.com/ethan_rieu/" target="_blank"
+                        class="link-color hover-effect cursor-pointer w-fit">
+                        Instagram
+                    </a>
+                    <a href="https://github.com/EthanRieu" target="_blank"
+                        class="link-color hover-effect cursor-pointer w-fit">
+                        GitHub
+                    </a>
                 </div>
             </div>
         </div>
@@ -58,27 +68,22 @@
     </footer>
 </template>
 
-<script>
-export default {
-    methods: {
-        scrollToTop() {
-            window.scrollTo({
-                top: 0,
-                behavior: 'smooth'
-            });
-        }
-    }
+<script setup>
+const scrollToTop = () => {
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
 }
 </script>
 
 <style scoped>
 .hover-effect {
-    color: var(--current-link-color);
     transition: color 0.3s ease-in-out;
 }
 
 .hover-effect:hover {
-    color: var(--current-secondary-color);
+    color: var(--secondary-color);
     transition: color 0.3s ease-in-out;
 }
 </style>
