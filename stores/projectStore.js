@@ -11,7 +11,7 @@ export const useProjectStore = defineStore('projects', {
         services: 'Interactive Design <br /> Full Development',
         description: 'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quos quisquam omnis architecto neque minus soluta! Fuga laudantium perferendis, explicabo modi similique reprehenderit! Quae et reprehenderit quaerat facilis voluptate, dolorum pariatur!',
         titre: 'Mouvements & Harmonie',
-        imageUrl: '/assets/img/projects/MouvementEtHarmonie.jpg',
+        imageUrl: '/assets/img/projects/MouvementsEtHarmonie.png',
         featured: true
       },
       {
@@ -21,7 +21,7 @@ export const useProjectStore = defineStore('projects', {
         services: 'Interactive Design <br /> Full Development',
         description: 'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quos quisquam omnis architecto neque minus soluta! Fuga laudantium perferendis, explicabo modi similique reprehenderit! Quae et reprehenderit quaerat facilis voluptate, dolorum pariatur!',
         titre: 'So\'Deco',
-        imageUrl: '/assets/img/projects/project2.jpg',
+        imageUrl: '/assets/img/projects/MouvementsEtHarmonie.png',
         featured: true
       },
       {
@@ -31,7 +31,7 @@ export const useProjectStore = defineStore('projects', {
         services: 'UI/UX Design <br /> Backend Development',
         description: 'Une application web innovante pour la gestion de projets collaboratifs, permettant aux équipes de travailler efficacement ensemble, de partager des idées et de suivre l\'avancement des tâches en temps réel.',
         titre: 'CollabSphere',
-        imageUrl: '/assets/img/projects/project3.jpg',
+        imageUrl: '/assets/img/projects/MouvementsEtHarmonie.png',
         featured: false
       },
       {
@@ -41,7 +41,7 @@ export const useProjectStore = defineStore('projects', {
         services: 'E-commerce <br /> API Integration',
         description: 'Plateforme e-commerce complète avec gestion des stocks, paiements sécurisés et interface administrateur intuitive, offrant une expérience d\'achat fluide et responsive sur tous les appareils.',
         titre: 'E-Shop Premium',
-        imageUrl: '/assets/img/projects/project4.jpg',
+        imageUrl: '/assets/img/projects/MouvementsEtHarmonie.png',
         featured: false
       },
       {
@@ -51,7 +51,7 @@ export const useProjectStore = defineStore('projects', {
         services: 'Mobile App <br /> Cross-platform Development',
         description: 'Application mobile de fitness personnalisée qui adapte les programmes d\'entraînement en fonction des objectifs et des progrès de l\'utilisateur, avec suivi des statistiques et conseils nutritionnels.',
         titre: 'FitTrack Pro',
-        imageUrl: '/assets/img/projects/project5.jpg',
+        imageUrl: '/assets/img/projects/MouvementsEtHarmonie.png',
         featured: false
       }
     ],

@@ -1,297 +1,620 @@
 <template>
     <Header />
-    <div class="relative min-h-screen text-white">
+    <div class="relative min-h-screen text-white overflow-hidden">
         <!-- Title section -->
         <div class="px-8 sm:px-16 py-8">
             <h1 class="text-3xl sm:text-4xl font-bold text-teal-500 mb-4">Projects - 2024 / 2025</h1>
         </div>
 
-        <!-- Project Carousel -->
-        <div class="relative w-full overflow-hidden" ref="carouselContainer">
-            <div ref="carousel" class="flex" :style="{ transform: `translateX(${position}px)` }" @mousedown="startDrag"
-                @mousemove="onDrag" @mouseup="endDrag" @mouseleave="endDrag" @touchstart="startDrag" @touchmove="onDrag"
-                @touchend="endDrag">
-                <div v-for="(project, index) in displayProjects" :key="`${project.id}-${index}`"
-                    class="project-card w-[95%] sm:w-[45%] md:w-[30%] px-4 py-4">
-                    <div class="bg-[#22303d] rounded-xl overflow-hidden shadow-lg h-full">
-                        <div class="w-full h-48 sm:h-56 md:h-64">
-                            <img :src="project.imageUrl || '/assets/img/placeholder.jpg'" :alt="project.titre"
-                                class="w-full h-full object-cover" />
+        <!-- Portfolio Slider Section -->
+        <div class="portfolio-slider relative px-8 sm:px-16 h-[calc(100vh-240px)]" @wheel.prevent="handleWheelEvent">
+            <!-- Project Cards Stack -->
+            <div class="portfolio-slider-center h-full flex items-center justify-center relative">
+                <div v-for="(project, index) in allProjects" :key="project.id" :class="[
+                    'project-card',
+                    'absolute top-0 left-0 w-full h-full flex items-center justify-center',
+                    { 'active-project': currentProjectIndex === index }
+                ]" :style="getCardStyle(index)">
+                    <div class="w-full max-w-6xl mx-auto flex items-center justify-center">
+                        <!-- Services à gauche avec animation -->
+                        <div class="service-section w-1/4" :class="{ 'invisible': index !== currentProjectIndex }">
+                            <div :id="`service-${index}`"
+                                class="service-animation transform opacity-0 text-2xl sm:text-3xl font-bold text-black"
+                                v-html="project.services"></div>
                         </div>
-                        <div class="p-4">
-                            <h2 class="text-xl font-bold mb-2 text-teal-500 truncate">{{ project.titre }}</h2>
-                            <div class="flex flex-col mb-2">
-                                <div class="text-sm font-medium">{{ project.annee }}</div>
-                                <div class="text-sm font-medium" v-html="project.services"></div>
+
+                        <!-- Rectangle coloré au milieu avec effet tilt -->
+                        <div class="card-section w-2/4 px-8 flex items-center justify-center">
+                            <div class="project-image-container w-full" :ref="`tiltRef${index}`">
+                                <div :style="{
+                                    backgroundColor: getProjectColor(index),
+                                    width: '100%',
+                                    height: '400px',
+                                    borderRadius: '0.5rem'
+                                }" class="shadow-lg transform-style-3d"></div>
                             </div>
-                            <p class="text-gray-300 text-sm line-clamp-2">{{ project.description }}</p>
-                            <button @click="navigateToProject(project.id)"
-                                class="mt-2 px-3 py-1 text-sm bg-teal-700 text-white rounded-lg hover:bg-teal-600 transition-colors">
-                                Voir le projet
-                            </button>
+                        </div>
+
+                        <!-- Titre et année à droite seulement -->
+                        <div class="info-section w-1/4" :class="{ 'invisible': index !== currentProjectIndex }">
+                            <div :id="`info-${index}`" class="project-info transform opacity-0">
+                                <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold text-teal-500 mb-3">
+                                    {{ project.titre }}
+                                </h2>
+                                <div class="text-xl font-medium mb-2">{{ project.annee }}</div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
+
+            <!-- Portfolio Counter -->
+            <div
+                class="portfolio-counter absolute bottom-8 left-8 sm:left-16 text-xl sm:text-2xl font-medium text-teal-500 z-50">
+                {{ formatProjectNumber(currentProjectIndex + 1) }} / {{ formatProjectNumber(allProjects.length) }}
+            </div>
+
+            <!-- Portfolio Cursor (VOIR) -->
+            <div class="portfolio-cursor absolute bottom-8 right-8 sm:right-16 text-xl sm:text-2xl font-medium text-teal-500 opacity-0 z-50"
+                ref="showCursor">
+                VOIR
+            </div>
+        </div>
+
+        <!-- Footer visible -->
+        <div class="mt-4" id="footer-section">
+            <Footer />
         </div>
     </div>
-    <Footer />
 </template>
 
 <script>
-import { gsap } from 'gsap'
+import { useHead } from '#app'
+import { onMounted, onBeforeUnmount, ref, computed, nextTick } from 'vue'
 import Header from '~/components/header.vue'
 import Footer from '~/components/footer.vue'
 import { useProjectStore } from '~/stores/projectStore'
+import { gsap } from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
 export default {
     components: {
         Header,
         Footer
     },
-    data() {
-        return {
-            position: 0,
-            isDragging: false,
-            startX: 0,
-            currentX: 0,
-            lastX: 0,
-            startPosition: 0,
-            totalWidth: 0,
-            cardWidth: 0,
-            containerWidth: 0,
-            velocityX: 0,
-            lastTimestamp: 0,
-            timestamps: [],
-            positions: [],
-            maxVelocitySamples: 5
-        }
-    },
-    computed: {
-        allProjects() {
-            const projectStore = useProjectStore()
-            return projectStore.getAllProjects
-        },
-        displayProjects() {
-            if (!this.allProjects.length) return []
-
-            // Dupliquer les projets pour l'effet infini
-            return [
-                ...this.allProjects,  // Tous les projets originaux
-                ...this.allProjects.slice(0, 4)  // Répéter plusieurs projets pour assurer l'effet de boucle
+    setup() {
+        // Ajouter vanilla-tilt et GSAP
+        useHead({
+            script: [
+                { src: 'https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.7.2/vanilla-tilt.min.js', body: true }
             ]
-        }
-    },
-    mounted() {
-        this.$nextTick(() => {
-            this.calculateDimensions()
-            this.setInitialPosition()
-            window.addEventListener('resize', this.handleResize)
         })
-    },
-    beforeDestroy() {
-        window.removeEventListener('resize', this.handleResize)
-    },
-    methods: {
-        calculateDimensions() {
-            if (!this.$refs.carouselContainer || !this.$refs.carousel) return
 
-            this.containerWidth = this.$refs.carouselContainer.offsetWidth
+        const tiltInstances = ref([])
+        const scrollTriggerInstances = ref([])
+        const showCursor = ref(null)
+        const currentProjectIndex = ref(0)
+        const isAnimating = ref(false)
+        const scrollDirection = ref('down') // 'up' ou 'down'
+        let wheelTimeout = null
+        let lastScrollTime = 0
+        const scrollCooldown = 1200 // Temps minimum entre chaque défilement en ms
+        const isLastProjectReached = ref(false) // Nouvelle variable pour suivre si on a atteint le dernier projet
 
-            // Obtenir la largeur du premier élément de carte
-            if (this.$refs.carousel.firstElementChild) {
-                this.cardWidth = this.$refs.carousel.firstElementChild.offsetWidth
+        // Formatage du numéro de projet avec deux chiffres
+        const formatProjectNumber = (num) => {
+            return num.toString().padStart(2, '0')
+        }
+
+        // Obtenir une couleur pour chaque projet
+        const getProjectColor = (index) => {
+            const colors = [
+                '#1abc9c', // Turquoise (Mouvements & Harmonie)
+                '#3498db', // Blue (So'Deco)
+                '#9b59b6', // Purple (CollabSphere)
+                '#f1c40f', // Yellow (E-Shop Premium)
+                '#e74c3c'  // Red (FitTrack Pro)
+            ];
+            return colors[index % colors.length];
+        }
+
+        // Style pour les cartes en fonction de leur position dans la pile
+        const getCardStyle = (index) => {
+            const currentIdx = currentProjectIndex.value
+
+            if (index < currentIdx) {
+                // Projets déjà vus - cachés en haut de l'écran
+                return {
+                    opacity: 0,
+                    visibility: 'hidden',
+                    zIndex: -10,
+                    transform: `translate(0, -150vh) scale(0.7)`
+                }
+            } else if (index === currentIdx) {
+                // Projet actuel
+                return {
+                    opacity: 1,
+                    visibility: 'visible',
+                    zIndex: 10,
+                    transform: `translate(0, 0) scale(1)`
+                }
+            } else if (index === currentIdx + 1) {
+                // Projet suivant
+                return {
+                    opacity: 0.85,
+                    visibility: 'visible',
+                    zIndex: 5,
+                    transform: `translate(0, 40px) scale(0.95)`
+                }
+            } else if (index === currentIdx + 2) {
+                // Projet après le suivant (dernier visible)
+                return {
+                    opacity: 0.7,
+                    visibility: 'visible',
+                    zIndex: 4,
+                    transform: `translate(0, 80px) scale(0.9)`
+                }
             } else {
-                // Fallback aux valeurs estimées
-                this.cardWidth = window.innerWidth < 768 ? this.containerWidth * 0.95 : this.containerWidth * 0.3
+                // Tous les autres projets - complètement cachés
+                return {
+                    opacity: 0,
+                    visibility: 'hidden',
+                    zIndex: -1,
+                    transform: `translate(0, 150vh) scale(0.7)`
+                }
             }
+        }
 
-            // Calculer la largeur totale des projets originaux
-            this.totalWidth = this.cardWidth * this.allProjects.length
-        },
+        // Animation des éléments du projet actif selon la direction
+        const animateActiveProject = () => {
+            const activeProject = document.querySelector('.active-project')
 
-        setInitialPosition() {
-            this.position = 0
-        },
+            if (activeProject) {
+                const serviceElement = activeProject.querySelector('.service-animation')
+                const infoElement = activeProject.querySelector('.project-info')
 
-        handleResize() {
-            const oldTotalWidth = this.totalWidth
+                if (scrollDirection.value === 'down') {
+                    // Animation vers le bas (entrée depuis le haut)
+                    if (serviceElement) {
+                        gsap.fromTo(
+                            serviceElement,
+                            { y: -50, opacity: 0 },
+                            { y: 0, opacity: 1, duration: 0.5, ease: "power2.out" }
+                        )
+                    }
 
-            this.calculateDimensions()
-
-            // Ajuster la position proportionnellement
-            if (oldTotalWidth > 0) {
-                this.position = (this.position / oldTotalWidth) * this.totalWidth
-            }
-
-            this.checkBounds(false)
-        },
-
-        checkBounds(animate = true) {
-            // Vérifier si nous avons atteint les limites pour l'effet infini
-
-            // Si nous sommes allés trop loin vers la droite (début)
-            if (this.position > 0) {
-                const newPosition = this.position - this.totalWidth
-
-                if (animate) {
-                    // Transition instantanée
-                    if (this.$refs.carousel) {
-                        this.$refs.carousel.style.transition = 'none'
-                        this.position = newPosition
-                        // Forcer un reflow
-                        // eslint-disable-next-line no-unused-expressions
-                        this.$refs.carousel.offsetHeight
+                    if (infoElement) {
+                        gsap.fromTo(
+                            infoElement,
+                            { y: -50, opacity: 0 },
+                            { y: 0, opacity: 1, duration: 0.5, ease: "power2.out", delay: 0.1 }
+                        )
                     }
                 } else {
-                    this.position = newPosition
+                    // Animation vers le haut (entrée depuis le bas)
+                    if (serviceElement) {
+                        gsap.fromTo(
+                            serviceElement,
+                            { y: 50, opacity: 0 },
+                            { y: 0, opacity: 1, duration: 0.5, ease: "power2.out" }
+                        )
+                    }
+
+                    if (infoElement) {
+                        gsap.fromTo(
+                            infoElement,
+                            { y: 50, opacity: 0 },
+                            { y: 0, opacity: 1, duration: 0.5, ease: "power2.out", delay: 0.1 }
+                        )
+                    }
                 }
             }
+        }
 
-            // Si nous sommes allés trop loin vers la gauche (fin)
-            const minPosition = -(this.totalWidth)
-            if (this.position < minPosition) {
-                const newPosition = this.position + this.totalWidth
+        // Animation de sortie pour le projet qui disparaît
+        const animateProjectExit = (index) => {
+            const projects = document.querySelectorAll('.project-card')
+            const oldProject = projects[index]
 
-                if (animate) {
-                    // Transition instantanée
-                    if (this.$refs.carousel) {
-                        this.$refs.carousel.style.transition = 'none'
-                        this.position = newPosition
-                        // Forcer un reflow
-                        // eslint-disable-next-line no-unused-expressions
-                        this.$refs.carousel.offsetHeight
+            if (oldProject) {
+                const serviceElement = oldProject.querySelector('.service-animation')
+                const infoElement = oldProject.querySelector('.project-info')
+
+                if (scrollDirection.value === 'down') {
+                    // Sortie vers le haut (quand on descend)
+                    if (serviceElement) {
+                        gsap.to(serviceElement, { y: -80, opacity: 0, duration: 0.4, ease: "power2.in" })
+                    }
+
+                    if (infoElement) {
+                        gsap.to(infoElement, { y: -80, opacity: 0, duration: 0.4, ease: "power2.in" })
                     }
                 } else {
-                    this.position = newPosition
+                    // Sortie vers le bas (quand on remonte)
+                    if (serviceElement) {
+                        gsap.to(serviceElement, { y: 80, opacity: 0, duration: 0.4, ease: "power2.in" })
+                    }
+
+                    if (infoElement) {
+                        gsap.to(infoElement, { y: 80, opacity: 0, duration: 0.4, ease: "power2.in" })
+                    }
                 }
             }
-        },
+        }
 
-        // Gestion du glissement avec inertie
-        startDrag(e) {
-            if (this.isDragging) return
+        // Animation du premier projet au chargement de la page
+        const animateFirstProject = () => {
+            // Attendre que le DOM soit complètement mis à jour
+            nextTick(() => {
+                const activeProject = document.querySelector('.active-project')
+                if (!activeProject) return
 
-            // Arrêter toute animation en cours
-            gsap.killTweensOf(this)
+                const serviceElement = activeProject.querySelector('.service-animation')
+                const infoElement = activeProject.querySelector('.project-info')
 
-            this.isDragging = true
-            this.startX = this.getPositionX(e)
-            this.lastX = this.startX
-            this.currentX = this.startX
-            this.startPosition = this.position
-
-            // Réinitialiser les données de vélocité
-            this.velocityX = 0
-            this.timestamps = []
-            this.positions = []
-            this.lastTimestamp = Date.now()
-
-            // Désactiver les transitions pour un mouvement fluide
-            if (this.$refs.carousel) {
-                this.$refs.carousel.style.transition = 'none'
-            }
-        },
-
-        onDrag(e) {
-            if (!this.isDragging) return
-
-            // Empêcher le défilement de la page
-            e.preventDefault()
-
-            const currentPosition = this.getPositionX(e)
-            const diff = currentPosition - this.startX
-
-            // Mettre à jour la position
-            this.position = this.startPosition + diff
-
-            // Enregistrer la position et l'horodatage pour calculer la vélocité
-            const timestamp = Date.now()
-            const elapsed = timestamp - this.lastTimestamp
-
-            if (elapsed > 20) { // Limiter la fréquence d'échantillonnage
-                this.timestamps.push(timestamp)
-                this.positions.push(currentPosition)
-
-                // Garder seulement les N derniers échantillons
-                if (this.timestamps.length > this.maxVelocitySamples) {
-                    this.timestamps.shift()
-                    this.positions.shift()
+                // Afficher immédiatement les conteneurs pour s'assurer qu'ils sont visibles
+                if (activeProject.querySelector('.service-section')) {
+                    activeProject.querySelector('.service-section').classList.remove('invisible')
                 }
 
-                this.lastTimestamp = timestamp
-                this.lastX = this.currentX
-            }
-
-            this.currentX = currentPosition
-
-            // Vérifier les limites pendant le glissement
-            this.checkBounds(false)
-        },
-
-        endDrag() {
-            if (!this.isDragging) return
-
-            this.isDragging = false
-
-            // Calculer la vélocité (pixels par milliseconde)
-            let velocity = 0
-
-            if (this.timestamps.length > 1) {
-                const recentTime = this.timestamps[this.timestamps.length - 1]
-                const oldestTime = this.timestamps[0]
-                const timeElapsed = recentTime - oldestTime
-
-                const recentPosition = this.positions[this.positions.length - 1]
-                const oldestPosition = this.positions[0]
-                const positionDelta = recentPosition - oldestPosition
-
-                if (timeElapsed > 0) {
-                    velocity = positionDelta / timeElapsed
+                if (activeProject.querySelector('.info-section')) {
+                    activeProject.querySelector('.info-section').classList.remove('invisible')
                 }
-            }
 
-            // Amplifier la vélocité pour un meilleur effet
-            velocity = velocity * 120
+                // Animer les éléments depuis le haut (comme si la carte descendait)
+                if (serviceElement) {
+                    gsap.fromTo(
+                        serviceElement,
+                        { y: -80, opacity: 0 },
+                        { y: 0, opacity: 1, duration: 0.8, ease: "power2.out", delay: 0.2 }
+                    )
+                }
 
-            // Limiter la vélocité maximum
-            const maxVelocity = 15
-            velocity = Math.max(Math.min(velocity, maxVelocity), -maxVelocity)
+                if (infoElement) {
+                    gsap.fromTo(
+                        infoElement,
+                        { y: -80, opacity: 0 },
+                        { y: 0, opacity: 1, duration: 0.8, ease: "power2.out", delay: 0.4 }
+                    )
+                }
 
-            // Si la vélocité est suffisante, appliquer l'effet d'inertie
-            if (Math.abs(velocity) > 0.1) {
-                // Calculer la distance que le carrousel va encore parcourir
-                const momentum = velocity * 15
-                const targetPosition = this.position + momentum
+                // Afficher le curseur VOIR
+                if (showCursor.value && allProjects.value.length > 1) {
+                    gsap.to(showCursor.value, { opacity: 1, duration: 0.5, delay: 0.6 })
+                }
+            })
+        }
 
-                // Animer avec un effet d'amortissement
-                gsap.to(this, {
-                    position: targetPosition,
-                    duration: 0.8,
-                    ease: "power2.out",
-                    onUpdate: () => this.checkBounds(true),
-                    onComplete: () => {
-                        if (this.$refs.carousel) {
-                            this.$refs.carousel.style.transition = 'none'
+        // Gestion de la navigation entre projets avec cooldown
+        const goToNextProject = () => {
+            const now = Date.now()
+            if (isAnimating.value || currentProjectIndex.value >= allProjects.value.length - 1 || now - lastScrollTime < scrollCooldown) return
+
+            lastScrollTime = now
+            scrollDirection.value = 'down'
+            isAnimating.value = true
+
+            // Optimisation: changer immédiatement l'index et appliquer la transition CSS
+            const oldIndex = currentProjectIndex.value
+
+            // Animation de sortie du projet actuel
+            animateProjectExit(oldIndex)
+
+            // Animation du curseur VOIR
+            gsap.to(showCursor.value, { opacity: 0, duration: 0.3, ease: "power1.in" })
+
+            // Transition entre projets
+            setTimeout(() => {
+                currentProjectIndex.value++
+
+                // Si on atteint le dernier projet
+                if (currentProjectIndex.value === allProjects.value.length - 1) {
+                    isLastProjectReached.value = true
+                    // Activer le défilement normal vers le footer
+                    enableNormalScrolling();
+                }
+
+                // Animer le nouveau projet
+                requestAnimationFrame(() => {
+                    animateActiveProject()
+
+                    // Réinitialiser l'état après l'animation
+                    setTimeout(() => {
+                        isAnimating.value = false
+
+                        // Montrer à nouveau le curseur si ce n'est pas le dernier projet
+                        if (currentProjectIndex.value < allProjects.value.length - 1) {
+                            gsap.to(showCursor.value, { opacity: 1, duration: 0.3, ease: "power1.out" })
                         }
+                    }, 400)
+                })
+            }, 300)
+        }
+
+        const goToPrevProject = () => {
+            const now = Date.now()
+            if (isAnimating.value || currentProjectIndex.value <= 0 || now - lastScrollTime < scrollCooldown) return
+
+            lastScrollTime = now
+            scrollDirection.value = 'up'
+            isAnimating.value = true
+
+            // Optimisation: changer immédiatement l'index et appliquer la transition CSS
+            const oldIndex = currentProjectIndex.value
+
+            // Animation de sortie du projet actuel
+            animateProjectExit(oldIndex)
+
+            // Animation du curseur VOIR
+            gsap.to(showCursor.value, { opacity: 0, duration: 0.3, ease: "power1.in" })
+
+            // Transition entre projets
+            setTimeout(() => {
+                currentProjectIndex.value--
+
+                // Si on n'est plus au dernier projet, désactiver le défilement normal
+                if (isLastProjectReached.value && currentProjectIndex.value < allProjects.value.length - 1) {
+                    isLastProjectReached.value = false
+                    disableNormalScrolling();
+                }
+
+                // Animer le nouveau projet
+                requestAnimationFrame(() => {
+                    animateActiveProject()
+
+                    // Réinitialiser l'état après l'animation
+                    setTimeout(() => {
+                        isAnimating.value = false
+
+                        // Toujours montrer le curseur quand on remonte
+                        gsap.to(showCursor.value, { opacity: 1, duration: 0.3, ease: "power1.out" })
+                    }, 300)
+                })
+            }, 300)
+        }
+
+        // Gérer l'événement de scroll
+        const handleWheelEvent = (e) => {
+            // Si on est au dernier projet et qu'on scrolle vers le bas, permettre le scroll normal
+            if (isLastProjectReached.value && e.deltaY > 0) {
+                // Laisser l'événement se propager pour un scroll normal
+                return;
+            }
+
+            e.preventDefault(); // Empêcher le scroll par défaut pour les autres cas
+
+            // Toujours traiter un seul événement de scroll à la fois, quelle que soit l'amplitude
+            const now = Date.now()
+            if (now - lastScrollTime < scrollCooldown || isAnimating.value) return
+
+            if (e.deltaY > 0) {
+                // Un seul projet à la fois, quelle que soit l'amplitude
+                goToNextProject()
+            } else if (e.deltaY < 0) {
+                // Un seul projet à la fois, quelle que soit l'amplitude
+                goToPrevProject()
+            }
+        }
+
+        // Nouvelle fonction pour activer le défilement normal
+        const enableNormalScrolling = () => {
+            if (process.client) {
+                // Supprimer l'écouteur d'événement qui bloque le défilement
+                window.removeEventListener('wheel', preventDefaultScroll);
+
+                // Animer la flèche ou un autre indicateur pour montrer qu'on peut défiler vers le footer
+                gsap.to(showCursor.value, {
+                    opacity: 1,
+                    duration: 0.3,
+                    ease: "power1.out",
+                    onComplete: () => {
+                        if (showCursor.value) {
+                            showCursor.value.textContent = "FOOTER ↓";
+                        }
+                    }
+                });
+            }
+        }
+
+        // Nouvelle fonction pour désactiver le défilement normal
+        const disableNormalScrolling = () => {
+            if (process.client) {
+                // Remettre l'écouteur d'événement qui bloque le défilement
+                window.addEventListener('wheel', preventDefaultScroll, { passive: false });
+
+                // Remettre le texte VOIR
+                if (showCursor.value) {
+                    showCursor.value.textContent = "VOIR";
+                }
+            }
+        }
+
+        // Gérer les touches clavier pour la navigation
+        const handleKeyDown = (e) => {
+            if (e.key === 'ArrowDown' || e.key === 'PageDown') {
+                // Si on est au dernier projet, permettre le scroll normal
+                if (isLastProjectReached.value) {
+                    return;
+                }
+                e.preventDefault();
+                goToNextProject()
+            } else if (e.key === 'ArrowUp' || e.key === 'PageUp') {
+                e.preventDefault();
+                goToPrevProject()
+            }
+        }
+
+        // Cleanup function for tilt instances
+        const cleanupTilt = () => {
+            if (tiltInstances.value && tiltInstances.value.length) {
+                tiltInstances.value.forEach(instance => {
+                    if (instance && instance.destroy) {
+                        instance.destroy()
+                    }
+                })
+                tiltInstances.value = []
+            }
+        }
+
+        // Cleanup function for ScrollTrigger instances
+        const cleanupScrollTrigger = () => {
+            if (scrollTriggerInstances.value && scrollTriggerInstances.value.length) {
+                scrollTriggerInstances.value.forEach(instance => {
+                    if (instance && instance.kill) {
+                        instance.kill()
+                    }
+                })
+                scrollTriggerInstances.value = []
+            }
+        }
+
+        // Initialize tilt effect
+        const initializeTilt = (refs) => {
+            if (process.client && window.VanillaTilt) {
+                // Clean previous instances
+                cleanupTilt()
+
+                // Loop through refs and apply tilt
+                refs.forEach(ref => {
+                    if (ref && ref.children[0]) {
+                        const instance = window.VanillaTilt.init(ref.children[0], {
+                            max: 15,
+                            speed: 400,
+                            glare: true,
+                            "max-glare": 0.4,
+                            scale: 1.05,
+                            perspective: 1000,
+                            transition: true,
+                            gyroscope: true,
+                            gyroscopeMinAngleX: -45,
+                            gyroscopeMaxAngleX: 45,
+                            gyroscopeMinAngleY: -45,
+                            gyroscopeMaxAngleY: 45
+                        })
+                        tiltInstances.value.push(instance)
                     }
                 })
             } else {
-                // Pas assez de vélocité, juste vérifier les limites
-                this.checkBounds(true)
-
+                // Si VanillaTilt n'est pas encore chargé, réessayer après un court délai
                 setTimeout(() => {
-                    if (this.$refs.carousel) {
-                        this.$refs.carousel.style.transition = 'none'
-                    }
-                }, 50)
+                    initializeTilt(refs)
+                }, 500)
             }
-        },
+        }
 
-        getPositionX(e) {
-            return e.type.includes('mouse') ? e.clientX : e.touches[0].clientX
-        },
+        // Bloquer le scroll de la page
+        const preventDefaultScroll = (e) => {
+            e.preventDefault();
+        }
 
+        onMounted(() => {
+            if (process.client) {
+                // Enregistrer le plugin ScrollTrigger
+                gsap.registerPlugin(ScrollTrigger)
+
+                // Bloquer le scroll par défaut sur la page
+                window.addEventListener('wheel', preventDefaultScroll, { passive: false });
+
+                // Mettre en place les écouteurs d'événements pour les touches
+                window.addEventListener('keydown', handleKeyDown);
+
+                // Pour le tactile (swipe)
+                let touchStartY = 0
+
+                const handleTouchStart = (e) => {
+                    touchStartY = e.touches[0].clientY
+                }
+
+                const handleTouchEnd = (e) => {
+                    const touchEndY = e.changedTouches[0].clientY
+                    const diff = touchStartY - touchEndY
+
+                    // Si on est au dernier projet et qu'on swipe vers le bas, permettre le défilement normal
+                    if (isLastProjectReached.value && diff > 50) {
+                        return;
+                    }
+
+                    // Un seul projet à la fois, quel que soit l'ampleur du swipe
+                    if (Math.abs(diff) > 50) { // Seuil minimum pour considérer un swipe
+                        if (diff > 0) {
+                            goToNextProject() // Swipe vers le haut
+                        } else {
+                            goToPrevProject() // Swipe vers le bas
+                        }
+                    }
+                }
+
+                window.addEventListener('touchstart', handleTouchStart);
+                window.addEventListener('touchend', handleTouchEnd);
+
+                // Initialiser les animations après un court délai pour s'assurer que le DOM est prêt
+                setTimeout(() => {
+                    const projectStore = useProjectStore()
+                    const projects = projectStore.getAllProjects
+
+                    // S'assurer que le premier projet est bien défini comme actif
+                    currentProjectIndex.value = 0
+
+                    // Collecter toutes les refs des images pour l'effet tilt
+                    const tiltRefs = []
+                    for (let i = 0; i < projects.length; i++) {
+                        const refName = `tiltRef${i}`
+                        if (this.$refs[refName]) {
+                            tiltRefs.push(this.$refs[refName])
+                        }
+                    }
+
+                    // Initialiser l'effet tilt
+                    initializeTilt(tiltRefs)
+
+                    // Animer le premier projet après avoir donné du temps au DOM de se stabiliser
+                    setTimeout(() => {
+                        animateFirstProject()
+                    }, 200)
+
+                }, 300)
+
+                onBeforeUnmount(() => {
+                    // Nettoyer les écouteurs d'événements
+                    window.removeEventListener('wheel', preventDefaultScroll);
+                    window.removeEventListener('keydown', handleKeyDown);
+                    window.removeEventListener('touchstart', handleTouchStart);
+                    window.removeEventListener('touchend', handleTouchEnd);
+
+                    cleanupTilt()
+                    cleanupScrollTrigger()
+
+                    if (wheelTimeout) {
+                        clearTimeout(wheelTimeout)
+                    }
+                })
+            }
+        })
+
+        // Computed pour les projets
+        const allProjects = computed(() => {
+            const projectStore = useProjectStore()
+            return projectStore.getAllProjects
+        })
+
+        return {
+            currentProjectIndex,
+            allProjects,
+            cleanupTilt,
+            initializeTilt,
+            cleanupScrollTrigger,
+            getCardStyle,
+            getProjectColor,
+            formatProjectNumber,
+            showCursor,
+            handleWheelEvent,
+            scrollDirection,
+            isLastProjectReached,
+            enableNormalScrolling,
+            disableNormalScrolling
+        }
+    },
+    methods: {
         navigateToProject(projectId) {
             const projectStore = useProjectStore()
             projectStore.selectProject(projectId)
@@ -302,18 +625,47 @@ export default {
 </script>
 
 <style scoped>
+.portfolio-slider {
+    position: relative;
+    overflow: hidden;
+}
+
 .project-card {
-    user-select: none;
-    -webkit-user-drag: none;
-    cursor: grab;
-    flex-shrink: 0;
+    will-change: transform, opacity;
+    transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1),
+        opacity 0.6s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
-.project-card:active {
-    cursor: grabbing;
+.project-image-container {
+    overflow: hidden;
+    border-radius: 0.5rem;
+    perspective: 1000px;
 }
 
-button {
-    -webkit-tap-highlight-color: transparent;
+.transform-style-3d {
+    transform-style: preserve-3d;
+}
+
+/* Animation initiale cachée */
+.service-animation,
+.project-info {
+    will-change: transform, opacity;
+}
+
+/* Effet de glare pour vanilla-tilt */
+.js-tilt-glare {
+    border-radius: 8px;
+}
+
+/* Animation du curseur VOIR */
+.portfolio-cursor {
+    cursor: pointer;
+    transition: opacity 0.3s ease;
+}
+
+/* Utilisation de classes au lieu de hidden pour garder la structure mais masquer visuellement */
+.invisible {
+    visibility: hidden;
+    opacity: 0;
 }
 </style>
