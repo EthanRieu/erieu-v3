@@ -67,3 +67,14 @@ Le tracé signature de la home extrudé en tube Three.js (dégradé `#2F4A4F →
 ## Déploiement (Vercel / Netlify)
 
 `npm run build` avec le preset Nitro détecté automatiquement. Définir les variables d'environnement ci-dessus dans le dashboard de l'hébergeur. La route `/api/contact` nécessite un runtime serveur : le site ne doit pas être déployé en statique (`nuxt generate`) sans remplacer le formulaire.
+
+## Tests et mises à jour automatiques
+
+```bash
+npm run build && npm run test:e2e   # smoke tests Playwright sur le build de production
+```
+
+- `tests/e2e/smoke.spec.ts` : chaque page (EN/FR) répond 200 sans erreur JS ni violation CSP et sans clé i18n brute, les scènes Three.js (home, About) se chargent, et le formulaire de contact valide puis affiche le succès (API simulée, aucun mail envoyé).
+- `.github/workflows/ci.yml` : build + smoke tests sur chaque PR et chaque push sur `master`.
+- `renovate.json` : chaque lundi matin, Renovate ouvre une PR « MàJ mineures » (patch + minor), une PR `three` (0.x, donc à risque) et une PR par version majeure. Merge manuel pour l'instant ; si la CI échoue, la PR reste ouverte et GitHub notifie. Le tableau de bord Renovate (issue « Dependency Dashboard ») liste tout ce qui est en attente.
+- Pour passer en merge automatique des patch/minor : `"automerge": true` dans la règle « MàJ mineures » de `renovate.json` (Renovate ne merge que si la CI est verte ; Vercel redéploie ensuite `master`).

@@ -7,7 +7,8 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
+    "postinstall": "nuxt prepare",
+    "test:e2e": "playwright test"
   },
   "dependencies": {
     "@nuxt/fonts": "^0.14.0",
@@ -22,5 +23,8 @@
     "three": "^0.185.1",
     "vue": "^3.5.13",
     "vue-router": "^4.5.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.63.0"
   }
 }
