@@ -85,7 +85,7 @@
 </template>
 
 <script>
-import { useHead } from '#app'
+import { useHead } from '#imports'
 import { onMounted, onBeforeUnmount, ref, computed, nextTick } from 'vue'
 import Header from '~/components/header.vue'
 import Footer from '~/components/footer.vue'
@@ -430,7 +430,7 @@ export default {
 
         // Nouvelle fonction pour activer le défilement normal
         const enableNormalScrolling = () => {
-            if (process.client) {
+            if (import.meta.client) {
                 // Supprimer l'écouteur d'événement qui bloque le défilement
                 window.removeEventListener('wheel', preventDefaultScroll);
 
@@ -445,7 +445,7 @@ export default {
 
         // Nouvelle fonction pour désactiver le défilement normal
         const disableNormalScrolling = () => {
-            if (process.client) {
+            if (import.meta.client) {
                 // Remettre l'écouteur d'événement qui bloque le défilement
                 window.addEventListener('wheel', preventDefaultScroll, { passive: false });
             }
@@ -496,7 +496,7 @@ export default {
 
         // Initialize tilt effect
         const initializeTilt = (refs) => {
-            if (process.client && window.VanillaTilt) {
+            if (import.meta.client && window.VanillaTilt) {
                 // Clean previous instances
                 cleanupTilt()
 
@@ -543,7 +543,7 @@ export default {
         }
 
         onMounted(() => {
-            if (process.client) {
+            if (import.meta.client) {
                 // Enregistrer le plugin ScrollTrigger
                 gsap.registerPlugin(ScrollTrigger)
 

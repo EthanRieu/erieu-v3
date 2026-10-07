@@ -178,7 +178,7 @@ const navigateToProject = (projectId) => {
 }
 
 const setupPathAnimation = () => {
-    if (!process.client || !path.value) return
+    if (!import.meta.client || !path.value) return
 
     const pathElement = path.value
     const pathLength = pathElement.getTotalLength()
@@ -235,7 +235,7 @@ const handleResize = () => {
 
 // Lifecycle hooks
 onMounted(() => {
-    if (process.client) {
+    if (import.meta.client) {
         gsap.registerPlugin(ScrollTrigger)
 
         nextTick(() => {

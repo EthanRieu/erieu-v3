@@ -10,6 +10,8 @@ export default defineNuxtConfig({
   css: ['~/assets/css/main.css'],
   vite: {
     plugins: [tailwindcss()],
+    // Dev uniquement : le pré-scan Vite échoue sur l'import virtuel `#components` du runtime i18n v10
+    optimizeDeps: { exclude: ['@nuxtjs/i18n'] },
   },
 
   modules: ['@pinia/nuxt', '@nuxtjs/i18n', '@nuxt/fonts', 'nuxt-security'],
@@ -43,17 +45,12 @@ export default defineNuxtConfig({
     ],
     defaultLocale: 'en',
     strategy: 'prefix_except_default',
-    lazy: true,
     baseUrl: siteUrl,
     detectBrowserLanguage: {
       useCookie: true,
       cookieKey: 'i18n_redirected',
       redirectOn: 'root',
       fallbackLocale: 'en',
-    },
-    bundle: {
-      // Option dépréciée en v10 et source de bugs : désactivée explicitement (supprime aussi l'avertissement au build)
-      optimizeTranslationDirective: false,
     },
   },
 

@@ -164,7 +164,7 @@ export function useRevealAnimations(options = {}) {
     }
 
     const init = () => {
-        if (!process.client) return
+        if (!import.meta.client) return
 
         gsap.registerPlugin(ScrollTrigger)
         matchMedia = gsap.matchMedia()
