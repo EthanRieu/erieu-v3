@@ -1,13 +1,15 @@
 <template>
     <Header />
-    <div class="relative min-h-screen text-white overflow-hidden">
+    <div class="relative min-h-screen overflow-hidden">
         <!-- Title section -->
-        <div class="px-8 sm:px-16 py-8">
-            <h1 class="text-3xl sm:text-4xl font-bold text-teal-500 mb-4">Projects - 2024 / 2025</h1>
+        <!-- Titre au niveau "section" (et non display) : le slider plein écran doit rester visible sans défiler -->
+        <div class="site-container pt-8 sm:pt-12 pb-4 flex flex-wrap items-baseline justify-between gap-x-8 gap-y-2">
+            <h1 class="secondary-color text-section">{{ $t('projectsPage.title') }}</h1>
+            <p class="text-subtitle primary-color">{{ $t('projectsPage.years') }}</p>
         </div>
 
         <!-- Portfolio Slider Section -->
-        <div class="portfolio-slider relative px-8 sm:px-16 h-[calc(100vh-240px)]" @wheel.prevent="handleWheelEvent">
+        <div class="portfolio-slider relative site-container h-[calc(100svh-290px)] min-h-[460px]" @wheel="handleWheelEvent">
             <!-- Project Cards Stack -->
             <div class="portfolio-slider-center h-full flex items-center justify-center relative">
                 <div v-for="(project, index) in allProjects" :key="project.id" :class="[
@@ -15,33 +17,46 @@
                     'absolute top-0 left-0 w-full h-full flex items-center justify-center',
                     { 'active-project': currentProjectIndex === index }
                 ]" :style="getCardStyle(index)">
-                    <div class="w-full max-w-6xl mx-auto flex items-center justify-center">
+                    <!-- Mobile : capture pleine largeur puis infos dessous ; dès md : services | capture | infos -->
+                    <div class="w-full max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-center gap-6 md:gap-0">
                         <!-- Services à gauche avec animation -->
-                        <div class="service-section w-1/4" :class="{ 'invisible': index !== currentProjectIndex }">
+                        <div class="service-section hidden md:block md:w-1/4" :class="{ 'invisible': index !== currentProjectIndex }">
                             <div :id="`service-${index}`"
-                                class="service-animation transform opacity-0 text-2xl sm:text-3xl font-bold text-black"
-                                v-html="project.services"></div>
+                                class="service-animation transform opacity-0 text-subtitle primary-color">
+                                <span v-for="(service, serviceIndex) in projectServices(project.id)" :key="serviceIndex"
+                                    class="block">{{ service }}</span>
+                            </div>
                         </div>
 
-                        <!-- Rectangle coloré au milieu avec effet tilt -->
-                        <div class="card-section w-2/4 px-8 flex items-center justify-center">
+                        <!-- Capture au milieu avec effet tilt -->
+                        <div class="card-section w-full md:w-2/4 md:px-8 flex items-center justify-center">
                             <div class="project-image-container w-full" :ref="`tiltRef${index}`">
-                                <div :style="{
-                                    backgroundColor: getProjectColor(index),
-                                    width: '100%',
-                                    height: '400px',
-                                    borderRadius: '0.5rem'
-                                }" class="shadow-lg transform-style-3d"></div>
+                                <div :style="{ backgroundColor: getProjectColor(index) }"
+                                    class="w-full h-[240px] sm:h-[320px] md:h-[400px] rounded-lg shadow-lg transform-style-3d overflow-hidden">
+                                    <!-- Capture du projet (lien vers l'étude de cas si elle existe) -->
+                                    <component :is="hasCaseStudy(project.id) ? NuxtLink : 'div'" v-if="project.imageUrl"
+                                        :to="hasCaseStudy(project.id) ? localePath(`/projects/${project.id}`) : undefined"
+                                        :tabindex="index === currentProjectIndex ? undefined : -1"
+                                        class="block w-full h-full">
+                                        <img :src="project.imageUrl" :srcset="project.imageSrcset || undefined"
+                                            :sizes="project.imageSrcset ? '(min-width: 1280px) 600px, (min-width: 768px) 50vw, 100vw' : undefined"
+                                            :width="project.imageWidth" :height="project.imageHeight"
+                                            :loading="index === 0 ? 'eager' : 'lazy'" decoding="async"
+                                            class="w-full h-full object-cover object-left-top"
+                                            :alt="$t(`projects.${project.id}.title`)" />
+                                    </component>
+                                </div>
                             </div>
                         </div>
 
                         <!-- Titre et année à droite seulement -->
-                        <div class="info-section w-1/4" :class="{ 'invisible': index !== currentProjectIndex }">
+                        <div class="info-section w-full md:w-1/4" :class="{ 'invisible': index !== currentProjectIndex }">
                             <div :id="`info-${index}`" class="project-info transform opacity-0">
-                                <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold text-teal-500 mb-3">
-                                    {{ project.titre }}
+                                <ProjectCategoryBadge :category="project.category" class="mb-3" />
+                                <h2 class="text-subtitle secondary-color mb-3">
+                                    {{ $t(`projects.${project.id}.title`) }}
                                 </h2>
-                                <div class="text-xl font-medium mb-2">{{ project.annee }}</div>
+                                <div class="text-xl font-medium mb-2 secondary-color">{{ project.annee }}</div>
                             </div>
                         </div>
                     </div>
@@ -50,18 +65,19 @@
 
             <!-- Portfolio Counter -->
             <div
-                class="portfolio-counter absolute bottom-8 left-8 sm:left-16 text-xl sm:text-2xl font-medium text-teal-500 z-50">
+                class="portfolio-counter absolute bottom-8 left-8 sm:left-24 text-xl sm:text-2xl font-semibold secondary-color z-50">
                 {{ formatProjectNumber(currentProjectIndex + 1) }} / {{ formatProjectNumber(allProjects.length) }}
             </div>
 
-            <!-- Portfolio Cursor (VOIR) -->
-            <div class="portfolio-cursor absolute bottom-8 right-8 sm:right-16 text-xl sm:text-2xl font-medium text-teal-500 opacity-0 z-50"
-                ref="showCursor">
-                VOIR
-            </div>
+            <!-- Portfolio Cursor (VOIR / FOOTER ↓) -->
+            <button type="button"
+                class="portfolio-cursor absolute bottom-8 right-8 sm:right-24 text-xl sm:text-2xl font-semibold secondary-color underline underline-offset-4 decoration-2 opacity-0 z-50"
+                ref="showCursor" @click="handleCursorClick">
+                {{ isLastProjectReached ? $t('projectsPage.toFooter') : $t('projectsPage.next') }}
+            </button>
         </div>
 
-        <!-- Footer visible -->
+        <!-- Footer visible (marges gérées par le composant, identiques sur toutes les pages) -->
         <div class="mt-4" id="footer-section">
             <Footer />
         </div>
@@ -74,8 +90,10 @@ import { onMounted, onBeforeUnmount, ref, computed, nextTick } from 'vue'
 import Header from '~/components/header.vue'
 import Footer from '~/components/footer.vue'
 import { useProjectStore } from '~/stores/projectStore'
+import { NuxtLink } from '#components'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { prefersReducedMotion } from '~/composables/useRevealAnimations'
 
 export default {
     components: {
@@ -83,6 +101,21 @@ export default {
         Footer
     },
     setup() {
+        // Textes des projets (titre, services) : fichiers de locale, cf. useMessageList
+        const list = useMessageList()
+        const localePath = useLocalePath()
+        const projectStore = useProjectStore()
+        const hasCaseStudy = (id) => projectStore.hasCaseStudy(id)
+        const projectServices = (id) => list(`projects.${id}.services`)
+
+        const { t } = useI18n()
+        useSeoMeta({
+            title: () => t('meta.projects.title'),
+            description: () => t('meta.projects.description'),
+            ogTitle: () => t('meta.projects.title'),
+            ogDescription: () => t('meta.projects.description')
+        })
+
         // Ajouter vanilla-tilt et GSAP
         useHead({
             script: [
@@ -106,14 +139,12 @@ export default {
             return num.toString().padStart(2, '0')
         }
 
-        // Obtenir une couleur pour chaque projet
+        // Couleur de fond de la carte (visible tant que la capture n'est pas chargée, ou sans capture)
         const getProjectColor = (index) => {
             const colors = [
-                '#1abc9c', // Turquoise (Mouvements & Harmonie)
-                '#3498db', // Blue (So'Deco)
-                '#9b59b6', // Purple (CollabSphere)
-                '#f1c40f', // Yellow (E-Shop Premium)
-                '#e74c3c'  // Red (FitTrack Pro)
+                '#2F4A4F', // site-secondary
+                '#899EA2', // site-link
+                '#CBD5E1'  // slate-300
             ];
             return colors[index % colors.length];
         }
@@ -375,9 +406,10 @@ export default {
 
         // Gérer l'événement de scroll
         const handleWheelEvent = (e) => {
-            // Si on est au dernier projet et qu'on scrolle vers le bas, permettre le scroll normal
-            if (isLastProjectReached.value && e.deltaY > 0) {
-                // Laisser l'événement se propager pour un scroll normal
+            // Dernier projet atteint : scroll natif vers le footer, et dans les deux sens tant que la page
+            // est défilée (sinon remonter relancerait le slider en laissant la page bloquée en bas).
+            // NB : pas de modificateur .prevent sur @wheel, sinon preventDefault() précède ce return.
+            if (isLastProjectReached.value && (e.deltaY > 0 || window.scrollY > 0)) {
                 return;
             }
 
@@ -406,12 +438,7 @@ export default {
                 gsap.to(showCursor.value, {
                     opacity: 1,
                     duration: 0.3,
-                    ease: "power1.out",
-                    onComplete: () => {
-                        if (showCursor.value) {
-                            showCursor.value.textContent = "FOOTER ↓";
-                        }
-                    }
+                    ease: "power1.out"
                 });
             }
         }
@@ -421,11 +448,6 @@ export default {
             if (process.client) {
                 // Remettre l'écouteur d'événement qui bloque le défilement
                 window.addEventListener('wheel', preventDefaultScroll, { passive: false });
-
-                // Remettre le texte VOIR
-                if (showCursor.value) {
-                    showCursor.value.textContent = "VOIR";
-                }
             }
         }
 
@@ -439,6 +461,10 @@ export default {
                 e.preventDefault();
                 goToNextProject()
             } else if (e.key === 'ArrowUp' || e.key === 'PageUp') {
+                // Page défilée jusqu'au footer : laisser remonter nativement
+                if (isLastProjectReached.value && window.scrollY > 0) {
+                    return;
+                }
                 e.preventDefault();
                 goToPrevProject()
             }
@@ -507,6 +533,15 @@ export default {
             e.preventDefault();
         }
 
+        // Clic sur le libellé VOIR / FOOTER : projet suivant, ou défilement vers le footer au dernier projet
+        const handleCursorClick = () => {
+            if (isLastProjectReached.value) {
+                document.getElementById('footer-section')?.scrollIntoView({ behavior: prefersReducedMotion() ? 'auto' : 'smooth' })
+            } else {
+                goToNextProject()
+            }
+        }
+
         onMounted(() => {
             if (process.client) {
                 // Enregistrer le plugin ScrollTrigger
@@ -530,7 +565,7 @@ export default {
                     const diff = touchStartY - touchEndY
 
                     // Si on est au dernier projet et qu'on swipe vers le bas, permettre le défilement normal
-                    if (isLastProjectReached.value && diff > 50) {
+                    if (isLastProjectReached.value && (diff > 50 || window.scrollY > 0)) {
                         return;
                     }
 
@@ -555,14 +590,8 @@ export default {
                     // S'assurer que le premier projet est bien défini comme actif
                     currentProjectIndex.value = 0
 
-                    // Collecter toutes les refs des images pour l'effet tilt
-                    const tiltRefs = []
-                    for (let i = 0; i < projects.length; i++) {
-                        const refName = `tiltRef${i}`
-                        if (this.$refs[refName]) {
-                            tiltRefs.push(this.$refs[refName])
-                        }
-                    }
+                    // Conteneurs d'image pour l'effet tilt (pas de `this` dans setup() : requête DOM directe)
+                    const tiltRefs = Array.from(document.querySelectorAll('.project-image-container'))
 
                     // Initialiser l'effet tilt
                     initializeTilt(tiltRefs)
@@ -592,12 +621,13 @@ export default {
         })
 
         // Computed pour les projets
-        const allProjects = computed(() => {
-            const projectStore = useProjectStore()
-            return projectStore.getAllProjects
-        })
+        const allProjects = computed(() => projectStore.getAllProjects)
 
         return {
+            projectServices,
+            localePath,
+            hasCaseStudy,
+            NuxtLink,
             currentProjectIndex,
             allProjects,
             cleanupTilt,
@@ -608,17 +638,11 @@ export default {
             formatProjectNumber,
             showCursor,
             handleWheelEvent,
+            handleCursorClick,
             scrollDirection,
             isLastProjectReached,
             enableNormalScrolling,
             disableNormalScrolling
-        }
-    },
-    methods: {
-        navigateToProject(projectId) {
-            const projectStore = useProjectStore()
-            projectStore.selectProject(projectId)
-            this.$router.push(`/projets/${projectId}`)
         }
     }
 }
@@ -634,6 +658,14 @@ export default {
     will-change: transform, opacity;
     transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1),
         opacity 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+/* Mobile : la capture est en pleine largeur avec les infos dessous, l'aperçu des cartes suivantes
+   (décalées de 40/80 px) chevaucherait ces infos : seule la carte active reste visible */
+@media (max-width: 767px) {
+    .project-card:not(.active-project) {
+        opacity: 0 !important;
+    }
 }
 
 .project-image-container {

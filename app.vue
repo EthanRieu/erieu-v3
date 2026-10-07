@@ -5,3 +5,9 @@
     </NuxtLayout>
   </div>
 </template>
+
+<script setup>
+// <html lang>, alternates hreflang et canonical gérés par @nuxtjs/i18n
+const head = useLocaleHead()
+useHead(head)
+</script>
