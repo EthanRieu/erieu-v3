@@ -2,7 +2,7 @@
 
 Site personnel d'Ethan Rieu, développeur full-stack créatif à Reims.
 
-**Stack** : Nuxt 3 · Vue 3.5 · Tailwind CSS v4 (plugin Vite) · Pinia · GSAP (ScrollTrigger) · Three.js · `@nuxtjs/i18n` · `@nuxt/fonts` · `nuxt-security`.
+**Stack** : Nuxt 4 · Vue 3.5 · Tailwind CSS v4 (plugin Vite) · Pinia · GSAP (ScrollTrigger) · Three.js · `@nuxtjs/i18n` · `@nuxt/fonts` · `nuxt-security`.
 
 ## Démarrer
 
@@ -33,14 +33,17 @@ Sans clé Resend, le formulaire répond `503` et affiche le message d'erreur gé
 ## Structure
 
 ```
-pages/            index (home), about, contact, projects (en chantier)
-components/       header, footer, LiveClock, SelectedProject, SignatureScene (Three.js)
-composables/      useRevealAnimations (reveal GSAP partagé), useMessageList (listes i18n)
-server/api/       contact.post.ts (validation, honeypot, envoi Resend)
-i18n/locales/     en.json (défaut, sans préfixe), fr.json (/fr/...)
-stores/           projectStore.js (données non textuelles des projets)
-assets/css/       main.css (tokens @theme Tailwind v4 = charte graphique)
-public/img/       images servies telles quelles (WebP)
+app/                      code du site (convention Nuxt 4, alias ~)
+  app.vue
+  pages/                  index (home), about, contact, projects
+  components/             header, footer, LiveClock, SelectedProject, SignatureScene / ToolboxScene (Three.js)
+  composables/            useRevealAnimations (reveal GSAP partagé), useMessageList (listes i18n)
+  stores/                 projectStore.js (données non textuelles des projets)
+  lib/                    sous-ensembles tree-shakés de three
+  assets/css/             main.css (tokens @theme Tailwind v4 = charte graphique)
+server/api/               contact.post.ts (validation, honeypot, envoi Resend)
+i18n/locales/             en.json (défaut, sans préfixe), fr.json (/fr/...)
+public/img/               images servies telles quelles (WebP)
 ```
 
 ## i18n
@@ -55,7 +58,7 @@ Les classes `reveal-title`, `reveal-text`, `reveal-text-staggered`, `reveal-divi
 
 ## Scène 3D (`SignatureScene`)
 
-Le tracé signature de la home extrudé en tube Three.js (dégradé `#2F4A4F → #899EA2`), réactif au curseur. Seul un sous-ensemble de `three` (`lib/three-subset.js`) est chargé, dynamiquement : à l'approche du viewport sur pointeur fin (souris/trackpad), au premier tap sur la box sur écran tactile ou en mode économie de données. Sans WebGL, la box CSS reste affichée.
+Le tracé signature de la home extrudé en tube Three.js (dégradé `#2F4A4F → #899EA2`), réactif au curseur. Seul un sous-ensemble de `three` (`app/lib/three-subset.js`) est chargé, dynamiquement : à l'approche du viewport sur pointeur fin (souris/trackpad), au premier tap sur la box sur écran tactile ou en mode économie de données. Sans WebGL, la box CSS reste affichée.
 
 ## Sécurité
 

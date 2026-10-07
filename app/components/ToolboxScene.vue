@@ -779,7 +779,7 @@ const stopLoop = () => {
 }
 
 onMounted(() => {
-    if (!process.client || !container.value) return
+    if (!import.meta.client || !container.value) return
     if (!('WebGLRenderingContext' in window)) return
 
     const finePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches

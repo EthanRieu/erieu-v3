@@ -274,7 +274,7 @@ const resetPointer = () => {
 }
 
 onMounted(() => {
-    if (!process.client || !container.value) return
+    if (!import.meta.client || !container.value) return
     // Test léger au montage (présence de l'API) : la création réelle d'un contexte WebGL, coûteuse
     // sous rendu logiciel, n'a lieu qu'au chargement effectif de la scène (voir load)
     if (!('WebGLRenderingContext' in window)) return
