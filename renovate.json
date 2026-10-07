@@ -6,7 +6,7 @@
   "labels": ["MàJ"],
   "rangeStrategy": "bump",
   "constraints": {
-    "npm": ">=11"
+    "npm": ">=11.21.0"
   },
   "postUpdateOptions": ["npmDedupe"],
   "lockFileMaintenance": {
