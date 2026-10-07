@@ -1,0 +1,33 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended", ":dependencyDashboard"],
+  "timezone": "Europe/Paris",
+  "schedule": ["before 9am on monday"],
+  "labels": ["MàJ"],
+  "rangeStrategy": "bump",
+  "lockFileMaintenance": {
+    "enabled": true,
+    "schedule": ["before 9am on monday"]
+  },
+  "packageRules": [
+    {
+      "description": "Patch + minor regroupés en une seule PR hebdomadaire. Merge manuel pour l'instant : passer automerge à true quand la CI aura fait ses preuves.",
+      "matchUpdateTypes": ["minor", "patch"],
+      "matchCurrentVersion": ">=1.0.0",
+      "groupName": "MàJ mineures",
+      "automerge": false
+    },
+    {
+      "description": "three est en 0.x : chaque version « mineure » peut casser l'API, donc PR dédiée et toujours en merge manuel.",
+      "matchPackageNames": ["three"],
+      "groupName": "three",
+      "automerge": false
+    },
+    {
+      "description": "Majeures (Nuxt 4, i18n v10...) : une PR par paquet, à valider à la main.",
+      "matchUpdateTypes": ["major"],
+      "labels": ["MàJ", "majeure"],
+      "automerge": false
+    }
+  ]
+}
