@@ -1,75 +1,69 @@
-# Nuxt Minimal Starter
+# ERIEU — portfolio (erieu-v3)
 
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+Site personnel d'Ethan Rieu, développeur full-stack créatif à Reims.
 
-## Setup
+**Stack** : Nuxt 3 · Vue 3.5 · Tailwind CSS v4 (plugin Vite) · Pinia · GSAP (ScrollTrigger) · Three.js · `@nuxtjs/i18n` · `@nuxt/fonts` · `nuxt-security`.
 
-Make sure to install dependencies:
+## Démarrer
 
 ```bash
-# npm
 npm install
-
-# pnpm
-pnpm install
-
-# yarn
-yarn install
-
-# bun
-bun install
+cp .env.example .env   # puis renseigner les clés (voir ci-dessous)
+npm run dev            # http://localhost:3000
 ```
-
-## Development Server
-
-Start the development server on `http://localhost:3000`:
 
 ```bash
-# npm
-npm run dev
-
-# pnpm
-pnpm dev
-
-# yarn
-yarn dev
-
-# bun
-bun run dev
+npm run build          # build de production (.output)
+npm run preview        # sert le build localement
 ```
 
-## Production
+## Variables d'environnement
 
-Build the application for production:
+Toutes les clés sont lues côté serveur via `runtimeConfig` : rien n'est exposé au client.
 
-```bash
-# npm
-npm run build
+| Variable | Rôle |
+|---|---|
+| `NUXT_PUBLIC_SITE_URL` | URL publique du site (canonical, hreflang, origine CORS). Défaut : `https://erieu.fr` |
+| `NUXT_RESEND_API_KEY` | Clé API Resend pour le formulaire de contact |
+| `NUXT_CONTACT_TO` | Destinataire des messages. Défaut : `contact@erieu.fr` |
+| `NUXT_CONTACT_FROM` | Expéditeur, sur un domaine vérifié chez Resend (ex. `ERIEU <no-reply@erieu.fr>`). Tant que le domaine n'est pas vérifié, `onboarding@resend.dev` ne délivre qu'à l'adresse du compte Resend |
 
-# pnpm
-pnpm build
+Sans clé Resend, le formulaire répond `503` et affiche le message d'erreur générique ; le lien `mailto:` reste disponible.
 
-# yarn
-yarn build
+## Structure
 
-# bun
-bun run build
+```
+pages/            index (home), about, contact, projects (en chantier)
+components/       header, footer, LiveClock, SelectedProject, SignatureScene (Three.js)
+composables/      useRevealAnimations (reveal GSAP partagé), useMessageList (listes i18n)
+server/api/       contact.post.ts (validation, honeypot, envoi Resend)
+i18n/locales/     en.json (défaut, sans préfixe), fr.json (/fr/...)
+stores/           projectStore.js (données non textuelles des projets)
+assets/css/       main.css (tokens @theme Tailwind v4 = charte graphique)
+public/img/       images servies telles quelles (WebP)
 ```
 
-Locally preview production build:
+## i18n
 
-```bash
-# npm
-npm run preview
+- Anglais par défaut sans préfixe (`/about`), français sous `/fr` (`/fr/about`), détection du navigateur au premier passage sur la racine (cookie `i18n_redirected`).
+- Tous les textes vivent dans `i18n/locales/*.json`. Les listes (paragraphes, outils, parcours...) sont lues avec `useMessageList()`.
+- Les textes de la page About et les descriptions des projets « Mouvements & Harmonie » et « So'Deco » sont des brouillons : chercher `TODO` dans les fichiers de locale.
 
-# pnpm
-pnpm preview
+## Animations
 
-# yarn
-yarn preview
+Les classes `reveal-title`, `reveal-text`, `reveal-text-staggered`, `reveal-divider`, `reveal-element`, `reveal-project-N`, `reveal-tool` et `reveal-cta` sont pré-cachées puis révélées au scroll par `useRevealAnimations()` (GSAP ScrollTrigger, une seule fois par élément). `prefers-reduced-motion` désactive les reveals, le dessin du tracé et la rotation automatique de la scène 3D.
 
-# bun
-bun run preview
-```
+## Scène 3D (`SignatureScene`)
 
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+Le tracé signature de la home extrudé en tube Three.js (dégradé `#2F4A4F → #899EA2`), réactif au curseur. Seul un sous-ensemble de `three` (`lib/three-subset.js`) est chargé, dynamiquement : à l'approche du viewport sur pointeur fin (souris/trackpad), au premier tap sur la box sur écran tactile ou en mode économie de données. Sans WebGL, la box CSS reste affichée.
+
+## Sécurité
+
+- Headers (CSP avec nonce, HSTS, X-Frame-Options, Referrer-Policy, Permissions-Policy) et taille de requête de `/api/contact` via `nuxt-security` dans `nuxt.config.ts`.
+- Formulaire : rate limiting (5 messages / heure / IP, en mémoire dans `server/api/contact.post.ts`), validation client et serveur, honeypot, délai minimal de remplissage, mail envoyé en texte brut.
+- Le rate limiting en mémoire est par instance : suffisant pour un portfolio en serverless (Vercel / Netlify). Pour un partage entre instances, remplacer la `Map` par un stockage KV/Redis (`useStorage`).
+- Le rate limiter de `nuxt-security` n'est pas utilisé : son middleware appelle `useStorage()` au niveau module, ce que Nitro 2.11 ordonne avant l'initialisation du storage (crash au démarrage du build de production).
+
+## Déploiement (Vercel / Netlify)
+
+`npm run build` avec le preset Nitro détecté automatiquement. Définir les variables d'environnement ci-dessus dans le dashboard de l'hébergeur. La route `/api/contact` nécessite un runtime serveur : le site ne doit pas être déployé en statique (`nuxt generate`) sans remplacer le formulaire.

@@ -1,0 +1,434 @@
+{
+  "meta": {
+    "siteName": "ERIEU",
+    "home": {
+      "title": "ERIEU — Développeur full-stack créatif à Reims",
+      "description": "Ethan Rieu, développeur full-stack créatif à Reims, en recherche d'alternance. Sites Nuxt, Node, GSAP et Three.js qui allient esthétique, interactivité et performance."
+    },
+    "projects": {
+      "title": "Projets — ERIEU",
+      "description": "Sélection de sites et d'expériences interactives conçus et développés par ERIEU."
+    },
+    "about": {
+      "title": "À propos — ERIEU",
+      "description": "Qui se cache derrière ERIEU : parcours, valeurs et boîte à outils d'un développeur full-stack créatif basé à Reims, en recherche d'alternance."
+    },
+    "contact": {
+      "title": "Contact — ERIEU",
+      "description": "À la recherche d'une alternance de deux ans en développement full-stack / DevOps. Envoyez un message via le formulaire ou écrivez directement par e-mail."
+    }
+  },
+  "nav": {
+    "home": "Accueil",
+    "projects": "Projets",
+    "about": "À propos",
+    "contact": "Contact",
+    "openMenu": "Ouvrir le menu",
+    "closeMenu": "Fermer le menu",
+    "mainNavigation": "Navigation principale",
+    "language": "Langue",
+    "switchTo": "Passer en {lang}",
+    "languages": {
+      "en": "English",
+      "fr": "Français"
+    }
+  },
+  "clock": {
+    "location": "Reims, France"
+  },
+  "footer": {
+    "sitemap": "Plan du site",
+    "socials": "Réseaux",
+    "backToTop": "Retour en haut ↑",
+    "copyright": "Copyright © ERIEU {year}",
+    "logoAlt": "Logo ERIEU"
+  },
+  "home": {
+    "logoAlt": "Logotype ERIEU",
+    "tagline": "Définir le futur numérique : façonner, développer et exprimer l'essence des marques à travers les médias contemporains",
+    "box": {
+      "title": "Expérience interactive",
+      "hint": "Déplacez votre curseur pour explorer",
+      "tapHint": "Touchez pour explorer en 3D",
+      "ariaLabel": "Animation 3D décorative du tracé signature ERIEU"
+    },
+    "intro": [
+      "Je suis développeur full-stack créatif, actuellement en Mastère Ingénierie du Web à l'ESGI.",
+      "Après deux ans d'alternance chez AGREEGO, où j'ai conçu et développé des sites vitrines et contribué à une plateforme SaaS, je cherche à rejoindre une équipe pour une nouvelle alternance de deux ans.",
+      "Ce qui m'anime : construire des interfaces soignées, performantes et accessibles, du maquettage Figma jusqu'à la mise en production.",
+      "Front-end, back-end ou DevOps : j'ai envie de progresser aux côtés de développeurs expérimentés et d'apporter ma rigueur et ma curiosité à vos projets."
+    ],
+    "learnMore": "En savoir plus sur mon parcours",
+    "selectedWorks": {
+      "line1": "Projets",
+      "line2": "choisis"
+    },
+    "seeAllProjects": "Voir tous les projets",
+    "aboutTitle": "À propos",
+    "aboutText": "Je suis développeur full-stack créatif et je me forme en continu aux dernières technologies pour créer des applications web qui allient esthétique, interactivité et praticité.",
+    "tools": [
+      "Nuxt.js",
+      "Node.js",
+      "GSAP",
+      "Figma",
+      "TailwindCSS",
+      "PostgreSQL"
+    ],
+    "contactTitle": "Recrutez-moi en alternance !",
+    "toolsTitle": "Mes outils",
+    "toolsLink": "Mon parcours et ma façon de travailler"
+  },
+  "projects": {
+    "categories": {
+      "pro": "PRO",
+      "school": "SCOLAIRE",
+      "personal": "PERSO"
+    },
+    "categoryHint": {
+      "pro": "Projet réalisé dans un cadre professionnel",
+      "school": "Projet réalisé dans un cadre scolaire",
+      "personal": "Projet personnel"
+    },
+    "intralab": {
+      "title": "IntraLab",
+      "services": [
+        "Développement full-stack",
+        "Temps réel",
+        "Base de données"
+      ],
+      "description": "Intranet d'école réalisé en B3 à l'ESGI : blog modéré, prêt de matériel, marketplace entre étudiants et messagerie en temps réel chiffrée. Application full-stack Nuxt 4, Prisma et PostgreSQL, avec 46 routes d'API sécurisées par JWT et rôles.",
+      "tagline": "L'intranet d'une école, de la base de données à la messagerie en temps réel.",
+      "role": "Développeur web full-stack (projet d'équipe)",
+      "period": "2025 — 2026",
+      "context": [
+        "IntraLab est l'intranet d'une école de type ESGI : étudiants, administrateurs et responsables pédagogiques y publient des articles, empruntent du matériel, vendent entre eux et échangent par messagerie.",
+        "Le projet a été mené en équipe pluridisciplinaire en troisième année à l'ESGI. J'ai pris en charge toute la partie web, de l'interface au serveur, pendant que d'autres étudiants travaillaient sur la cybersécurité et l'infrastructure système et réseau."
+      ],
+      "missions": [
+        {
+          "title": "Interface",
+          "description": "Une interface sombre aux surfaces de verre dépoli, posée sur un fond animé en WebGL (OGL), construite avec Tailwind CSS et des composants réutilisables, en desktop comme en mobile."
+        },
+        {
+          "title": "API & base de données",
+          "description": "46 routes d'API REST avec Nuxt 4 (Nitro), 16 modèles Prisma sur PostgreSQL et une validation Zod de toutes les entrées."
+        },
+        {
+          "title": "Temps réel & sécurité",
+          "description": "Messagerie par WebSocket (réponses, réactions, indicateur de frappe, accusés de lecture), messages chiffrés en base (AES), authentification JWT, mots de passe hachés avec bcrypt et contrôle d'accès par rôle sur chaque route."
+        },
+        {
+          "title": "Mise en production",
+          "description": "Déploiement sur une machine virtuelle Debian : PM2 pour le processus Node, Apache en proxy inverse (WebSocket compris) et migrations Prisma."
+        }
+      ],
+      "features": [
+        {
+          "title": "Blog modéré",
+          "description": "Les articles passent par un circuit brouillon, en attente, publié ou rejeté, validé par les administrateurs et les responsables pédagogiques."
+        },
+        {
+          "title": "Prêts & marketplace",
+          "description": "Emprunt du matériel de l'école avec validation et suivi des retours, et vente entre étudiants avec recherche, filtres et tris."
+        },
+        {
+          "title": "Messagerie & notifications",
+          "description": "Conversations en temps réel et notifications pour chaque événement : demande d'emprunt, article validé, nouveau message."
+        }
+      ],
+      "extraTitle": "En équipe",
+      "extra": [
+        "Le projet réunissait plusieurs spécialités de l'ESGI : je portais le développement web, mes camarades la cybersécurité et l'infrastructure système et réseau.",
+        "J'ai aussi documenté l'application, avec une fiche technique et un guide de déploiement pas à pas sur machine virtuelle Linux."
+      ],
+      "shots": {
+        "home": "Accueil d'IntraLab avec les derniers articles",
+        "messages": "Messagerie en temps réel : réponses et réactions",
+        "dashboard": "Tableau de bord personnel (emprunts, articles, annonces)",
+        "admin-users": "Administration des comptes : rôles, blocage et déblocage",
+        "loans": "Inventaire du matériel à emprunter",
+        "mobile-home": "Accueil d'IntraLab sur mobile",
+        "mobile-messages": "Conversation sur mobile",
+        "mobile-blog": "Blog sur mobile"
+      }
+    },
+    "agreego": {
+      "title": "AGREEGO",
+      "services": [
+        "Design UI/UX",
+        "Développement complet",
+        "SEO & Analytics"
+      ],
+      "description": "Site vitrine d'AGREEGO, prestataire de drones agricoles à Reims : semis, traitements biocontrôle et diagnostics par IA. Conçu sur Figma puis développé de zéro avec Nuxt 4 et Tailwind, bilingue FR/EN, optimisé pour le référencement et suivi avec Google Analytics.",
+      "tagline": "Le site vitrine d'une flotte de drones au service des agriculteurs.",
+      "role": "Designer & développeur (alternance)",
+      "period": "Déc. 2024 — sept. 2026",
+      "context": [
+        "AGREEGO est une entreprise rémoise qui met une flotte de drones et ses pilotes au service des agriculteurs : semis d'intercultures, traitements de biocontrôle (largage de trichogrammes, pulvérisation ciblée) et diagnostics des cultures par intelligence artificielle.",
+        "Pendant mon alternance, j'ai pris en charge le site de A à Z : il fallait présenter des services techniques à un public agricole, inspirer confiance aux exploitations, coopératives et négoces, et générer des demandes de rendez-vous."
+      ],
+      "missions": [
+        {
+          "title": "Design",
+          "description": "Maquettes réalisées sur Figma, de l'arborescence aux écrans desktop et mobile : une identité sobre, centrée sur l'image, pensée pour une lecture rapide sur le terrain."
+        },
+        {
+          "title": "Développement",
+          "description": "Développement de zéro avec Nuxt 4 et Tailwind CSS. Animations minimalistes au défilement avec AOS, navigation et formulaire de prise de rendez-vous par type de service."
+        },
+        {
+          "title": "SEO",
+          "description": "Balises title et description par page, données structurées (Organization, FAQPage, SoftwareApplication), sitemaps par langue et version anglaise complète avec Nuxt i18n."
+        },
+        {
+          "title": "Analytics & mise en ligne",
+          "description": "Mesure d'audience avec Google Analytics et déploiement continu sur Vercel."
+        }
+      ],
+      "features": [
+        {
+          "title": "Pages solutions",
+          "description": "Une page dédiée par service (semis, traitements, diagnostics) avec bénéfices, déroulé et questions fréquentes."
+        },
+        {
+          "title": "Prise de rendez-vous",
+          "description": "Formulaire de contact présent sur chaque page, qualifié par le service souhaité."
+        },
+        {
+          "title": "Bilingue FR / EN",
+          "description": "Contenus traduits et URLs localisées pour toucher une clientèle au-delà de la France."
+        }
+      ],
+      "extraTitle": "AGREEGO Cloud",
+      "extra": [
+        "En parallèle des sites vitrines, j'ai largement contribué au développement d'AGREEGO Cloud, la plateforme SaaS de gestion des campagnes drone de l'entreprise.",
+        "Elle réunit administrateurs, pilotes, agronomes et clients finaux autour d'un même outil : édition et sélection des parcelles, création et suivi des tournées de drones en temps réel, guidage GPS, génération des plans de vol, notifications par SMS et courriel, rapports et statistiques en ligne."
+      ],
+      "shots": {
+        "home": "Page d'accueil du site AGREEGO",
+        "cloud": "Page de présentation d'AGREEGO Cloud",
+        "seeding": "Page solution « Semis par drone »",
+        "mobile-home": "Accueil AGREEGO sur mobile",
+        "mobile-cloud": "AGREEGO Cloud sur mobile",
+        "mobile-treatments": "Page « Traitements par drone » sur mobile"
+      }
+    },
+    "viteego": {
+      "title": "VITEEGO",
+      "services": [
+        "Design UI/UX",
+        "Développement complet",
+        "SEO & Analytics"
+      ],
+      "description": "Site vitrine de VITEEGO, la filiale viticulture du groupe AGREEGO : inventaire des ceps, arpentage centimétrique et cartes de vigueur NDVI par drone et IA. Une identité propre aux vignobles, conçue sur Figma et développée de zéro avec Nuxt 4, Tailwind et AOS.",
+      "tagline": "La filiale viticulture du groupe AGREEGO, cartographiée par drone et IA.",
+      "role": "Designer & développeur (alternance)",
+      "period": "Déc. 2024 — sept. 2026",
+      "context": [
+        "VITEEGO est la filiale viticulture du groupe AGREEGO. Elle propose aux vignerons trois services par drone : l'inventaire des ceps manquants ou improductifs, l'arpentage des parcelles à ± 0,3 cm et l'analyse de vigueur foliaire (NDVI) à 25 mm de précision.",
+        "L'enjeu était de donner à la filiale sa propre identité, distincte d'AGREEGO et ancrée dans l'univers du vin, tout en expliquant simplement des technologies pointues à des viticulteurs."
+      ],
+      "missions": [
+        {
+          "title": "Design",
+          "description": "Identité et maquettes sur Figma : une palette bordeaux tirée du vin, des visuels de cartographie mis en avant et une hiérarchie claire entre les trois solutions."
+        },
+        {
+          "title": "Développement",
+          "description": "Développement de zéro avec Nuxt 4 et Tailwind CSS, animations au défilement avec AOS, pages solutions, démarche, à propos et contact."
+        },
+        {
+          "title": "SEO",
+          "description": "Balises par page, données structurées (Organization, Service, OfferCatalog, FAQPage, BreadcrumbList), sitemaps par langue et version anglaise avec Nuxt i18n."
+        },
+        {
+          "title": "Analytics & mise en ligne",
+          "description": "Mesure d'audience avec Google Analytics et déploiement continu sur Vercel."
+        }
+      ],
+      "features": [
+        {
+          "title": "Trois solutions détaillées",
+          "description": "Inventaire, arpentage et analyse NDVI présentés avec leurs avantages et des visuels issus des vols."
+        },
+        {
+          "title": "Questions fréquentes",
+          "description": "Une FAQ qui répond aux questions des vignerons (précision, période des vols, compatibilité machines) et alimente les résultats enrichis de Google."
+        },
+        {
+          "title": "Bilingue FR / EN",
+          "description": "Contenus traduits pour une clientèle viticole internationale."
+        }
+      ],
+      "shots": {
+        "home": "Page d'accueil du site VITEEGO",
+        "solutions": "Page « Nos solutions » avec l'inventaire des parcelles",
+        "demarche": "Page « Démarche raisonnée »",
+        "mobile-home": "Accueil VITEEGO sur mobile",
+        "mobile-solutions": "Page « Nos solutions » sur mobile",
+        "mobile-apropos": "Page « À propos » sur mobile"
+      }
+    }
+  },
+  "about": {
+    "_todo": "Brouillon rédigé à partir du site existant. À vérifier : faits de la bio, entrées du parcours (dates, employeurs, école), formulation des valeurs.",
+    "title": "À propos",
+    "intro": "Développeur full-stack créatif basé à Reims, je conçois et développe des expériences web où l'esthétique, l'interaction et la performance comptent autant les unes que les autres.",
+    "bioTitle": "Qui je suis",
+    "bio": [
+      "Je suis Ethan Rieu, la personne derrière ERIEU. Je développe de la première frame Figma jusqu'au produit déployé, pour que l'intention de design survive jusqu'au navigateur.",
+      "Mon terrain de jeu, c'est l'écosystème Vue moderne : Nuxt pour la structure et la performance, GSAP et Three.js pour le mouvement et la profondeur, Tailwind pour un système visuel cohérent, Node et PostgreSQL quand un projet a besoin d'un vrai back-end.",
+      "Je me forme en continu aux dernières technologies, non pas pour suivre les tendances mais pour choisir le bon outil selon chaque projet et ses contraintes. Aujourd'hui, je recherche une alternance pour continuer à progresser au sein d'une équipe."
+    ],
+    "journeyTitle": "Parcours",
+    "journey": [
+      {
+        "period": "2026 — aujourd'hui",
+        "title": "Mastère Ingénierie du Web",
+        "place": "ESGI — École Supérieure de Génie Informatique",
+        "description": "Je poursuis dans la même filière en Mastère et je recherche une alternance de deux ans en tant que développeur full-stack / DevOps, au rythme de 3 semaines en entreprise et 1 semaine en cours."
+      },
+      {
+        "period": "En parallèle",
+        "title": "Projet personnel",
+        "place": "Phantom.Studio",
+        "description": "Studio web en cours de création, mené en parallèle de mes études, autour des sites vitrines et des expériences web interactives."
+      },
+      {
+        "period": "Déc. 2024 — sept. 2026",
+        "title": "Développeur web en alternance",
+        "place": "AGREEGO, Reims",
+        "description": "Conception sur Figma et développement de zéro des sites vitrines AGREEGO et VITEEGO (Nuxt 4, Tailwind), référencement et suivi Google Analytics, et contribution importante à AGREEGO Cloud, la plateforme SaaS de gestion des campagnes drone."
+      },
+      {
+        "period": "2023 — 2026",
+        "title": "Bachelor Ingénierie du Web",
+        "place": "ESGI — École Supérieure de Génie Informatique",
+        "description": "Deux ans de tronc commun partagé avec les filières Systèmes, réseaux & cloud computing et Cybersécurité, puis spécialisation en ingénierie du web en troisième année, avec des projets d'équipe pluridisciplinaires comme IntraLab."
+      }
+    ],
+    "valuesTitle": "Ma façon de travailler",
+    "values": [
+      {
+        "title": "Le design d'abord",
+        "description": "Chaque projet commence dans Figma. Typographie, rythme et mouvement sont décidés avant la première ligne de code, puis respectés au pixel près."
+      },
+      {
+        "title": "Du mouvement qui a du sens",
+        "description": "L'animation guide le regard et donne du feedback, elle ne gêne jamais. Les préférences de réduction des animations sont respectées sur chaque page."
+      },
+      {
+        "title": "Conçu pour durer",
+        "description": "Un code propre et documenté, des performances mesurées et des interfaces accessibles, pour que le produit reste maintenable dans trois ans."
+      }
+    ],
+    "toolbox": {
+      "title": "Ma boîte à outils",
+      "loading": "Chargement de la boîte à outils…",
+      "tapToLoad": "Touchez pour ouvrir la boîte en 3D",
+      "hintClosed": "Cliquez sur la boîte pour l'ouvrir",
+      "hintOpen": "Attrapez les jetons · survolez-les pour voir l'outil · cliquez sur la boîte pour ranger",
+      "open": "Ouvrir la boîte à outils",
+      "close": "Ranger les outils et fermer la boîte",
+      "ariaLabel": "Boîte à outils 3D interactive contenant les jetons de ma stack : {tools}"
+    },
+    "stackTitle": "Boîte à outils",
+    "stack": [
+      {
+        "category": "Front-end",
+        "items": "Nuxt, Vue 3, React Native, GSAP, Three.js, Tailwind CSS"
+      },
+      {
+        "category": "Back-end",
+        "items": "Node.js, Nitro, PostgreSQL, API REST"
+      },
+      {
+        "category": "Design",
+        "items": "Figma, design systems"
+      },
+      {
+        "category": "Workflow",
+        "items": "Git, GitHub, Vercel, Lighthouse, Claude"
+      }
+    ]
+  },
+  "contact": {
+    "title": "Parlons alternance !",
+    "intro": "Mon profil vous intéresse pour une alternance de deux ans en développement full-stack / DevOps ? Écrivez-moi, je vous réponds rapidement.",
+    "direct": {
+      "title": "En direct",
+      "location": "Basé à Reims, France",
+      "socials": "Ailleurs"
+    },
+    "form": {
+      "title": "Envoyer un message",
+      "requiredHint": "Tous les champs sont obligatoires.",
+      "statusLabel": "État du formulaire",
+      "name": "Nom",
+      "namePlaceholder": "Votre nom",
+      "email": "E-mail",
+      "emailPlaceholder": "Votre adresse e-mail",
+      "message": "Message",
+      "messagePlaceholder": "Quelques mots sur votre entreprise, le poste et le rythme de l'alternance",
+      "submit": "Envoyer le message",
+      "sending": "Envoi en cours…",
+      "success": "Merci ! Votre message a bien été envoyé. Je vous réponds rapidement.",
+      "error": "Une erreur est survenue. Réessayez ou écrivez-moi directement par e-mail.",
+      "rateLimited": "Trop de messages ont été envoyés récemment. Réessayez un peu plus tard.",
+      "errors": {
+        "name": {
+          "required": "Merci d'indiquer votre nom.",
+          "length": "Votre nom doit contenir entre 2 et 80 caractères."
+        },
+        "email": {
+          "required": "Merci d'indiquer votre adresse e-mail.",
+          "invalid": "Merci d'indiquer une adresse e-mail valide."
+        },
+        "message": {
+          "required": "Merci d'écrire un message.",
+          "length": "Votre message doit contenir entre 10 et 2000 caractères."
+        }
+      }
+    }
+  },
+  "projectPage": {
+    "back": "Tous les projets",
+    "visit": "Voir le site en ligne",
+    "code": "Voir le code sur GitHub",
+    "role": "Rôle",
+    "period": "Période",
+    "services": "Services",
+    "stack": "Stack",
+    "context": "Contexte",
+    "missions": "Ce que j'ai réalisé",
+    "screens": "Aperçu",
+    "mobile": "Sur mobile",
+    "features": "Points clés",
+    "performance": "Performance",
+    "performanceNote": "Audit Lighthouse de la page d'accueil en production, mesuré le {date}. Performance mobile : médiane de trois passages.",
+    "device": {
+      "mobile": "Mobile",
+      "desktop": "Desktop"
+    },
+    "scores": {
+      "performance": "Performance",
+      "accessibility": "Accessibilité",
+      "bestPractices": "Bonnes pratiques",
+      "seo": "SEO"
+    },
+    "related": "Projet associé",
+    "metaTitle": "{title} — Projet ERIEU",
+    "newTab": "(nouvel onglet)"
+  },
+  "projectsPage": {
+    "title": "Projets",
+    "next": "VOIR",
+    "toFooter": "FOOTER ↓",
+    "years": "2024 — 2026"
+  },
+  "cta": {
+    "title": "Mon profil vous intéresse ?",
+    "availability": "Actuellement à la recherche d'une alternance de deux ans, au rythme de 3 semaines en entreprise et 1 semaine en cours.",
+    "form": "Envoyer un message"
+  }
+}

@@ -1,15 +1,86 @@
-@import url('https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:ital,wght@0,400..900;1,400..900&display=swap');
 @import "tailwindcss";
 
+/*
+ * Charte graphique (light uniquement) — source unique de vérité.
+ * Tailwind v4 lit ce bloc @theme (l'ancien tailwind.config.js n'était jamais chargé) :
+ * il génère bg-site-bg, text-site-secondary, border-site-secondary, etc.
+ * --font-sans remplace la police par défaut du preflight => Schibsted Grotesk sur tout le site.
+ * La police est auto-hébergée par @nuxt/fonts (plus de requête vers Google Fonts).
+ */
+@theme {
+  --color-site-bg: #EEEEEE;
+  --color-site-primary: #000000;
+  --color-site-secondary: #2F4A4F;
+  --color-site-link: #899EA2;
+
+  --font-sans: "Schibsted Grotesk", ui-sans-serif, system-ui, sans-serif;
+}
+
+/*
+ * Grille commune à toutes les pages (contenu + footer) : marges de 32 px puis 96 px dès 640 px,
+ * largeur plafonnée à 1600 px (marges comprises) et centrée sur les très grands écrans.
+ */
+@utility site-container {
+  width: 100%;
+  max-width: 1600px;
+  margin-inline: auto;
+  padding-inline: 2rem;
+
+  @media (width >= 40rem) {
+    padding-inline: 6rem;
+  }
+}
+
+/*
+ * Échelle typographique à 3 niveaux (fluide, de 390 px à 1600 px de large) :
+ *   text-display  : h1 de chaque page uniquement (64 → 200 px)
+ *   text-section  : titres de section h2 (44 → 104 px)
+ *   text-subtitle : sous-titres h3, liens d'action (24 → 36 px)
+ * text-lead : paragraphes d'introduction sous un titre (24 → 48 px).
+ * Interlignage et approche fixés ici : ne pas les surcharger avec leading-* / tracking-*.
+ */
+@utility text-display {
+  font-size: clamp(4rem, 1.4rem + 10.6vw, 12.5rem);
+  line-height: 0.85;
+  letter-spacing: -0.05em;
+  font-weight: 700;
+}
+
+@utility text-section {
+  font-size: clamp(2.75rem, 1.5rem + 5vw, 6.5rem);
+  line-height: 0.9;
+  letter-spacing: -0.035em;
+  font-weight: 700;
+}
+
+@utility text-subtitle {
+  font-size: clamp(1.5rem, 1.2rem + 1.2vw, 2.25rem);
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  font-weight: 600;
+}
+
+@utility text-lead {
+  font-size: clamp(1.5rem, 0.9rem + 2.4vw, 3rem);
+  line-height: 1.15;
+}
+
+/* Variables historiques : conservées pour les composants existants, alignées sur les tokens @theme */
 :root {
-  /* Couleurs du thème (light uniquement) */
-  --bg-color: #EEEEEE;
-  --primary-color: #000000;
-  --secondary-color: #2F4A4F;
-  --link-color: #899EA2;
-  --divider: #2F4A4F;
-  --logo-color: #2F4A4F;
-  --header-link-color: #2F4A4F;
+  --bg-color: var(--color-site-bg);
+  --primary-color: var(--color-site-primary);
+  --secondary-color: var(--color-site-secondary);
+  --link-color: var(--color-site-link);
+  --divider: var(--color-site-secondary);
+  --logo-color: var(--color-site-secondary);
+  --header-link-color: var(--color-site-secondary);
+}
+
+@layer base {
+  body {
+    background-color: var(--color-site-bg);
+    color: var(--color-site-primary);
+  }
 }
 
 /* Classes utilitaires de base */
@@ -25,14 +96,17 @@
 .theme-text { fill: var(--secondary-color); }
 .header-theme-text { fill: var(--logo-color); }
 
+/* Accessibilité : anneau de focus visible et cohérent pour la navigation clavier */
+:focus-visible {
+  outline: 3px solid var(--secondary-color);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
 /* Styles généraux */
 .title {
   font-size: 64px;
   font-weight: bold;
-}
-
-.body {
-  font-family: 'Schibsted Grotesk', sans-serif;
 }
 
 /* Styles pour les animations et interactions */
@@ -53,34 +127,11 @@
   margin-right: -10px;
 }
 
-/* Styles pour vanilla-tilt */
-.tilt-box {
-  transform-style: preserve-3d;
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s ease;
-  position: relative;
-  overflow: hidden;
-  cursor: pointer;
-}
-
-.tilt-box:hover {
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
-}
-
-.tilt-box > * {
-  transform: translateZ(20px);
-  transition: transform 0.3s ease;
-}
-
-.js-tilt-glare {
-  border-radius: 8px;
-}
-
 /* Styles pour les effets d'underline */
 .smooth-underline-xl {
   position: relative;
 }
-  
+
 .smooth-underline-xl::after {
   content: '';
   position: absolute;
@@ -93,12 +144,12 @@
   transform-origin: bottom left;
   transition: transform 0.3s ease-out;
 }
-  
+
 .smooth-underline-xl:hover::after {
   transform: scaleX(0);
   transform-origin: bottom right;
 }
-  
+
 .smooth-underline-xl::before {
   content: '';
   position: absolute;
@@ -111,7 +162,7 @@
   transform-origin: bottom left;
   transition: transform 0.3s ease-out 0.3s;
 }
-  
+
 .smooth-underline-xl:hover::before {
   transform: scaleX(1);
   transform-origin: bottom left;
@@ -120,7 +171,7 @@
 .smooth-underline {
   position: relative;
 }
-  
+
 .smooth-underline::after {
   content: '';
   position: absolute;
@@ -133,12 +184,12 @@
   transform-origin: bottom left;
   transition: transform 0.3s ease-out;
 }
-  
+
 .smooth-underline:hover::after {
   transform: scaleX(0);
   transform-origin: bottom right;
 }
-  
+
 .smooth-underline::before {
   content: '';
   position: absolute;
@@ -151,8 +202,18 @@
   transform-origin: bottom left;
   transition: transform 0.3s ease-out 0.3s;
 }
-  
+
 .smooth-underline:hover::before {
   transform: scaleX(1);
   transform-origin: bottom left;
+}
+
+/* Respect de prefers-reduced-motion pour les transitions CSS (les reveals GSAP sont gérés dans useRevealAnimations) */
+@media (prefers-reduced-motion: reduce) {
+  .smooth-underline::before,
+  .smooth-underline::after,
+  .smooth-underline-xl::before,
+  .smooth-underline-xl::after {
+    transition-duration: 0.01ms !important;
+  }
 }

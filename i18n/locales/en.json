@@ -1,0 +1,434 @@
+{
+  "meta": {
+    "siteName": "ERIEU",
+    "home": {
+      "title": "ERIEU — Creative full-stack developer in Reims",
+      "description": "Ethan Rieu, creative full-stack developer in Reims, France, looking for a work-study position. Nuxt, Node, GSAP and Three.js websites that blend aesthetics, interactivity and performance."
+    },
+    "projects": {
+      "title": "Projects — ERIEU",
+      "description": "Selected websites and interactive experiences designed and developed by ERIEU."
+    },
+    "about": {
+      "title": "About — ERIEU",
+      "description": "Who is behind ERIEU: journey, values and toolbox of a creative full-stack developer based in Reims, France, looking for a work-study position."
+    },
+    "contact": {
+      "title": "Contact — ERIEU",
+      "description": "Looking for a two-year work-study position as a full-stack / DevOps developer. Send a message through the form or write directly by email."
+    }
+  },
+  "nav": {
+    "home": "Home",
+    "projects": "Projects",
+    "about": "About",
+    "contact": "Contact",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "mainNavigation": "Main navigation",
+    "language": "Language",
+    "switchTo": "Switch to {lang}",
+    "languages": {
+      "en": "English",
+      "fr": "Français"
+    }
+  },
+  "clock": {
+    "location": "Reims, France"
+  },
+  "footer": {
+    "sitemap": "Site map",
+    "socials": "Socials",
+    "backToTop": "Back on top ↑",
+    "copyright": "Copyright © ERIEU {year}",
+    "logoAlt": "ERIEU logo"
+  },
+  "home": {
+    "logoAlt": "ERIEU wordmark",
+    "tagline": "Defining the digital future: shaping, developing and expressing the essence of brands through contemporary media",
+    "box": {
+      "title": "Interactive experience",
+      "hint": "Move your cursor to explore",
+      "tapHint": "Tap to explore in 3D",
+      "ariaLabel": "Decorative 3D animation of the ERIEU signature line"
+    },
+    "intro": [
+      "I'm a creative full-stack developer, currently studying for a Master's in Web Engineering at ESGI.",
+      "After two years of work-study at AGREEGO, where I designed and built showcase websites and contributed to a SaaS platform, I'm looking to join a team for a new two-year work-study position.",
+      "What drives me: building polished, fast and accessible interfaces, from the Figma mockup all the way to production.",
+      "Front end, back end or DevOps: I want to grow alongside experienced developers and bring my rigour and curiosity to your projects."
+    ],
+    "learnMore": "Learn more about my journey",
+    "selectedWorks": {
+      "line1": "Selected",
+      "line2": "Works"
+    },
+    "seeAllProjects": "See all projects",
+    "aboutTitle": "About me",
+    "aboutText": "I'm a creative full-stack developer and I train myself in the latest technologies to create web applications that blend aesthetics, interactivity and practicality.",
+    "tools": [
+      "Nuxt.js",
+      "Node.js",
+      "GSAP",
+      "Figma",
+      "TailwindCSS",
+      "PostgreSQL"
+    ],
+    "contactTitle": "Hire me as a work-study student!",
+    "toolsTitle": "My tools",
+    "toolsLink": "My journey and how I work"
+  },
+  "projects": {
+    "categories": {
+      "pro": "PRO",
+      "school": "SCHOOL",
+      "personal": "PERSONAL"
+    },
+    "categoryHint": {
+      "pro": "Project delivered in a professional setting",
+      "school": "Project delivered in an academic setting",
+      "personal": "Personal project"
+    },
+    "intralab": {
+      "title": "IntraLab",
+      "services": [
+        "Full-stack Development",
+        "Real-time",
+        "Database"
+      ],
+      "description": "School intranet built during my third year at ESGI: moderated blog, equipment loans, student marketplace and encrypted real-time messaging. A full-stack Nuxt 4, Prisma and PostgreSQL application with 46 API routes secured by JWT and roles.",
+      "tagline": "A school intranet, from the database to real-time messaging.",
+      "role": "Full-stack web developer (team project)",
+      "period": "2025 — 2026",
+      "context": [
+        "IntraLab is the intranet of an ESGI-style school: students, administrators and academic managers publish articles, borrow equipment, sell to each other and chat.",
+        "The project was carried out by a multidisciplinary team in our third year at ESGI. I owned the entire web side, from the interface to the server, while other students worked on cybersecurity and system and network infrastructure."
+      ],
+      "missions": [
+        {
+          "title": "Interface",
+          "description": "A dark interface with frosted-glass surfaces over an animated WebGL background (OGL), built with Tailwind CSS and reusable components, on desktop and mobile."
+        },
+        {
+          "title": "API & database",
+          "description": "46 REST API routes with Nuxt 4 (Nitro), 16 Prisma models on PostgreSQL and Zod validation of every input."
+        },
+        {
+          "title": "Real-time & security",
+          "description": "WebSocket messaging (replies, reactions, typing indicator, read receipts), messages encrypted at rest (AES), JWT authentication, bcrypt-hashed passwords and role-based access control on every route."
+        },
+        {
+          "title": "Production",
+          "description": "Deployment on a Debian virtual machine: PM2 for the Node process, Apache as a reverse proxy (WebSocket included) and Prisma migrations."
+        }
+      ],
+      "features": [
+        {
+          "title": "Moderated blog",
+          "description": "Articles go through a draft, pending, published or rejected workflow, validated by administrators and academic managers."
+        },
+        {
+          "title": "Loans & marketplace",
+          "description": "Borrowing school equipment with approval and return tracking, and student-to-student sales with search, filters and sorting."
+        },
+        {
+          "title": "Messaging & notifications",
+          "description": "Real-time conversations and notifications for every event: loan request, approved article, new message."
+        }
+      ],
+      "extraTitle": "Teamwork",
+      "extra": [
+        "The project brought several ESGI specialisations together: I led web development, my classmates handled cybersecurity and system and network infrastructure.",
+        "I also documented the application, with a technical sheet and a step-by-step deployment guide for a Linux virtual machine."
+      ],
+      "shots": {
+        "home": "IntraLab home page with the latest articles",
+        "messages": "Real-time messaging: replies and reactions",
+        "dashboard": "Personal dashboard (loans, articles, listings)",
+        "admin-users": "Account administration: roles, blocking and unblocking",
+        "loans": "Inventory of equipment to borrow",
+        "mobile-home": "IntraLab home page on mobile",
+        "mobile-messages": "Conversation on mobile",
+        "mobile-blog": "Blog on mobile"
+      }
+    },
+    "agreego": {
+      "title": "AGREEGO",
+      "services": [
+        "UI/UX Design",
+        "Full Development",
+        "SEO & Analytics"
+      ],
+      "description": "Showcase website for AGREEGO, an agricultural drone company based in Reims: seeding, biocontrol treatments and AI-powered crop diagnostics. Designed in Figma and built from scratch with Nuxt 4 and Tailwind, bilingual FR/EN, optimised for search and tracked with Google Analytics.",
+      "tagline": "The showcase website of a drone fleet working for farmers.",
+      "role": "Designer & developer (work-study)",
+      "period": "Dec. 2024 — Sept. 2026",
+      "context": [
+        "AGREEGO is a company from Reims that puts a fleet of drones and their pilots at the service of farmers: cover-crop seeding, biocontrol treatments (trichogramma release, targeted spraying) and AI-powered crop diagnostics.",
+        "During my work-study programme I owned the website end to end: it had to present technical services to a farming audience, build trust with farms, cooperatives and distributors, and turn visits into appointment requests."
+      ],
+      "missions": [
+        {
+          "title": "Design",
+          "description": "Figma mockups, from the site map to desktop and mobile screens: a sober, image-led identity built to be read quickly in the field."
+        },
+        {
+          "title": "Development",
+          "description": "Built from scratch with Nuxt 4 and Tailwind CSS. Minimal scroll animations with AOS, navigation and an appointment form qualified by service."
+        },
+        {
+          "title": "SEO",
+          "description": "Per-page title and description tags, structured data (Organization, FAQPage, SoftwareApplication), per-language sitemaps and a full English version with Nuxt i18n."
+        },
+        {
+          "title": "Analytics & deployment",
+          "description": "Audience tracking with Google Analytics and continuous deployment on Vercel."
+        }
+      ],
+      "features": [
+        {
+          "title": "Solution pages",
+          "description": "A dedicated page for each service (seeding, treatments, diagnostics) with benefits, process and FAQs."
+        },
+        {
+          "title": "Appointment booking",
+          "description": "A contact form on every page, qualified by the requested service."
+        },
+        {
+          "title": "Bilingual FR / EN",
+          "description": "Translated content and localised URLs to reach customers beyond France."
+        }
+      ],
+      "extraTitle": "AGREEGO Cloud",
+      "extra": [
+        "Alongside the showcase websites, I contributed extensively to AGREEGO Cloud, the company's SaaS platform for managing drone campaigns.",
+        "It brings administrators, pilots, agronomists and end customers together in a single tool: field editing and selection, real-time creation and tracking of drone rounds, GPS guidance, flight plan generation, SMS and email notifications, online reports and statistics."
+      ],
+      "shots": {
+        "home": "AGREEGO website home page",
+        "cloud": "AGREEGO Cloud presentation page",
+        "seeding": "“Drone seeding” solution page",
+        "mobile-home": "AGREEGO home page on mobile",
+        "mobile-cloud": "AGREEGO Cloud on mobile",
+        "mobile-treatments": "“Drone treatments” page on mobile"
+      }
+    },
+    "viteego": {
+      "title": "VITEEGO",
+      "services": [
+        "UI/UX Design",
+        "Full Development",
+        "SEO & Analytics"
+      ],
+      "description": "Showcase website for VITEEGO, the viticulture subsidiary of the AGREEGO group: vine inventory, centimetre-accurate surveying and NDVI vigour maps by drone and AI. A vineyard-specific identity, designed in Figma and built from scratch with Nuxt 4, Tailwind and AOS.",
+      "tagline": "The AGREEGO group's viticulture subsidiary, mapped by drone and AI.",
+      "role": "Designer & developer (work-study)",
+      "period": "Dec. 2024 — Sept. 2026",
+      "context": [
+        "VITEEGO is the viticulture subsidiary of the AGREEGO group. It offers winegrowers three drone services: inventory of missing or unproductive vines, plot surveying accurate to ± 0.3 cm and leaf vigour analysis (NDVI) at 25 mm resolution.",
+        "The challenge was to give the subsidiary its own identity, distinct from AGREEGO and rooted in the world of wine, while explaining cutting-edge technology simply to winegrowers."
+      ],
+      "missions": [
+        {
+          "title": "Design",
+          "description": "Identity and mockups in Figma: a burgundy palette drawn from wine, mapping visuals in the spotlight and a clear hierarchy between the three solutions."
+        },
+        {
+          "title": "Development",
+          "description": "Built from scratch with Nuxt 4 and Tailwind CSS, scroll animations with AOS, solutions, approach, about and contact pages."
+        },
+        {
+          "title": "SEO",
+          "description": "Per-page tags, structured data (Organization, Service, OfferCatalog, FAQPage, BreadcrumbList), per-language sitemaps and an English version with Nuxt i18n."
+        },
+        {
+          "title": "Analytics & deployment",
+          "description": "Audience tracking with Google Analytics and continuous deployment on Vercel."
+        }
+      ],
+      "features": [
+        {
+          "title": "Three detailed solutions",
+          "description": "Inventory, surveying and NDVI analysis presented with their benefits and visuals from actual flights."
+        },
+        {
+          "title": "FAQ",
+          "description": "Answers to winegrowers' questions (accuracy, flight periods, machine compatibility) that also feed Google rich results."
+        },
+        {
+          "title": "Bilingual FR / EN",
+          "description": "Translated content for an international wine-growing audience."
+        }
+      ],
+      "shots": {
+        "home": "VITEEGO website home page",
+        "solutions": "“Our solutions” page showing the vine inventory",
+        "demarche": "“Sustainable approach” page",
+        "mobile-home": "VITEEGO home page on mobile",
+        "mobile-solutions": "“Our solutions” page on mobile",
+        "mobile-apropos": "“About us” page on mobile"
+      }
+    }
+  },
+  "about": {
+    "_todo": "Draft written from the existing site. Verify: bio facts, journey entries (dates, employers, school), values wording.",
+    "title": "About",
+    "intro": "Creative full-stack developer based in Reims, I design and build web experiences where aesthetics, interaction and performance carry equal weight.",
+    "bioTitle": "Who I am",
+    "bio": [
+      "I'm Ethan Rieu, the person behind ERIEU. I build from the first Figma frame to the deployed product, so that the design intent survives all the way to the browser.",
+      "My playground is the modern Vue ecosystem: Nuxt for structure and performance, GSAP and Three.js for motion and depth, Tailwind for a consistent visual system, Node and PostgreSQL when a project needs a real back end.",
+      "I train myself continuously on the latest technologies, not to chase trends but to pick the right tool for each project and its constraints. Today, I'm looking for a work-study position to keep growing within a team."
+    ],
+    "journeyTitle": "Journey",
+    "journey": [
+      {
+        "period": "2026 — today",
+        "title": "Master's in Web Engineering",
+        "place": "ESGI — École Supérieure de Génie Informatique",
+        "description": "I'm continuing in the same field with a Master's degree and I'm looking for a two-year work-study position as a full-stack / DevOps developer: 3 weeks at the company, 1 week at school."
+      },
+      {
+        "period": "Alongside my studies",
+        "title": "Personal project",
+        "place": "Phantom.Studio",
+        "description": "Web studio in the making, run alongside my studies, focused on showcase websites and interactive web experiences."
+      },
+      {
+        "period": "Dec. 2024 — Sept. 2026",
+        "title": "Web developer (work-study)",
+        "place": "AGREEGO, Reims",
+        "description": "Designed in Figma and built from scratch the AGREEGO and VITEEGO showcase websites (Nuxt 4, Tailwind), handled SEO and Google Analytics tracking, and contributed extensively to AGREEGO Cloud, the SaaS platform for managing drone campaigns."
+      },
+      {
+        "period": "2023 — 2026",
+        "title": "Bachelor's in Web Engineering",
+        "place": "ESGI — École Supérieure de Génie Informatique",
+        "description": "Two years of common core shared with the Systems, Networks & Cloud Computing and Cybersecurity tracks, then a specialisation in web engineering in the third year, with multidisciplinary team projects such as IntraLab."
+      }
+    ],
+    "valuesTitle": "How I work",
+    "values": [
+      {
+        "title": "Design first",
+        "description": "Every project starts in Figma. Typography, rhythm and motion are decided before the first line of code, then respected pixel for pixel."
+      },
+      {
+        "title": "Motion with meaning",
+        "description": "Animation guides the eye and gives feedback, it never gets in the way. Reduced-motion preferences are respected on every page."
+      },
+      {
+        "title": "Built to last",
+        "description": "Clean, documented code, measured performance and accessible interfaces, so the product is still maintainable in three years."
+      }
+    ],
+    "toolbox": {
+      "title": "My toolbox",
+      "loading": "Loading the toolbox…",
+      "tapToLoad": "Tap to open the 3D toolbox",
+      "hintClosed": "Click the box to open it",
+      "hintOpen": "Grab the tokens · hover to see the tool · click the box to tidy up",
+      "open": "Open the toolbox",
+      "close": "Put the tools away and close the box",
+      "ariaLabel": "Interactive 3D toolbox holding tokens for my stack: {tools}"
+    },
+    "stackTitle": "Toolbox",
+    "stack": [
+      {
+        "category": "Front-end",
+        "items": "Nuxt, Vue 3, React Native, GSAP, Three.js, Tailwind CSS"
+      },
+      {
+        "category": "Back-end",
+        "items": "Node.js, Nitro, PostgreSQL, REST APIs"
+      },
+      {
+        "category": "Design",
+        "items": "Figma, design systems"
+      },
+      {
+        "category": "Workflow",
+        "items": "Git, GitHub, Vercel, Lighthouse, Claude"
+      }
+    ]
+  },
+  "contact": {
+    "title": "Let's talk work-study!",
+    "intro": "Interested in my profile for a two-year full-stack / DevOps work-study position? Write to me, I'll get back to you quickly.",
+    "direct": {
+      "title": "Directly",
+      "location": "Based in Reims, France",
+      "socials": "Elsewhere"
+    },
+    "form": {
+      "title": "Send a message",
+      "requiredHint": "All fields are required.",
+      "statusLabel": "Form status",
+      "name": "Name",
+      "namePlaceholder": "Your name",
+      "email": "Email",
+      "emailPlaceholder": "Your email address",
+      "message": "Message",
+      "messagePlaceholder": "A few words about your company, the role and the work-study schedule",
+      "submit": "Send message",
+      "sending": "Sending…",
+      "success": "Thank you! Your message has been sent. I will get back to you shortly.",
+      "error": "Something went wrong. Please try again or send an email directly.",
+      "rateLimited": "Too many messages were sent recently. Please try again later.",
+      "errors": {
+        "name": {
+          "required": "Please enter your name.",
+          "length": "Your name must be between 2 and 80 characters."
+        },
+        "email": {
+          "required": "Please enter your email address.",
+          "invalid": "Please enter a valid email address."
+        },
+        "message": {
+          "required": "Please write a message.",
+          "length": "Your message must be between 10 and 2000 characters."
+        }
+      }
+    }
+  },
+  "projectPage": {
+    "back": "All projects",
+    "visit": "Visit the live website",
+    "code": "View the code on GitHub",
+    "role": "Role",
+    "period": "Period",
+    "services": "Services",
+    "stack": "Stack",
+    "context": "Context",
+    "missions": "What I did",
+    "screens": "Overview",
+    "mobile": "On mobile",
+    "features": "Highlights",
+    "performance": "Performance",
+    "performanceNote": "Lighthouse audit of the production home page, measured on {date}. Mobile performance: median of three runs.",
+    "device": {
+      "mobile": "Mobile",
+      "desktop": "Desktop"
+    },
+    "scores": {
+      "performance": "Performance",
+      "accessibility": "Accessibility",
+      "bestPractices": "Best practices",
+      "seo": "SEO"
+    },
+    "related": "Related project",
+    "metaTitle": "{title} — ERIEU project",
+    "newTab": "(opens in a new tab)"
+  },
+  "projectsPage": {
+    "title": "Projects",
+    "next": "VIEW",
+    "toFooter": "FOOTER ↓",
+    "years": "2024 — 2026"
+  },
+  "cta": {
+    "title": "Interested in my profile?",
+    "availability": "Currently looking for a two-year work-study position: 3 weeks at the company, 1 week at school.",
+    "form": "Send a message"
+  }
+}
