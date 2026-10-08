@@ -15,6 +15,7 @@
     "@nuxtjs/i18n": "^10.6.0",
     "@pinia/nuxt": "^1.0.2",
     "@tailwindcss/vite": "^4.3.3",
+    "@vercel/analytics": "^2.0.1",
     "gsap": "^3.15.0",
     "nuxt": "^4.6.0",
     "nuxt-security": "^2.6.0",
@@ -26,5 +27,10 @@
   },
   "devDependencies": {
     "@playwright/test": "^1.63.0"
+  },
+  "overrides": {
+    "@vercel/analytics": {
+      "vue-router": "$vue-router"
+    }
   }
 }
