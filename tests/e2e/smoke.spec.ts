@@ -55,8 +55,8 @@ test('la scène 3D de la home se charge', async ({ page }) => {
   await page.goto('/');
 
   // Le canvas reste masqué tant que la scène n'est pas prête : on amène le conteneur à l'écran
-  await page.locator('.signature-scene').scrollIntoViewIfNeeded();
-  const canvas = page.locator('.signature-scene canvas');
+  await page.locator('.desk-scene').scrollIntoViewIfNeeded();
+  const canvas = page.locator('.desk-scene canvas');
   await expect(canvas).toBeVisible({ timeout: 20_000 });
 
   expect(errors).toEqual([]);

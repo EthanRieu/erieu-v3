@@ -42,11 +42,10 @@
 
                 <!-- Conteneur flexible -->
                 <div class="flex flex-col space-y-8 md:space-y-12 xl:flex-row xl:space-y-0 xl:space-x-16 items-center">
-                    <!-- Box interactive : tracé signature en 3D (Three.js), repli CSS si WebGL est indisponible -->
+                    <!-- Mini bureau 3D interactif (Three.js), sans cadre : il flotte sur le fond de page -->
                     <div class="w-full flex justify-center mb-8 xl:mb-0 reveal-element">
-                        <div
-                            class="bg-gradient-to-br from-slate-200 to-slate-400 w-full sm:w-4/5 md:w-3/4 xl:w-full max-w-md h-48 sm:h-56 md:h-64 rounded-lg shadow-lg overflow-hidden">
-                            <SignatureScene :path="SIGNATURE_PATH" />
+                        <div class="w-full sm:w-4/5 md:w-3/4 xl:w-full max-w-lg h-72 sm:h-80 xl:h-96">
+                            <DeskScene />
                         </div>
                     </div>
 
