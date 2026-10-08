@@ -1,0 +1,24 @@
+# master = prod : seule develop peut y être mergée. GitHub n'a pas de règle native « branche source »,
+# donc ce check échoue pour toute autre branche et est rendu obligatoire dans le ruleset de master.
+name: Branch guard
+
+on:
+  pull_request:
+    branches: [master]
+    # edited : relance le check si la branche cible d'une PR existante est changée vers master
+    types: [opened, synchronize, reopened, edited]
+
+jobs:
+  source-develop:
+    name: Source = develop
+    runs-on: ubuntu-latest
+    steps:
+      - name: Vérifier la branche source
+        env:
+          HEAD_REF: ${{ github.head_ref }}
+        run: |
+          if [ "$HEAD_REF" != "develop" ]; then
+            echo "::error::Seule develop peut être mergée sur master (branche source : $HEAD_REF). Cible develop à la place."
+            exit 1
+          fi
+          echo "OK : PR develop → master"
