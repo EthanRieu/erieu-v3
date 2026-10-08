@@ -9,9 +9,20 @@ export default defineNuxtConfig({
 
   css: ['~/assets/css/main.css'],
   vite: {
-    plugins: [tailwindcss()],
-    // Dev uniquement : le pré-scan Vite échoue sur l'import virtuel `#components` du runtime i18n v10
-    optimizeDeps: { exclude: ['@nuxtjs/i18n'] },
+    plugins: [
+      tailwindcss(),
+      // Dev uniquement : le pré-scan Vite lit le runtime i18n brut, où `#components` n'a pas encore été
+      // réécrit par Nuxt, et le cherche dans le champ `imports` du package.json d'i18n → erreur. On l'ignore.
+      {
+        name: 'erieu:i18n-scan-components',
+        enforce: 'pre',
+        resolveId(id, importer) {
+          if (id === '#components' && importer?.includes('/node_modules/@nuxtjs/i18n/')) {
+            return { id, external: true };
+          }
+        },
+      },
+    ],
   },
 
   modules: ['@pinia/nuxt', '@nuxtjs/i18n', '@nuxt/fonts', 'nuxt-security', '@vercel/analytics'],
