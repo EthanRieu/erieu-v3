@@ -14,7 +14,7 @@ export default defineNuxtConfig({
     optimizeDeps: { exclude: ['@nuxtjs/i18n'] },
   },
 
-  modules: ['@pinia/nuxt', '@nuxtjs/i18n', '@nuxt/fonts', 'nuxt-security'],
+  modules: ['@pinia/nuxt', '@nuxtjs/i18n', '@nuxt/fonts', 'nuxt-security', '@vercel/analytics'],
 
   pinia: {
     autoImports: ['defineStore', 'acceptHMRUpdate'],

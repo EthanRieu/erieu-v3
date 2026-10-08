@@ -1,5 +1,13 @@
 import { test, expect, type Page } from '@playwright/test';
 
+// Vercel Analytics : /_vercel/insights/* n'existe que sur l'infra Vercel (404 JSON en local/CI).
+// On sert un script vide pour garder la page sans erreur console, sans masquer les autres erreurs.
+test.beforeEach(async ({ page }) => {
+  await page.route('**/_vercel/insights/**', (route) =>
+    route.fulfill({ status: 200, contentType: 'application/javascript', body: '' }),
+  );
+});
+
 /**
  * Collecte les erreurs JS et console d'une page (violations CSP comprises : Chrome les logge en erreur console).
  * Une MàJ de dépendance qui casse l'hydratation, un import ou un header de sécurité finit presque toujours ici.
