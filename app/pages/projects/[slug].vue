@@ -191,27 +191,51 @@
                 <!-- Projet associé -->
                 <template v-if="related">
                     <div class="w-full h-[2px] divider reveal-divider"></div>
-                    <section class="my-16 md:my-24" aria-labelledby="project-related">
-                        <h2 id="project-related" class="secondary-color text-subtitle mb-6 reveal-text">
+                    <!-- Même grille que ContactCta compact. Desktop : titre puis infos à gauche (calées en bas), capture à droite.
+                         Mobile : titre, capture, infos. Toute la section est cliquable via le lien du nom (after:inset-0). -->
+                    <section
+                        class="group relative my-16 md:my-24 grid grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-x-16 lg:gap-y-8"
+                        aria-labelledby="project-related">
+                        <h2 id="project-related"
+                            class="secondary-color text-section text-balance lg:col-start-1 lg:row-start-1 reveal-title">
                             {{ $t('projectPage.related') }}
                         </h2>
-                        <NuxtLink :to="localePath(`/projects/${related.id}`)"
-                            class="group flex flex-col md:flex-row md:items-center gap-8 reveal-element">
-                            <span
-                                class="secondary-color text-section smooth-underline-xl w-fit">
-                                {{ $t(`projects.${related.id}.title`) }}
-                            </span>
+                        <div
+                            class="rounded-xl overflow-hidden shadow-lg lg:col-start-2 lg:row-start-1 lg:row-span-2 lg:self-start reveal-element">
                             <img :src="related.cover.src" :srcset="related.cover.srcset"
-                                sizes="(min-width: 768px) 384px, calc(100vw - 64px)" :width="related.cover.width"
-                                :height="related.cover.height" loading="lazy" decoding="async"
-                                class="w-full md:w-96 h-auto rounded-lg shadow-lg transition-transform duration-500 group-hover:scale-[1.03] motion-reduce:transition-none motion-reduce:group-hover:scale-100"
+                                sizes="(min-width: 1280px) 672px, (min-width: 1024px) calc(50vw - 128px), (min-width: 640px) calc(100vw - 192px), calc(100vw - 64px)"
+                                :width="related.cover.width" :height="related.cover.height" loading="lazy"
+                                decoding="async"
+                                class="w-full h-auto block transition-transform duration-500 group-hover:scale-[1.03] motion-reduce:transition-none motion-reduce:group-hover:scale-100"
                                 alt="" />
-                        </NuxtLink>
+                        </div>
+                        <!-- Pas de reveal-* sur ce bloc : le transform laissé par GSAP réduirait la zone cliquable du lien à ce bloc -->
+                        <div class="lg:col-start-1 lg:row-start-2 lg:self-end">
+                            <div class="flex flex-wrap items-center gap-4 reveal-text">
+                                <ProjectCategoryBadge :category="related.category" />
+                                <span class="secondary-color font-semibold text-base sm:text-lg">
+                                    {{ $t(`projects.${related.id}.period`) }}
+                                </span>
+                            </div>
+                            <h3 class="secondary-color text-subtitle mt-4">
+                                <NuxtLink :to="localePath(`/projects/${related.id}`)"
+                                    class="after:absolute after:inset-0 after:z-10 after:rounded-xl focus-visible:outline-none focus-visible:after:outline-2 focus-visible:after:outline-offset-8 focus-visible:after:outline-current">
+                                    {{ $t(`projects.${related.id}.title`) }}
+                                </NuxtLink>
+                            </h3>
+                            <p class="primary-color text-base md:text-lg mt-2 reveal-text">
+                                {{ $t(`projects.${related.id}.tagline`) }}
+                            </p>
+                            <span aria-hidden="true"
+                                class="inline-block primary-color font-semibold text-lg mt-6 border-b-2 border-current pointer-events-none reveal-text">
+                                {{ $t('projectPage.viewProject') }} →
+                            </span>
+                        </div>
                     </section>
                 </template>
                 <div class="w-full h-[2px] divider reveal-divider"></div>
 
-                <ContactCta />
+                <ContactCta compact />
             </main>
         </div>
 
