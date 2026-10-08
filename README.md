@@ -36,7 +36,7 @@ Sans clé Resend, le formulaire répond `503` et affiche le message d'erreur gé
 app/                      code du site (convention Nuxt 4, alias ~)
   app.vue
   pages/                  index (home), about, contact, projects
-  components/             header, footer, LiveClock, SelectedProject, SignatureScene / ToolboxScene (Three.js)
+  components/             header, footer, LiveClock, SelectedProject, DeskScene / ToolboxScene (Three.js)
   composables/            useRevealAnimations (reveal GSAP partagé), useMessageList (listes i18n)
   stores/                 projectStore.js (données non textuelles des projets)
   lib/                    sous-ensembles tree-shakés de three
@@ -54,11 +54,24 @@ public/img/               images servies telles quelles (WebP)
 
 ## Animations
 
-Les classes `reveal-title`, `reveal-text`, `reveal-text-staggered`, `reveal-divider`, `reveal-element`, `reveal-project-N`, `reveal-tool` et `reveal-cta` sont pré-cachées puis révélées au scroll par `useRevealAnimations()` (GSAP ScrollTrigger, une seule fois par élément). `prefers-reduced-motion` désactive les reveals, le dessin du tracé et la rotation automatique de la scène 3D.
+Les classes `reveal-title`, `reveal-text`, `reveal-text-staggered`, `reveal-divider`, `reveal-element`, `reveal-project-N`, `reveal-tool` et `reveal-cta` sont pré-cachées puis révélées au scroll par `useRevealAnimations()` (GSAP ScrollTrigger, une seule fois par élément). `prefers-reduced-motion` désactive les reveals, le dessin du tracé et le balancement automatique de la scène 3D.
 
-## Scène 3D (`SignatureScene`)
+## Scène 3D (`DeskScene`)
 
-Le tracé signature de la home extrudé en tube Three.js (dégradé `#2F4A4F → #899EA2`), réactif au curseur. Seul un sous-ensemble de `three` (`app/lib/three-subset.js`) est chargé, dynamiquement : à l'approche du viewport sur pointeur fin (souris/trackpad), au premier tap sur la box sur écran tactile ou en mode économie de données. Sans WebGL, la box CSS reste affichée.
+Mini bureau isométrique de la home (`public/models/desk.glb`, ~90 Ko), assemblé dans `blender/desk.blend` à partir du [Furniture Kit de Kenney](https://kenney.nl/assets/furniture-kit) (CC0) et recoloré aux couleurs du site. Il pivote avec le curseur ; au survol chaque objet se soulève et affiche ce qu'il représente, au clic il réagit (l'écran change de contenu, la lampe s'allume / s'éteint, la chaise tourne…). Seul un sous-ensemble de `three` (`app/lib/three-desk.js`) est chargé, dynamiquement : à l'approche du viewport sur pointeur fin (souris/trackpad), au premier tap sur écran tactile ou en mode économie de données. Sans WebGL, un texte de repli reste affiché.
+
+## Scène 3D (`ToolboxScene`)
+
+Boîte à outils de la page About (`public/models/toolbox.glb`, ~2,9 Mo), modifiée dans `blender/toolbox.blend` à partir de [« Metal Toolbox » de Mateusz Sadek sur Poly Haven](https://polyhaven.com/a/metal_toolbox) (CC0), recolorée aux couleurs du site avec un médaillon ERIEU. Au clic, le couvercle s'ouvre et les jetons de la stack sautent dehors ; ils se déplacent à la souris / au doigt (physique maison). Même stratégie de chargement que `DeskScene`, avec `app/lib/three-toolbox.js`.
+
+## Crédits
+
+| Ressource | Auteur | Source | Licence |
+| --- | --- | --- | --- |
+| Metal Toolbox (boîte à outils, page About) | Mateusz Sadek | [Poly Haven](https://polyhaven.com/a/metal_toolbox) | [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/) |
+| Furniture Kit (bureau 3D, home) | Kenney | [kenney.nl](https://kenney.nl/assets/furniture-kit) | [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/) |
+
+Les deux modèles sont modifiés (recoloration, assemblage, médaillon). Le CC0 n'impose aucune attribution ; ces crédits sont donnés par courtoisie.
 
 ## Sécurité
 

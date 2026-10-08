@@ -41,7 +41,7 @@ import { prefersReducedMotion } from '~/composables/useRevealAnimations'
  * souris / au doigt (physique maison : gravité, rebonds, empilement, collisions entre jetons et avec la boîte).
  * Un jeton lâché au-dessus de la boîte ouverte y retourne ; un clic sur la boîte range tout et la referme.
  *
- * Performance (même stratégie que SignatureScene) : three (sous-ensemble lib/three-toolbox.js) et le .glb sont
+ * Performance (même stratégie que DeskScene) : three (sous-ensemble lib/three-toolbox.js) et le .glb sont
  * chargés à la demande — à l'approche du viewport sur pointeur fin, au premier tap sur tactile / économie de
  * données. La boucle de rendu ne tourne que si la scène est visible et l'onglet actif ; tout est libéré au démontage.
  * prefers-reduced-motion : pas de sautillement, ouverture et rangement sans trajectoires balistiques.

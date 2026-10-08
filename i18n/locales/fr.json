@@ -16,6 +16,14 @@
     "contact": {
       "title": "Contact — ERIEU",
       "description": "À la recherche d'une alternance de deux ans en développement full-stack / DevOps. Envoyez un message via le formulaire ou écrivez directement par e-mail."
+    },
+    "legal": {
+      "title": "Mentions légales — ERIEU",
+      "description": "Éditeur, hébergeur, propriété intellectuelle et crédits du site erieu.fr."
+    },
+    "privacy": {
+      "title": "Confidentialité — ERIEU",
+      "description": "Données collectées par erieu.fr : formulaire de contact, mesure d'audience sans cookie et cookie de langue. Vos droits et comment les exercer."
     }
   },
   "nav": {
@@ -41,16 +49,39 @@
     "socials": "Réseaux",
     "backToTop": "Retour en haut ↑",
     "copyright": "Copyright © ERIEU {year}",
-    "logoAlt": "Logo ERIEU"
+    "logoAlt": "Logo ERIEU",
+    "legal": "Informations",
+    "legalNotice": "Mentions légales",
+    "privacy": "Confidentialité"
   },
   "home": {
     "logoAlt": "Logotype ERIEU",
     "tagline": "Définir le futur numérique : façonner, développer et exprimer l'essence des marques à travers les médias contemporains",
-    "box": {
+    "desk": {
       "title": "Expérience interactive",
-      "hint": "Déplacez votre curseur pour explorer",
-      "tapHint": "Touchez pour explorer en 3D",
-      "ariaLabel": "Animation 3D décorative du tracé signature ERIEU"
+      "loading": "Chargement du bureau 3D…",
+      "tapToLoad": "Touchez pour charger le bureau 3D",
+      "hint": "Survolez et cliquez sur les objets",
+      "hintTouch": "Touchez les objets",
+      "ariaLabel": "Bureau 3D interactif : écran, clavier, souris, lampe, livres, plantes et chaise de bureau",
+      "nextScreen": "Changer le contenu de l'écran",
+      "lampOn": "Allumer la lampe",
+      "lampOff": "Éteindre la lampe",
+      "screen": {
+        "role": "Développeur full-stack créatif",
+        "next": "alternance",
+        "status": "Disponible",
+        "rhythm": "Alternance · 3 sem. / 1 sem."
+      },
+      "items": {
+        "screen": "Des interfaces soignées",
+        "keyboard": "Front, back et DevOps",
+        "mouse": "Du maquettage Figma à la prod",
+        "lamp": "La curiosité, toujours allumée",
+        "books": "Mastère Ingénierie du Web · ESGI",
+        "plant": "Toujours en progression",
+        "chair": "Une place dans votre équipe ?"
+      }
     },
     "intro": [
       "Je suis développeur full-stack créatif, actuellement en Mastère Ingénierie du Web à l'ESGI.",
@@ -67,12 +98,30 @@
     "aboutTitle": "À propos",
     "aboutText": "Je suis développeur full-stack créatif et je me forme en continu aux dernières technologies pour créer des applications web qui allient esthétique, interactivité et praticité.",
     "tools": [
-      "Nuxt.js",
-      "Node.js",
-      "GSAP",
-      "Figma",
-      "TailwindCSS",
-      "PostgreSQL"
+      {
+        "name": "Nuxt.js",
+        "description": "Mon framework de prédilection : sites vitrines et applications SSR bilingues, comme AGREEGO et IntraLab."
+      },
+      {
+        "name": "Node.js",
+        "description": "Côté serveur : API REST, routes Nitro sécurisées par JWT et formulaires connectés."
+      },
+      {
+        "name": "GSAP",
+        "description": "Animations au scroll et micro-interactions, sans sacrifier la performance ni l'accessibilité."
+      },
+      {
+        "name": "Figma",
+        "description": "Maquettes et design systems, pensés avant d'écrire la moindre ligne de code."
+      },
+      {
+        "name": "TailwindCSS",
+        "description": "Des interfaces responsives et cohérentes, construites sur un design system utilitaire."
+      },
+      {
+        "name": "PostgreSQL",
+        "description": "Modélisation et stockage des données avec Prisma, comme sur IntraLab."
+      }
     ],
     "contactTitle": "Recrutez-moi en alternance !",
     "toolsTitle": "Mes outils",
@@ -388,6 +437,10 @@
           "required": "Merci d'écrire un message.",
           "length": "Votre message doit contenir entre 10 et 2000 caractères."
         }
+      },
+      "notice": {
+        "text": "Vos données servent uniquement à vous répondre et ne sont jamais revendues.",
+        "link": "Politique de confidentialité"
       }
     }
   },
@@ -417,6 +470,7 @@
       "seo": "SEO"
     },
     "related": "Projet associé",
+    "viewProject": "Voir le projet",
     "metaTitle": "{title} — Projet ERIEU",
     "newTab": "(nouvel onglet)"
   },
@@ -430,5 +484,152 @@
     "title": "Mon profil vous intéresse ?",
     "availability": "Actuellement à la recherche d'une alternance de deux ans, au rythme de 3 semaines en entreprise et 1 semaine en cours.",
     "form": "Envoyer un message"
+  },
+  "legalPages": {
+    "updated": "Dernière mise à jour : {date}"
+  },
+  "legal": {
+    "title": "Mentions légales",
+    "intro": "Les informations légales du site erieu.fr, conformément à la loi pour la confiance dans l'économie numérique (LCEN).",
+    "sections": [
+      {
+        "title": "Éditeur",
+        "body": [
+          "Ce site est un portfolio personnel, édité à titre non professionnel par Ethan Rieu, développeur full-stack basé à Reims (France).",
+          "Responsable de la publication : Ethan Rieu. Pour toute question :"
+        ],
+        "email": true
+      },
+      {
+        "title": "Hébergement",
+        "body": [
+          "Vercel Inc.",
+          "440 N Barranca Ave #4133, Covina, CA 91723, États-Unis."
+        ],
+        "links": [
+          {
+            "label": "vercel.com",
+            "href": "https://vercel.com"
+          }
+        ]
+      },
+      {
+        "title": "Propriété intellectuelle",
+        "body": [
+          "Les textes, le design, le code et le logo ERIEU sont la propriété d'Ethan Rieu, sauf mention contraire. Toute reproduction sans autorisation préalable est interdite.",
+          "Les captures d'écran des projets présentés illustrent des réalisations à titre de références ; les sites, contenus et marques correspondants restent la propriété de leurs titulaires.",
+          "Les marques et logos cités (outils, frameworks, services) appartiennent à leurs propriétaires respectifs. Leur présence n'implique aucune affiliation ni partenariat."
+        ]
+      },
+      {
+        "title": "Crédits",
+        "body": [
+          "Boîte à outils 3D (page À propos) : « Metal Toolbox » de Mateusz Sadek, Poly Haven, licence CC0. Modèle modifié (couleurs, médaillon ERIEU).",
+          "Bureau 3D (accueil) : Furniture Kit de Kenney, licence CC0. Modèles assemblés et recolorés.",
+          "Police : Schibsted Grotesk, licence SIL Open Font License, hébergée sur ce site."
+        ],
+        "links": [
+          {
+            "label": "Metal Toolbox sur Poly Haven",
+            "href": "https://polyhaven.com/a/metal_toolbox"
+          },
+          {
+            "label": "Furniture Kit sur kenney.nl",
+            "href": "https://kenney.nl/assets/furniture-kit"
+          },
+          {
+            "label": "Licence CC0 1.0",
+            "href": "https://creativecommons.org/publicdomain/zero/1.0/"
+          }
+        ]
+      },
+      {
+        "title": "Données personnelles",
+        "body": [
+          "Le traitement des données envoyées via le formulaire de contact, la mesure d'audience et les cookies sont détaillés dans la politique de confidentialité."
+        ],
+        "links": [
+          {
+            "label": "Politique de confidentialité",
+            "to": "privacy"
+          }
+        ]
+      }
+    ]
+  },
+  "privacy": {
+    "title": "Confidentialité",
+    "intro": "Ce site collecte le strict minimum : ce que vous m'écrivez via le formulaire de contact et des statistiques de visite anonymes. Aucune publicité, aucun traceur tiers, aucune revente.",
+    "sections": [
+      {
+        "title": "Responsable du traitement",
+        "body": [
+          "Ethan Rieu, éditeur du site. Pour toute question sur vos données :"
+        ],
+        "email": true
+      },
+      {
+        "title": "Formulaire de contact",
+        "body": [
+          "Données collectées : nom, adresse e-mail, message, ainsi que la langue du site utilisée.",
+          "Finalité : vous répondre. Vos données ne sont utilisées pour rien d'autre : ni prospection, ni newsletter, ni revente.",
+          "Base légale : l'intérêt légitime à répondre aux personnes qui me contactent (article 6.1.f du RGPD).",
+          "Durée de conservation : 3 ans à compter du dernier échange, puis suppression."
+        ]
+      },
+      {
+        "title": "Destinataires et sous-traitants",
+        "body": [
+          "Vos messages ne sont lus que par moi. Deux prestataires techniques interviennent dans leur acheminement :",
+          "Resend (envoi de l'e-mail vers ma boîte de réception) et Vercel (hébergement du site), tous deux situés aux États-Unis.",
+          "Ces transferts hors de l'Union européenne sont encadrés par les garanties prévues par le RGPD (Data Privacy Framework UE–États-Unis ou clauses contractuelles types de la Commission européenne)."
+        ],
+        "links": [
+          {
+            "label": "Politique de confidentialité de Resend",
+            "href": "https://resend.com/legal/privacy-policy"
+          },
+          {
+            "label": "Politique de confidentialité de Vercel",
+            "href": "https://vercel.com/legal/privacy-policy"
+          }
+        ]
+      },
+      {
+        "title": "Sécurité et anti-spam",
+        "body": [
+          "Pour limiter les abus, votre adresse IP est gardée en mémoire au plus une heure afin de plafonner l'envoi à 5 messages par heure. Elle n'est jamais enregistrée ni associée à votre message.",
+          "Comme tout hébergeur, Vercel conserve des journaux techniques (dont l'adresse IP) pendant une durée limitée, pour assurer la sécurité et le bon fonctionnement du service."
+        ]
+      },
+      {
+        "title": "Mesure d'audience",
+        "body": [
+          "Le site utilise Vercel Web Analytics, sans cookie. Seules des données agrégées sont mesurées : pages vues, site de provenance, pays, type d'appareil, navigateur et système.",
+          "Les visiteurs ne sont pas identifiés : l'empreinte utilisée pour compter les visites est anonymisée et renouvelée chaque jour. Cette mesure ne nécessite donc pas votre consentement."
+        ]
+      },
+      {
+        "title": "Cookies",
+        "body": [
+          "Un seul cookie est déposé : i18n_redirected. Il mémorise la langue du site (français ou anglais) lors de votre arrivée sur la page d'accueil, pour 12 mois.",
+          "Indispensable au fonctionnement de l'interface, il est exempté de consentement. Aucun cookie publicitaire, de réseau social ou de suivi n'est utilisé. Vous pouvez le supprimer à tout moment depuis les réglages de votre navigateur."
+        ]
+      },
+      {
+        "title": "Vos droits",
+        "body": [
+          "Vous disposez d'un droit d'accès, de rectification, d'effacement, d'opposition, de limitation et de portabilité de vos données. Pour l'exercer, écrivez-moi : je réponds sous un mois au plus.",
+          "Si vous estimez que vos droits ne sont pas respectés, vous pouvez adresser une réclamation à la CNIL."
+        ],
+        "email": true,
+        "links": [
+          {
+            "label": "Adresser une réclamation à la CNIL",
+            "href": "https://www.cnil.fr/fr/plaintes"
+          }
+        ]
+      }
+    ]
   }
 }

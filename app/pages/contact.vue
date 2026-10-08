@@ -115,6 +115,14 @@
                                     {{ statusMessage }}
                                 </p>
                             </div>
+
+                            <!-- Information RGPD (art. 13) au moment de la collecte -->
+                            <p class="primary-color text-sm">
+                                {{ $t('contact.form.notice.text') }}
+                                <NuxtLink :to="localePath('privacy')" class="secondary-color font-semibold smooth-underline">
+                                    {{ $t('contact.form.notice.link') }}
+                                </NuxtLink>
+                            </p>
                         </form>
                     </section>
                 </div>
@@ -138,6 +146,7 @@ const socials = [
 ]
 
 const { t, locale } = useI18n()
+const localePath = useLocalePath()
 
 useSeoMeta({
     title: () => t('meta.contact.title'),
