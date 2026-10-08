@@ -86,8 +86,8 @@ export default defineNuxtConfig({
         'object-src': ["'none'"],
         'frame-ancestors': ["'none'"],
         'form-action': ["'self'"],
-        // Scripts : uniquement les bundles nonce-és + vanilla-tilt (CDN encore utilisé par pages/projects.vue).
-        'script-src': ["'self'", "'nonce-{{nonce}}'", "'strict-dynamic'", 'https://cdnjs.cloudflare.com'],
+        // Scripts : uniquement les bundles nonce-és.
+        'script-src': ["'self'", "'nonce-{{nonce}}'", "'strict-dynamic'"],
         'script-src-attr': ["'none'"],
         'style-src': ["'self'", "'unsafe-inline'"],
         // blob: : textures embarquées dans les modèles .glb (GLTFLoader les décode via des URL blob locales)

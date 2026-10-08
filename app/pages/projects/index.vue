@@ -9,7 +9,7 @@
         </div>
 
         <!-- Portfolio Slider Section -->
-        <div class="portfolio-slider relative site-container h-[calc(100svh-290px)] min-h-[460px]" @wheel="handleWheelEvent">
+        <div class="portfolio-slider relative site-container h-[calc(100svh-290px)] min-h-[460px]">
             <!-- Project Cards Stack -->
             <div class="portfolio-slider-center h-full flex items-center justify-center relative">
                 <div v-for="(project, index) in allProjects" :key="project.id" :class="[
@@ -28,11 +28,11 @@
                             </div>
                         </div>
 
-                        <!-- Capture au milieu avec effet tilt -->
+                        <!-- Capture au milieu -->
                         <div class="card-section w-full md:w-2/4 md:px-8 flex items-center justify-center">
-                            <div class="project-image-container w-full" :ref="`tiltRef${index}`">
+                            <div class="project-image-container w-full">
                                 <div :style="{ backgroundColor: getProjectColor(index) }"
-                                    class="w-full h-[240px] sm:h-[320px] md:h-[400px] rounded-lg shadow-lg transform-style-3d overflow-hidden">
+                                    class="w-full h-[240px] sm:h-[320px] md:h-[400px] rounded-lg shadow-lg overflow-hidden">
                                     <!-- Capture du projet (lien vers l'étude de cas si elle existe) -->
                                     <component :is="hasCaseStudy(project.id) ? NuxtLink : 'div'" v-if="project.imageUrl"
                                         :to="hasCaseStudy(project.id) ? localePath(`/projects/${project.id}`) : undefined"
@@ -85,7 +85,6 @@
 </template>
 
 <script>
-import { useHead } from '#imports'
 import { onMounted, onBeforeUnmount, ref, computed, nextTick } from 'vue'
 import Header from '~/components/header.vue'
 import Footer from '~/components/footer.vue'
@@ -116,14 +115,6 @@ export default {
             ogDescription: () => t('meta.projects.description')
         })
 
-        // Ajouter vanilla-tilt et GSAP
-        useHead({
-            script: [
-                { src: 'https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.7.2/vanilla-tilt.min.js', body: true }
-            ]
-        })
-
-        const tiltInstances = ref([])
         const scrollTriggerInstances = ref([])
         const showCursor = ref(null)
         const currentProjectIndex = ref(0)
@@ -131,8 +122,20 @@ export default {
         const scrollDirection = ref('down') // 'up' ou 'down'
         let wheelTimeout = null
         let lastScrollTime = 0
-        const scrollCooldown = 1200 // Temps minimum entre chaque défilement en ms
+        const scrollCooldown = 700 // Durée d'une transition entre projets (sortie 300 ms + entrée 400 ms)
         const isLastProjectReached = ref(false) // Nouvelle variable pour suivre si on a atteint le dernier projet
+        // Molette / trackpad : on ne réagit qu'aux NOUVELLES intentions de scroll, jamais à l'inertie.
+        // L'inertie (trackpad macOS, molettes « free spin ») ne fait que décélérer, alors qu'un nouveau geste
+        // accélère : on compare la moyenne des derniers deltas à celle d'un historique plus long (principe de
+        // fullPage.js). Un simple délai entre événements ne suffit pas : l'inertie peut avoir des trous et deux
+        // gestes rapprochés se confondent.
+        let wheelDeltas = []
+        let lastWheelEventTime = 0
+        const WHEEL_PAUSE = 150 // ms sans événement : pause (fin de geste… ou trou dans l'inertie)
+        const WHEEL_RESET_LONG = 1000 // ms sans événement : l'historique repart de zéro
+        const MIN_INTENT_DELTA = 4 // les micro-deltas de fin d'inertie ne déclenchent jamais rien
+        // Au dernier projet, le scroll natif vers le footer n'est déverrouillé que par une nouvelle intention
+        let footerUnlocked = false
 
         // Formatage du numéro de projet avec deux chiffres
         const formatProjectNumber = (num) => {
@@ -341,8 +344,9 @@ export default {
                 // Si on atteint le dernier projet
                 if (currentProjectIndex.value === allProjects.value.length - 1) {
                     isLastProjectReached.value = true
-                    // Activer le défilement normal vers le footer
-                    enableNormalScrolling();
+                    footerUnlocked = false
+                    // Le libellé passe à « FOOTER ↓ »
+                    gsap.to(showCursor.value, { opacity: 1, duration: 0.3, ease: "power1.out" })
                 }
 
                 // Animer le nouveau projet
@@ -386,7 +390,7 @@ export default {
                 // Si on n'est plus au dernier projet, désactiver le défilement normal
                 if (isLastProjectReached.value && currentProjectIndex.value < allProjects.value.length - 1) {
                     isLastProjectReached.value = false
-                    disableNormalScrolling();
+                    footerUnlocked = false
                 }
 
                 // Animer le nouveau projet
@@ -404,51 +408,47 @@ export default {
             }, 300)
         }
 
-        // Gérer l'événement de scroll
-        const handleWheelEvent = (e) => {
-            // Dernier projet atteint : scroll natif vers le footer, et dans les deux sens tant que la page
-            // est défilée (sinon remonter relancerait le slider en laissant la page bloquée en bas).
-            // NB : pas de modificateur .prevent sur @wheel, sinon preventDefault() précède ce return.
-            if (isLastProjectReached.value && (e.deltaY > 0 || window.scrollY > 0)) {
-                return;
-            }
+        const average = (values) => values.reduce((sum, value) => sum + value, 0) / values.length
 
-            e.preventDefault(); // Empêcher le scroll par défaut pour les autres cas
-
-            // Toujours traiter un seul événement de scroll à la fois, quelle que soit l'amplitude
+        // Vrai si l'événement wheel courant marque une nouvelle intention
+        const isNewIntent = (e) => {
             const now = Date.now()
-            if (now - lastScrollTime < scrollCooldown || isAnimating.value) return
+            const gap = now - lastWheelEventTime
+            lastWheelEventTime = now
+            const delta = Math.abs(e.deltaY)
+            const previous = wheelDeltas.length ? wheelDeltas[wheelDeltas.length - 1] : 0
+            if (gap > WHEEL_RESET_LONG) wheelDeltas = []
+            wheelDeltas.push(delta)
+            if (wheelDeltas.length > 150) wheelDeltas.shift()
+            if (delta < MIN_INTENT_DELTA) return false
 
-            if (e.deltaY > 0) {
-                // Un seul projet à la fois, quelle que soit l'amplitude
-                goToNextProject()
-            } else if (e.deltaY < 0) {
-                // Un seul projet à la fois, quelle que soit l'amplitude
-                goToPrevProject()
-            }
+            // Long silence : tout nouvel événement est un nouveau geste
+            if (wheelDeltas.length === 1) return true
+            // Courte pause : l'inertie peut avoir des trous (page occupée par l'animation) mais reprend plus
+            // faible ; un nouveau geste (ou un cran de molette) repart au moins aussi fort
+            if (gap > WHEEL_PAUSE) return delta >= previous
+            // Flux continu : seule une nette accélération est une nouvelle intention (l'inertie décélère,
+            // un scroll constant n'enchaîne pas les projets)
+            return average(wheelDeltas.slice(-10)) > average(wheelDeltas.slice(-70)) * 1.1
         }
 
-        // Nouvelle fonction pour activer le défilement normal
-        const enableNormalScrolling = () => {
-            if (import.meta.client) {
-                // Supprimer l'écouteur d'événement qui bloque le défilement
-                window.removeEventListener('wheel', preventDefaultScroll);
+        // Molette / trackpad (écouteur unique sur window, non passif pour pouvoir bloquer le scroll natif)
+        const handleWheelEvent = (e) => {
+            const intent = isNewIntent(e)
+            const ready = !isAnimating.value && Date.now() - lastScrollTime >= scrollCooldown
 
-                // Animer la flèche ou un autre indicateur pour montrer qu'on peut défiler vers le footer
-                gsap.to(showCursor.value, {
-                    opacity: 1,
-                    duration: 0.3,
-                    ease: "power1.out"
-                });
-            }
-        }
+            // Dernier projet atteint : une nouvelle intention vers le bas déverrouille le scroll natif vers le footer
+            if (isLastProjectReached.value && intent && ready && e.deltaY > 0) footerUnlocked = true
 
-        // Nouvelle fonction pour désactiver le défilement normal
-        const disableNormalScrolling = () => {
-            if (import.meta.client) {
-                // Remettre l'écouteur d'événement qui bloque le défilement
-                window.addEventListener('wheel', preventDefaultScroll, { passive: false });
-            }
+            // Footer déverrouillé : scroll natif, dans les deux sens tant que la page est défilée
+            // (sinon remonter relancerait le slider en laissant la page bloquée en bas)
+            if (footerUnlocked && (e.deltaY > 0 || window.scrollY > 0)) return
+
+            e.preventDefault()
+            if (!intent || !ready) return
+
+            if (e.deltaY > 0) goToNextProject()
+            else if (e.deltaY < 0) goToPrevProject()
         }
 
         // Gérer les touches clavier pour la navigation
@@ -470,18 +470,6 @@ export default {
             }
         }
 
-        // Cleanup function for tilt instances
-        const cleanupTilt = () => {
-            if (tiltInstances.value && tiltInstances.value.length) {
-                tiltInstances.value.forEach(instance => {
-                    if (instance && instance.destroy) {
-                        instance.destroy()
-                    }
-                })
-                tiltInstances.value = []
-            }
-        }
-
         // Cleanup function for ScrollTrigger instances
         const cleanupScrollTrigger = () => {
             if (scrollTriggerInstances.value && scrollTriggerInstances.value.length) {
@@ -492,45 +480,6 @@ export default {
                 })
                 scrollTriggerInstances.value = []
             }
-        }
-
-        // Initialize tilt effect
-        const initializeTilt = (refs) => {
-            if (import.meta.client && window.VanillaTilt) {
-                // Clean previous instances
-                cleanupTilt()
-
-                // Loop through refs and apply tilt
-                refs.forEach(ref => {
-                    if (ref && ref.children[0]) {
-                        const instance = window.VanillaTilt.init(ref.children[0], {
-                            max: 15,
-                            speed: 400,
-                            glare: true,
-                            "max-glare": 0.4,
-                            scale: 1.05,
-                            perspective: 1000,
-                            transition: true,
-                            gyroscope: true,
-                            gyroscopeMinAngleX: -45,
-                            gyroscopeMaxAngleX: 45,
-                            gyroscopeMinAngleY: -45,
-                            gyroscopeMaxAngleY: 45
-                        })
-                        tiltInstances.value.push(instance)
-                    }
-                })
-            } else {
-                // Si VanillaTilt n'est pas encore chargé, réessayer après un court délai
-                setTimeout(() => {
-                    initializeTilt(refs)
-                }, 500)
-            }
-        }
-
-        // Bloquer le scroll de la page
-        const preventDefaultScroll = (e) => {
-            e.preventDefault();
         }
 
         // Clic sur le libellé VOIR / FOOTER : projet suivant, ou défilement vers le footer au dernier projet
@@ -547,8 +496,8 @@ export default {
                 // Enregistrer le plugin ScrollTrigger
                 gsap.registerPlugin(ScrollTrigger)
 
-                // Bloquer le scroll par défaut sur la page
-                window.addEventListener('wheel', preventDefaultScroll, { passive: false });
+                // Molette / trackpad : navigation entre projets, puis scroll natif vers le footer au dernier projet
+                window.addEventListener('wheel', handleWheelEvent, { passive: false });
 
                 // Mettre en place les écouteurs d'événements pour les touches
                 window.addEventListener('keydown', handleKeyDown);
@@ -590,12 +539,6 @@ export default {
                     // S'assurer que le premier projet est bien défini comme actif
                     currentProjectIndex.value = 0
 
-                    // Conteneurs d'image pour l'effet tilt (pas de `this` dans setup() : requête DOM directe)
-                    const tiltRefs = Array.from(document.querySelectorAll('.project-image-container'))
-
-                    // Initialiser l'effet tilt
-                    initializeTilt(tiltRefs)
-
                     // Animer le premier projet après avoir donné du temps au DOM de se stabiliser
                     setTimeout(() => {
                         animateFirstProject()
@@ -605,12 +548,11 @@ export default {
 
                 onBeforeUnmount(() => {
                     // Nettoyer les écouteurs d'événements
-                    window.removeEventListener('wheel', preventDefaultScroll);
+                    window.removeEventListener('wheel', handleWheelEvent);
                     window.removeEventListener('keydown', handleKeyDown);
                     window.removeEventListener('touchstart', handleTouchStart);
                     window.removeEventListener('touchend', handleTouchEnd);
 
-                    cleanupTilt()
                     cleanupScrollTrigger()
 
                     if (wheelTimeout) {
@@ -630,19 +572,14 @@ export default {
             NuxtLink,
             currentProjectIndex,
             allProjects,
-            cleanupTilt,
-            initializeTilt,
             cleanupScrollTrigger,
             getCardStyle,
             getProjectColor,
             formatProjectNumber,
             showCursor,
-            handleWheelEvent,
             handleCursorClick,
             scrollDirection,
-            isLastProjectReached,
-            enableNormalScrolling,
-            disableNormalScrolling
+            isLastProjectReached
         }
     }
 }
@@ -671,22 +608,12 @@ export default {
 .project-image-container {
     overflow: hidden;
     border-radius: 0.5rem;
-    perspective: 1000px;
-}
-
-.transform-style-3d {
-    transform-style: preserve-3d;
 }
 
 /* Animation initiale cachée */
 .service-animation,
 .project-info {
     will-change: transform, opacity;
-}
-
-/* Effet de glare pour vanilla-tilt */
-.js-tilt-glare {
-    border-radius: 8px;
 }
 
 /* Animation du curseur VOIR */

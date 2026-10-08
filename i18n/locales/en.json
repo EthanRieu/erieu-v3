@@ -46,11 +46,31 @@
   "home": {
     "logoAlt": "ERIEU wordmark",
     "tagline": "Defining the digital future: shaping, developing and expressing the essence of brands through contemporary media",
-    "box": {
+    "desk": {
       "title": "Interactive experience",
-      "hint": "Move your cursor to explore",
-      "tapHint": "Tap to explore in 3D",
-      "ariaLabel": "Decorative 3D animation of the ERIEU signature line"
+      "loading": "Loading the 3D desk…",
+      "tapToLoad": "Tap to load the 3D desk",
+      "hint": "Hover and click the objects",
+      "hintTouch": "Tap the objects",
+      "ariaLabel": "Interactive 3D desk: monitor, keyboard, mouse, lamp, books, plants and office chair",
+      "nextScreen": "Change the screen content",
+      "lampOn": "Turn the lamp on",
+      "lampOff": "Turn the lamp off",
+      "screen": {
+        "role": "Creative full-stack developer",
+        "next": "work-study",
+        "status": "Available",
+        "rhythm": "Work-study · 3 wk / 1 wk"
+      },
+      "items": {
+        "screen": "Polished interfaces",
+        "keyboard": "Front, back and DevOps",
+        "mouse": "From Figma mockup to production",
+        "lamp": "Curiosity, always on",
+        "books": "Master's in Web Engineering · ESGI",
+        "plant": "Always growing",
+        "chair": "A seat in your team?"
+      }
     },
     "intro": [
       "I'm a creative full-stack developer, currently studying for a Master's in Web Engineering at ESGI.",
@@ -67,12 +87,30 @@
     "aboutTitle": "About me",
     "aboutText": "I'm a creative full-stack developer and I train myself in the latest technologies to create web applications that blend aesthetics, interactivity and practicality.",
     "tools": [
-      "Nuxt.js",
-      "Node.js",
-      "GSAP",
-      "Figma",
-      "TailwindCSS",
-      "PostgreSQL"
+      {
+        "name": "Nuxt.js",
+        "description": "My framework of choice: bilingual SSR websites and applications, like AGREEGO and IntraLab."
+      },
+      {
+        "name": "Node.js",
+        "description": "On the server side: REST APIs, JWT-secured Nitro routes and connected forms."
+      },
+      {
+        "name": "GSAP",
+        "description": "Scroll animations and micro-interactions, without sacrificing performance or accessibility."
+      },
+      {
+        "name": "Figma",
+        "description": "Mockups and design systems, thought through before writing a single line of code."
+      },
+      {
+        "name": "TailwindCSS",
+        "description": "Responsive, consistent interfaces built on a utility-first design system."
+      },
+      {
+        "name": "PostgreSQL",
+        "description": "Data modelling and storage with Prisma, as on IntraLab."
+      }
     ],
     "contactTitle": "Hire me as a work-study student!",
     "toolsTitle": "My tools",
@@ -417,6 +455,7 @@
       "seo": "SEO"
     },
     "related": "Related project",
+    "viewProject": "View project",
     "metaTitle": "{title} — ERIEU project",
     "newTab": "(opens in a new tab)"
   },

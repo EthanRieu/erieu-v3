@@ -27,11 +27,16 @@
     <div class="mt-8 md:w-2/3 lg:w-1/2">
       <div class="w-full flex justify-center mb-8 xl:mb-0 project-image">
         <div v-if="!imageUrl" class="mt-8 bg-slate-300 w-full h-64 sm:h-72 md:h-80 rounded-lg" aria-hidden="true"></div>
-        <img v-else :src="imageUrl" :srcset="imageSrcset || undefined"
-          :sizes="imageSrcset ? '(min-width: 1280px) 448px, (min-width: 768px) 60vw, 100vw' : undefined"
-          :width="imageWidth" :height="imageHeight" loading="lazy" decoding="async"
-          class="w-full sm:w-4/5 md:w-3/4 xl:w-full max-w-md h-48 sm:h-56 md:h-64 rounded-lg object-cover"
-          :alt="titre" />
+        <!-- Raccourci souris / tactile vers la fiche projet : hors tabulation et masqué aux lecteurs d'écran,
+             le titre reste le lien accessible (évite un doublon) -->
+        <button v-else type="button" tabindex="-1" aria-hidden="true"
+          class="block w-full sm:w-4/5 md:w-3/4 xl:w-full max-w-md h-48 sm:h-56 md:h-64 rounded-lg overflow-hidden cursor-pointer"
+          @click="emit('project-click', id)">
+          <img :src="imageUrl" :srcset="imageSrcset || undefined"
+            :sizes="imageSrcset ? '(min-width: 1280px) 448px, (min-width: 768px) 60vw, 100vw' : undefined"
+            :width="imageWidth" :height="imageHeight" loading="lazy" decoding="async"
+            class="w-full h-full object-cover" alt="" />
+        </button>
       </div>
     </div>
   </article>

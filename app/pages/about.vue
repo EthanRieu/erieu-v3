@@ -83,7 +83,7 @@
 
                 <div class="w-full h-[2px] divider reveal-divider"></div>
 
-                <ContactCta />
+                <ContactCta compact />
             </main>
         </div>
 
