@@ -317,6 +317,72 @@
         "mobile-solutions": "“Our solutions” page on mobile",
         "mobile-apropos": "“About us” page on mobile"
       }
+    },
+    "portfolio": {
+      "title": "ERIEU.FR",
+      "services": [
+        "Design & 3D",
+        "Full-stack Development",
+        "Quality & DevOps"
+      ],
+      "description": "The portfolio you are browsing right now: Nuxt 4, Tailwind CSS v4, GSAP and three Three.js scenes reworked in Blender. Bilingual FR/EN, secured (nonce-based CSP), tested with Playwright on every pull request and kept up to date by Renovate.",
+      "tagline": "The website you are reading, and everything it hides.",
+      "role": "Designer & developer (personal project)",
+      "period": "Mar. 2025 — present",
+      "context": [
+        "This portfolio is my playground. A first version was born in March 2025; I redesigned it from the ground up in autumn 2026 to support my search for a work-study position.",
+        "The goal: show the whole path from mockup to production on a single website. A consistent art direction, interactive 3D scenes that stay lightweight, and the habits of a team project (branches, pull requests, tests, updates), even when working alone."
+      ],
+      "missions": [
+        {
+          "title": "Design & 3D",
+          "description": "A restrained art direction: a single grid, three heading levels, a tight palette. Three 3D scenes assembled and recoloured in Blender from free models (Kenney, Poly Haven)."
+        },
+        {
+          "title": "Development",
+          "description": "Nuxt 4, Vue 3.5, Tailwind CSS v4 and Pinia. Scroll animations with GSAP ScrollTrigger, French and English versions with Nuxt i18n, and support for the “reduce motion” setting."
+        },
+        {
+          "title": "Security & form",
+          "description": "Security headers with nuxt-security (nonce-based CSP, HSTS…). A contact form sent through Resend, validated on the client and the server, protected by a honeypot, a minimum fill time and a limit of 5 messages per hour."
+        },
+        {
+          "title": "Quality & maintenance",
+          "description": "Build and Playwright tests on every pull request (GitHub Actions), weekly updates proposed by Renovate, a develop / master git flow protected by GitHub rules, continuous deployment on Vercel."
+        }
+      ],
+      "features": [
+        {
+          "title": "A desk that reacts",
+          "description": "On the home page, every object on the desk lifts on hover and reacts on click: the screen changes, the lamp switches on, the chair spins."
+        },
+        {
+          "title": "A toolbox",
+          "description": "On the About page, the box opens and my stack's tokens jump out. You can grab and throw them, thanks to a small hand-written physics engine."
+        },
+        {
+          "title": "A 404 with a story",
+          "description": "The home page desk, abandoned: tipped-over chair, withered plants, cobwebs, a sleeping screen… and a crow that drops by. It's one click away, via the link at the top of this page."
+        }
+      ],
+      "extraTitle": "Under the hood",
+      "extra": [
+        "The 3D scenes don't slow down page loads: only part of three.js is imported, and only when a scene gets close to the viewport (on first tap on mobile). The render loop stops as soon as the scene leaves the screen or the tab is hidden. Every scene has a text fallback and keyboard equivalents.",
+        "The website is maintained like a team project. Every feature goes through a branch and a pull request to develop; master, the production branch, only receives develop, once the build and tests are green. Every Monday, Renovate proposes dependency updates, which I review by hand."
+      ],
+      "links": {
+        "notFound": "See the 404 page"
+      },
+      "shots": {
+        "home": "erieu.fr home page",
+        "notfound": "The 404 page: the abandoned desk and its crow",
+        "desk": "The interactive 3D desk on the home page",
+        "toolbox": "The open 3D toolbox, with the stack tokens out",
+        "projects": "The Projects page and its full-screen slider",
+        "mobile-notfound": "The 404 page on mobile",
+        "mobile-home": "erieu.fr home page on mobile",
+        "mobile-toolbox": "The toolbox on mobile"
+      }
     }
   },
   "about": {
@@ -631,5 +697,35 @@
         ]
       }
     ]
+  },
+  "notFound": {
+    "meta": {
+      "title": "Page not found — ERIEU",
+      "errorTitle": "Error — ERIEU"
+    },
+    "eyebrow": "Error {code}",
+    "title": "Page not found",
+    "lead": "This page doesn't exist. I do — and I'm looking for a work-study position.",
+    "body": "Broken link, typo, or a page that left without notice: it happens to the best of us. Have a minute of fun with what is left of it, then head back home.",
+    "path": "Nothing lives at {path}.",
+    "home": "Back to home",
+    "contact": "Or write to me",
+    "error": {
+      "title": "Something broke",
+      "lead": "It's not you, it's me. The server tripped: try again in a moment."
+    },
+    "scene": {
+      "loading": "Loading…",
+      "tapToLoad": "Tap to load the 3D scene",
+      "ariaLabel": "The desk from the home page, abandoned: tipped-over chair, withered plants, cobwebs, a flickering lamp and a sleeping screen showing 404. Now and then a crow lands on the screen, looks around and flies off.",
+      "hint": "Click the screen, the lamp… or the crow",
+      "screen": "Last login: 404 days ago",
+      "postit": "Back\nsoon",
+      "actions": {
+        "crow": "Scare the crow away",
+        "screen": "Wake the screen up",
+        "lamp": "Flick the lamp"
+      }
+    }
   }
 }
