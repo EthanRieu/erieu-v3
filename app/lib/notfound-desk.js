@@ -33,7 +33,12 @@ const BASE_YAW = 0.3
 const CROW_SCALE = 0.034
 // Le corbeau posé regarde vers la caméra, de trois quarts
 const PERCH_YAW = -Math.PI / 2 + 0.7
+// Hors-champ par défaut (canvas limité au bureau) ; sinon calculé depuis les bords réels de l'écran, cf. setFlightBounds
 const OFFSCREEN_X = 3
+// Marge au-delà du bord : le corbeau (ailes déployées) doit être entièrement sorti
+const OFFSCREEN_MARGIN = 0.35
+// Longueur d'un vol avec le hors-champ par défaut : au-delà, le vol s'allonge (en racine, pour garder du rythme)
+const BASE_FLIGHT_LENGTH = 3.5
 
 const rand = (min, max) => min + Math.random() * (max - min)
 
@@ -403,6 +408,19 @@ export async function createScene(THREE, { reducedMotion, font, t }) {
     let side = 1
     let crowTimer = null
     let nextLook = 0
+    // isOffscreen(point) : vrai si un point (repère du bureau) est hors du canvas ; fourni par le composant
+    let isOffscreen = null
+    const probe = new THREE.Vector3()
+
+    // Abscisse hors-champ côté `sign` à la hauteur/profondeur données : on s'éloigne du bureau jusqu'à sortir du canvas
+    const offscreenX = (sign, y, z) => {
+        if (!isOffscreen) return sign * OFFSCREEN_X
+        let x = sign
+        while (!isOffscreen(probe.set(x, y, z)) && Math.abs(x) < 40) x += sign * 0.25
+        return x + sign * OFFSCREEN_MARGIN
+    }
+
+    const flightDuration = (base) => base * Math.sqrt(Math.max(1, curve.getLength() / BASE_FLIGHT_LENGTH))
 
     const foldWings = (folded, duration = 0.3) => {
         gsap.to(wing, { spread: folded ? 0.3 : 1, angle: folded ? -0.2 : 0, flap: folded ? 0 : 1, duration })
@@ -421,8 +439,10 @@ export async function createScene(THREE, { reducedMotion, font, t }) {
 
     function arrive() {
         side = Math.random() < 0.5 ? -1 : 1
+        const startY = rand(1.6, 2)
+        const startZ = rand(0.4, 1)
         curve = new THREE.CatmullRomCurve3([
-            new THREE.Vector3(side * OFFSCREEN_X, rand(1.6, 2), rand(0.4, 1)),
+            new THREE.Vector3(offscreenX(side, startY, startZ), startY, startZ),
             new THREE.Vector3(side * 1.2, rand(0.95, 1.2), 0.5),
             new THREE.Vector3(perch.x + side * 0.28, perch.y + 0.16, perch.z + 0.06),
             perch.clone()
@@ -431,18 +451,20 @@ export async function createScene(THREE, { reducedMotion, font, t }) {
         crow.visible = true
         flight.u = 0
         foldWings(false, 0.01)
-        gsap.to(flight, { u: 1, duration: 3.4, ease: 'power2.out', onComplete: land })
+        gsap.to(flight, { u: 1, duration: flightDuration(3.4), ease: 'power2.out', onComplete: land })
     }
 
     function leave(startled = false) {
         if (crowState !== 'perched') return
         if (crowTimer) crowTimer.kill()
         const direction = Math.random() < 0.5 ? -1 : 1
+        const endY = rand(1.8, 2.2)
+        const endZ = rand(0, 0.6)
         curve = new THREE.CatmullRomCurve3([
             perch.clone(),
             new THREE.Vector3(perch.x + direction * 0.25, perch.y + 0.22, perch.z + 0.12),
             new THREE.Vector3(direction * 1.4, rand(1.1, 1.4), 0.4),
-            new THREE.Vector3(direction * OFFSCREEN_X, rand(1.8, 2.2), rand(0, 0.6))
+            new THREE.Vector3(offscreenX(direction, endY, endZ), endY, endZ)
         ])
         crowState = 'leaving'
         flight.u = 0
@@ -450,7 +472,7 @@ export async function createScene(THREE, { reducedMotion, font, t }) {
         flutter()
         gsap.to(flight, {
             u: 1,
-            duration: startled ? 1.8 : 2.8,
+            duration: flightDuration(startled ? 1.8 : 2.8),
             ease: 'power2.in',
             onComplete: () => {
                 crowState = 'away'
@@ -631,6 +653,9 @@ export async function createScene(THREE, { reducedMotion, font, t }) {
         actions: ['crow', 'screen', 'lamp'],
         update,
         interact,
+        setFlightBounds(fn) {
+            isOffscreen = fn
+        },
         redraw() {
             drawScreen()
             drawPostit()

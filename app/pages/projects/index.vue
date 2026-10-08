@@ -8,8 +8,53 @@
             <p class="text-subtitle primary-color">{{ $t('projectsPage.years') }}</p>
         </div>
 
-        <!-- Portfolio Slider Section -->
-        <div class="portfolio-slider relative site-container h-[calc(100svh-290px)] min-h-[460px]">
+        <!-- Mobile : carrousel horizontal en scroll-snap natif, la page garde son scroll vertical -->
+        <section class="md:hidden" aria-roledescription="carousel" :aria-label="$t('projectsPage.title')">
+            <div ref="mobileTrack" class="mobile-track relative flex gap-4 overflow-x-auto snap-x snap-mandatory px-8 sm:px-24 scroll-px-8 sm:scroll-px-24"
+                @scroll.passive="onMobileScroll">
+                <article v-for="(project, index) in allProjects" :key="project.id"
+                    class="mobile-slide snap-start shrink-0 basis-[88%]" role="group" aria-roledescription="slide"
+                    :aria-label="`${index + 1} / ${allProjects.length}`">
+                    <div :style="{ backgroundColor: getProjectColor(index) }"
+                        class="w-full h-[240px] sm:h-[320px] rounded-lg shadow-lg overflow-hidden">
+                        <component :is="hasCaseStudy(project.id) ? NuxtLink : 'div'" v-if="project.imageUrl"
+                            :to="hasCaseStudy(project.id) ? localePath(`/projects/${project.id}`) : undefined"
+                            class="block w-full h-full">
+                            <img :src="project.imageUrl" :srcset="project.imageSrcset || undefined"
+                                :sizes="project.imageSrcset ? '88vw' : undefined"
+                                :width="project.imageWidth" :height="project.imageHeight"
+                                :loading="index === 0 ? 'eager' : 'lazy'" decoding="async"
+                                class="w-full h-full object-cover object-left-top"
+                                :alt="$t(`projects.${project.id}.title`)" />
+                        </component>
+                    </div>
+                    <div class="pt-5">
+                        <ProjectCategoryBadge :category="project.category" class="mb-3" />
+                        <h2 class="text-subtitle secondary-color mb-2">{{ $t(`projects.${project.id}.title`) }}</h2>
+                        <div class="text-xl font-medium mb-2 secondary-color">{{ project.annee }}</div>
+                        <p class="primary-color">{{ projectServices(project.id).join(' · ') }}</p>
+                    </div>
+                </article>
+            </div>
+
+            <!-- Compteur + points de navigation -->
+            <div class="site-container flex items-center justify-between pt-6">
+                <div class="text-xl font-semibold secondary-color" aria-live="polite">
+                    {{ formatProjectNumber(mobileIndex + 1) }} / {{ formatProjectNumber(allProjects.length) }}
+                </div>
+                <div class="flex items-center">
+                    <button v-for="(project, index) in allProjects" :key="project.id" type="button"
+                        class="mobile-dot p-2" :aria-label="$t('projectsPage.goTo', { n: index + 1 })"
+                        :aria-current="mobileIndex === index ? 'true' : undefined" @click="scrollToMobileSlide(index)">
+                        <span class="block h-2 rounded-full transition-all duration-300"
+                            :class="mobileIndex === index ? 'w-6 bg-site-secondary' : 'w-2 bg-site-link'"></span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Portfolio Slider Section (dès md) -->
+        <div class="portfolio-slider relative site-container h-[calc(100svh-290px)] min-h-[460px] hidden md:block">
             <!-- Project Cards Stack -->
             <div class="portfolio-slider-center h-full flex items-center justify-center relative">
                 <div v-for="(project, index) in allProjects" :key="project.id" :class="[
@@ -136,6 +181,37 @@ export default {
         const MIN_INTENT_DELTA = 4 // les micro-deltas de fin d'inertie ne déclenchent jamais rien
         // Au dernier projet, le scroll natif vers le footer n'est déverrouillé que par une nouvelle intention
         let footerUnlocked = false
+
+        // Le slider empilé (molette, clavier, swipe vertical) n'existe que dès md ; en dessous, carrousel natif
+        const isDesktopSlider = () => window.matchMedia('(min-width: 768px)').matches
+
+        // Carrousel mobile : index du slide le plus proche du bord gauche (le dernier ne peut pas s'y aligner,
+        // mais reste le plus proche une fois la piste défilée au maximum)
+        const mobileTrack = ref(null)
+        const mobileIndex = ref(0)
+        let mobileScrollFrame = 0
+        const onMobileScroll = () => {
+            cancelAnimationFrame(mobileScrollFrame)
+            mobileScrollFrame = requestAnimationFrame(() => {
+                const track = mobileTrack.value
+                if (!track) return
+                const start = track.scrollLeft + parseFloat(getComputedStyle(track).paddingLeft)
+                let closest = 0
+                Array.from(track.children).forEach((slide, index) => {
+                    if (Math.abs(slide.offsetLeft - start) < Math.abs(track.children[closest].offsetLeft - start)) closest = index
+                })
+                mobileIndex.value = closest
+            })
+        }
+        const scrollToMobileSlide = (index) => {
+            const track = mobileTrack.value
+            const slide = track?.children[index]
+            if (!slide) return
+            track.scrollTo({
+                left: slide.offsetLeft - parseFloat(getComputedStyle(track).paddingLeft),
+                behavior: prefersReducedMotion() ? 'auto' : 'smooth'
+            })
+        }
 
         // Formatage du numéro de projet avec deux chiffres
         const formatProjectNumber = (num) => {
@@ -434,6 +510,7 @@ export default {
 
         // Molette / trackpad (écouteur unique sur window, non passif pour pouvoir bloquer le scroll natif)
         const handleWheelEvent = (e) => {
+            if (!isDesktopSlider()) return
             const intent = isNewIntent(e)
             const ready = !isAnimating.value && Date.now() - lastScrollTime >= scrollCooldown
 
@@ -453,6 +530,7 @@ export default {
 
         // Gérer les touches clavier pour la navigation
         const handleKeyDown = (e) => {
+            if (!isDesktopSlider()) return
             if (e.key === 'ArrowDown' || e.key === 'PageDown') {
                 // Si on est au dernier projet, permettre le scroll normal
                 if (isLastProjectReached.value) {
@@ -510,6 +588,7 @@ export default {
                 }
 
                 const handleTouchEnd = (e) => {
+                    if (!isDesktopSlider()) return
                     const touchEndY = e.changedTouches[0].clientY
                     const diff = touchStartY - touchEndY
 
@@ -558,6 +637,7 @@ export default {
                     if (wheelTimeout) {
                         clearTimeout(wheelTimeout)
                     }
+                    cancelAnimationFrame(mobileScrollFrame)
                 })
             }
         })
@@ -579,7 +659,11 @@ export default {
             showCursor,
             handleCursorClick,
             scrollDirection,
-            isLastProjectReached
+            isLastProjectReached,
+            mobileTrack,
+            mobileIndex,
+            onMobileScroll,
+            scrollToMobileSlide
         }
     }
 }
@@ -597,12 +681,14 @@ export default {
         opacity 0.6s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
-/* Mobile : la capture est en pleine largeur avec les infos dessous, l'aperçu des cartes suivantes
-   (décalées de 40/80 px) chevaucherait ces infos : seule la carte active reste visible */
-@media (max-width: 767px) {
-    .project-card:not(.active-project) {
-        opacity: 0 !important;
-    }
+/* Carrousel mobile : pas de barre de défilement, et le swipe horizontal ne déclenche pas le « retour » du navigateur */
+.mobile-track {
+    scrollbar-width: none;
+    overscroll-behavior-x: contain;
+}
+
+.mobile-track::-webkit-scrollbar {
+    display: none;
 }
 
 .project-image-container {
