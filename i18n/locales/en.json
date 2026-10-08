@@ -16,6 +16,14 @@
     "contact": {
       "title": "Contact — ERIEU",
       "description": "Looking for a two-year work-study position as a full-stack / DevOps developer. Send a message through the form or write directly by email."
+    },
+    "legal": {
+      "title": "Legal notice — ERIEU",
+      "description": "Publisher, host, intellectual property and credits of erieu.fr."
+    },
+    "privacy": {
+      "title": "Privacy — ERIEU",
+      "description": "Data collected by erieu.fr: contact form, cookieless analytics and a language cookie. Your rights and how to exercise them."
     }
   },
   "nav": {
@@ -41,7 +49,10 @@
     "socials": "Socials",
     "backToTop": "Back on top ↑",
     "copyright": "Copyright © ERIEU {year}",
-    "logoAlt": "ERIEU logo"
+    "logoAlt": "ERIEU logo",
+    "legal": "Information",
+    "legalNotice": "Legal notice",
+    "privacy": "Privacy"
   },
   "home": {
     "logoAlt": "ERIEU wordmark",
@@ -426,6 +437,10 @@
           "required": "Please write a message.",
           "length": "Your message must be between 10 and 2000 characters."
         }
+      },
+      "notice": {
+        "text": "Your data is only used to reply to you and is never sold.",
+        "link": "Privacy policy"
       }
     }
   },
@@ -469,5 +484,152 @@
     "title": "Interested in my profile?",
     "availability": "Currently looking for a two-year work-study position: 3 weeks at the company, 1 week at school.",
     "form": "Send a message"
+  },
+  "legalPages": {
+    "updated": "Last updated: {date}"
+  },
+  "legal": {
+    "title": "Legal notice",
+    "intro": "Legal information about erieu.fr, as required by French law (LCEN).",
+    "sections": [
+      {
+        "title": "Publisher",
+        "body": [
+          "This website is a personal portfolio, published on a non-professional basis by Ethan Rieu, full-stack developer based in Reims, France.",
+          "Publication director: Ethan Rieu. For any question:"
+        ],
+        "email": true
+      },
+      {
+        "title": "Hosting",
+        "body": [
+          "Vercel Inc.",
+          "440 N Barranca Ave #4133, Covina, CA 91723, United States."
+        ],
+        "links": [
+          {
+            "label": "vercel.com",
+            "href": "https://vercel.com"
+          }
+        ]
+      },
+      {
+        "title": "Intellectual property",
+        "body": [
+          "Texts, design, code and the ERIEU logo are the property of Ethan Rieu unless stated otherwise. Any reproduction without prior permission is prohibited.",
+          "Screenshots of the projects shown illustrate past work as references; the related websites, content and trademarks remain the property of their owners.",
+          "Trademarks and logos mentioned (tools, frameworks, services) belong to their respective owners. Their presence implies no affiliation or partnership."
+        ]
+      },
+      {
+        "title": "Credits",
+        "body": [
+          "3D toolbox (About page): \"Metal Toolbox\" by Mateusz Sadek, Poly Haven, CC0 license. Modified model (colours, ERIEU badge).",
+          "3D desk (home page): Furniture Kit by Kenney, CC0 license. Models assembled and recoloured.",
+          "Typeface: Schibsted Grotesk, SIL Open Font License, self-hosted."
+        ],
+        "links": [
+          {
+            "label": "Metal Toolbox on Poly Haven",
+            "href": "https://polyhaven.com/a/metal_toolbox"
+          },
+          {
+            "label": "Furniture Kit on kenney.nl",
+            "href": "https://kenney.nl/assets/furniture-kit"
+          },
+          {
+            "label": "CC0 1.0 license",
+            "href": "https://creativecommons.org/publicdomain/zero/1.0/"
+          }
+        ]
+      },
+      {
+        "title": "Personal data",
+        "body": [
+          "How data sent through the contact form, analytics and cookies are handled is described in the privacy policy."
+        ],
+        "links": [
+          {
+            "label": "Privacy policy",
+            "to": "privacy"
+          }
+        ]
+      }
+    ]
+  },
+  "privacy": {
+    "title": "Privacy",
+    "intro": "This website collects the bare minimum: what you write to me through the contact form and anonymous visit statistics. No ads, no third-party trackers, no data sold.",
+    "sections": [
+      {
+        "title": "Data controller",
+        "body": [
+          "Ethan Rieu, publisher of this website. For any question about your data:"
+        ],
+        "email": true
+      },
+      {
+        "title": "Contact form",
+        "body": [
+          "Data collected: name, e-mail address, message, and the language of the site you used.",
+          "Purpose: replying to you. Your data is used for nothing else: no marketing, no newsletter, never sold.",
+          "Legal basis: legitimate interest in replying to people who contact me (Article 6(1)(f) GDPR).",
+          "Retention: 3 years from our last exchange, then deleted."
+        ]
+      },
+      {
+        "title": "Recipients and processors",
+        "body": [
+          "Your messages are only read by me. Two technical providers are involved in delivering them:",
+          "Resend (sends the e-mail to my inbox) and Vercel (hosts the website), both based in the United States.",
+          "These transfers outside the European Union are covered by the safeguards provided by the GDPR (EU–US Data Privacy Framework or the European Commission standard contractual clauses)."
+        ],
+        "links": [
+          {
+            "label": "Resend privacy policy",
+            "href": "https://resend.com/legal/privacy-policy"
+          },
+          {
+            "label": "Vercel privacy policy",
+            "href": "https://vercel.com/legal/privacy-policy"
+          }
+        ]
+      },
+      {
+        "title": "Security and spam protection",
+        "body": [
+          "To prevent abuse, your IP address is kept in memory for one hour at most to cap sending at 5 messages per hour. It is never stored or linked to your message.",
+          "Like any host, Vercel keeps technical logs (including IP addresses) for a limited time to keep the service secure and running."
+        ]
+      },
+      {
+        "title": "Analytics",
+        "body": [
+          "This website uses Vercel Web Analytics, without cookies. Only aggregated data is measured: pages viewed, referring site, country, device type, browser and operating system.",
+          "Visitors are not identified: the fingerprint used to count visits is anonymised and reset every day. This measurement therefore does not require your consent."
+        ]
+      },
+      {
+        "title": "Cookies",
+        "body": [
+          "A single cookie is set: i18n_redirected. It remembers the language of the site (English or French) when you land on the home page, for 12 months.",
+          "As it is required for the interface to work, it is exempt from consent. No advertising, social media or tracking cookies are used. You can delete it at any time from your browser settings."
+        ]
+      },
+      {
+        "title": "Your rights",
+        "body": [
+          "You have the right to access, rectify, erase, object to, restrict and port your data. To exercise these rights, write to me: I reply within one month at most.",
+          "If you believe your rights are not respected, you can lodge a complaint with the CNIL, the French data protection authority."
+        ],
+        "email": true,
+        "links": [
+          {
+            "label": "Lodge a complaint with the CNIL",
+            "href": "https://www.cnil.fr/en/complaints"
+          }
+        ]
+      }
+    ]
   }
 }

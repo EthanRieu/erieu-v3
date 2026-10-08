@@ -1,7 +1,7 @@
 <template>
     <!-- Même grille que le contenu (site-container) : le footer est placé hors des conteneurs de page -->
     <footer class="site-container pb-16">
-        <div class="flex flex-row space-x-24 font-semibold">
+        <div class="flex flex-row flex-wrap gap-x-24 gap-y-12 font-semibold">
             <!-- Site Map -->
             <nav :aria-label="$t('footer.sitemap')">
                 <div class="secondary-color mb-6">{{ $t('footer.sitemap') }}</div>
@@ -26,6 +26,18 @@
                     </li>
                 </ul>
             </div>
+
+            <!-- Informations légales -->
+            <nav :aria-label="$t('footer.legal')">
+                <div class="secondary-color mb-6">{{ $t('footer.legal') }}</div>
+                <ul class="flex flex-col space-y-4">
+                    <li v-for="item in legalItems" :key="item.route">
+                        <NuxtLink :to="localePath(item.route)" class="link-color hover-effect w-fit block">
+                            {{ $t(item.label) }}
+                        </NuxtLink>
+                    </li>
+                </ul>
+            </nav>
         </div>
 
         <div class="hidden md:flex flex-row justify-between items-center mt-8">
@@ -78,6 +90,12 @@ const navItems = [
     { path: '/projects', label: 'nav.projects' },
     { path: '/about', label: 'nav.about' },
     { path: '/contact', label: 'nav.contact' }
+]
+
+// Noms de route : les chemins sont traduits par page (defineI18nRoute), ex. /fr/mentions-legales
+const legalItems = [
+    { route: 'legal-notice', label: 'footer.legalNotice' },
+    { route: 'privacy', label: 'footer.privacy' }
 ]
 
 const socials = [

@@ -30,6 +30,10 @@ const pages = [
   { path: '/projects/agreego', title: /Agreego/i },
   { path: '/contact', title: /Contact/ },
   { path: '/fr/contact', title: /Contact/ },
+  { path: '/legal-notice', title: /Legal notice/ },
+  { path: '/fr/mentions-legales', title: /Mentions légales/ },
+  { path: '/privacy', title: /Privacy/ },
+  { path: '/fr/confidentialite', title: /Confidentialité/ },
 ];
 
 for (const { path, title } of pages) {
@@ -43,7 +47,7 @@ for (const { path, title } of pages) {
 
     // Une clé i18n manquante s'affiche telle quelle (ex. « home.box.title ») : on n'en veut aucune dans la page
     const text = await page.locator('body').innerText();
-    expect(text).not.toMatch(/\b(meta|home|about|projects|contact|nav|footer)\.[a-zA-Z]+\.[a-zA-Z.]+\b/);
+    expect(text).not.toMatch(/\b(meta|home|about|projects|contact|nav|footer|legal|legalPages|privacy)\.[a-zA-Z]+\.[a-zA-Z.]+\b/);
 
     await page.waitForLoadState('networkidle');
     expect(errors).toEqual([]);
