@@ -317,6 +317,72 @@
         "mobile-solutions": "Page « Nos solutions » sur mobile",
         "mobile-apropos": "Page « À propos » sur mobile"
       }
+    },
+    "portfolio": {
+      "title": "ERIEU.FR",
+      "services": [
+        "Design & 3D",
+        "Développement full-stack",
+        "Qualité & DevOps"
+      ],
+      "description": "Le portfolio que vous êtes en train de parcourir : Nuxt 4, Tailwind CSS v4, GSAP et trois scènes Three.js retravaillées sous Blender. Bilingue FR/EN, sécurisé (CSP avec nonce), testé avec Playwright à chaque pull request et tenu à jour par Renovate.",
+      "tagline": "Le site que vous êtes en train de lire, et tout ce qu'il cache.",
+      "role": "Designer & développeur (projet personnel)",
+      "period": "Mars 2025 — aujourd'hui",
+      "context": [
+        "Ce portfolio est mon terrain d'expérimentation. Une première version est née en mars 2025 ; je l'ai entièrement repensé à l'automne 2026 pour accompagner ma recherche d'alternance.",
+        "L'objectif : montrer sur un seul site tout le chemin de la maquette à la production. Une direction artistique cohérente, des scènes 3D interactives qui restent légères, et les habitudes d'un projet d'équipe (branches, pull requests, tests, mises à jour), même en travaillant seul."
+      ],
+      "missions": [
+        {
+          "title": "Design & 3D",
+          "description": "Une direction artistique sobre : une seule grille, trois niveaux de titres, une palette resserrée. Trois scènes 3D assemblées et recolorées sous Blender à partir de modèles libres (Kenney, Poly Haven)."
+        },
+        {
+          "title": "Développement",
+          "description": "Nuxt 4, Vue 3.5, Tailwind CSS v4 et Pinia. Animations au défilement avec GSAP ScrollTrigger, versions française et anglaise avec Nuxt i18n, et respect du réglage « réduire les animations »."
+        },
+        {
+          "title": "Sécurité & formulaire",
+          "description": "En-têtes de sécurité avec nuxt-security (CSP avec nonce, HSTS…). Formulaire de contact envoyé via Resend, validé côté client et serveur, protégé par un honeypot, un délai minimal et une limite de 5 messages par heure."
+        },
+        {
+          "title": "Qualité & maintenance",
+          "description": "Build et tests Playwright à chaque pull request (GitHub Actions), mises à jour hebdomadaires proposées par Renovate, git flow develop / master protégé par des règles GitHub, déploiement continu sur Vercel."
+        }
+      ],
+      "features": [
+        {
+          "title": "Un bureau qui réagit",
+          "description": "Sur l'accueil, chaque objet du bureau se soulève au survol et réagit au clic : l'écran change de contenu, la lampe s'allume, la chaise tourne."
+        },
+        {
+          "title": "Une boîte à outils",
+          "description": "Sur la page À propos, la boîte s'ouvre et les jetons de ma stack en sortent. On peut les attraper et les lancer, grâce à une petite physique écrite à la main."
+        },
+        {
+          "title": "Une 404 qui raconte",
+          "description": "Le bureau de l'accueil, laissé à l'abandon : chaise renversée, plantes fanées, toiles d'araignée, écran en veille… et un corbeau qui vient s'y poser. Elle est accessible par le lien en haut de page."
+        }
+      ],
+      "extraTitle": "Sous le capot",
+      "extra": [
+        "Les scènes 3D ne ralentissent pas le chargement : seule une partie de three.js est importée, et seulement quand la scène approche de l'écran (au premier toucher sur mobile). La boucle de rendu s'arrête dès que la scène sort du champ ou que l'onglet est masqué. Chaque scène a un texte de repli et des équivalents au clavier.",
+        "Le site est maintenu comme un projet d'équipe. Chaque fonctionnalité passe par une branche et une pull request vers develop ; master, la production, ne reçoit que develop, une fois le build et les tests au vert. Chaque lundi, Renovate propose les mises à jour des dépendances, que je valide à la main."
+      ],
+      "links": {
+        "notFound": "Voir la page 404"
+      },
+      "shots": {
+        "home": "Page d'accueil d'erieu.fr",
+        "notfound": "La page 404 : le bureau abandonné et son corbeau",
+        "desk": "Le bureau 3D interactif de la page d'accueil",
+        "toolbox": "La boîte à outils 3D ouverte, jetons de la stack sortis",
+        "projects": "La page Projets et son slider plein écran",
+        "mobile-notfound": "La page 404 sur mobile",
+        "mobile-home": "Accueil d'erieu.fr sur mobile",
+        "mobile-toolbox": "La boîte à outils sur mobile"
+      }
     }
   },
   "about": {
@@ -631,5 +697,35 @@
         ]
       }
     ]
+  },
+  "notFound": {
+    "meta": {
+      "title": "Page introuvable — ERIEU",
+      "errorTitle": "Erreur — ERIEU"
+    },
+    "eyebrow": "Erreur {code}",
+    "title": "Page introuvable",
+    "lead": "Cette page n'existe pas. Moi, si — et je cherche une alternance.",
+    "body": "Lien cassé, faute de frappe ou page partie sans prévenir : ça arrive aux meilleurs. Amusez-vous une minute avec ce qu'il en reste, puis retour à l'accueil.",
+    "path": "Rien à l'adresse {path}.",
+    "home": "Retour à l'accueil",
+    "contact": "Ou m'écrire",
+    "error": {
+      "title": "Quelque chose a cassé",
+      "lead": "Ce n'est pas vous, c'est moi. Le serveur a trébuché : réessayez dans un instant."
+    },
+    "scene": {
+      "loading": "Chargement…",
+      "tapToLoad": "Touchez pour charger la scène 3D",
+      "ariaLabel": "Le bureau de la page d'accueil, abandonné : chaise renversée, plantes fanées, toiles d'araignée, lampe qui grésille et écran en veille qui affiche 404. De temps en temps, un corbeau se pose sur l'écran, regarde autour de lui et repart.",
+      "hint": "Cliquez sur l'écran, la lampe… ou le corbeau",
+      "screen": "Dernière connexion : il y a 404 jours",
+      "postit": "Je\nreviens",
+      "actions": {
+        "crow": "Effrayer le corbeau",
+        "screen": "Réveiller l'écran",
+        "lamp": "Faire grésiller la lampe"
+      }
+    }
   }
 }
