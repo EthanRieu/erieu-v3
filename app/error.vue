@@ -2,7 +2,10 @@
   <div class="min-h-screen bg-site-bg">
     <!-- Header + héros remplissent au moins l'écran : le footer n'apparaît qu'au scroll
          (svh : hauteur stable sur mobile, barre d'adresse comprise) -->
-    <div class="min-h-svh flex flex-col">
+    <div class="relative min-h-svh flex flex-col">
+      <!-- Ciel du corbeau : le canvas de la scène y est téléporté pour qu'il arrive et reparte par les bords
+           de l'écran (au-dessus du texte, sans bloquer les clics) -->
+      <div v-if="isNotFound" ref="flightLayer" class="absolute inset-0 z-30 overflow-hidden pointer-events-none"></div>
       <Header />
       <div class="site-container flex-1 flex items-center pt-8 sm:pt-16">
         <!-- Héros : titre + texte à gauche, scène à droite (lg) ; titre, scène puis texte sur mobile.
@@ -22,7 +25,7 @@
           <!-- Le bureau de la home, abandonné (plus grand que sur la home) -->
           <div v-if="isNotFound"
             class="w-full h-96 sm:h-[28rem] lg:h-[40rem] lg:col-start-2 lg:row-start-1 lg:row-span-2 reveal-element">
-            <NotFoundScene />
+            <NotFoundScene :layer="flightLayer" />
           </div>
 
           <div class="space-y-6 sm:space-y-8 lg:self-start">
@@ -69,6 +72,8 @@ const route = useRoute()
 
 const statusCode = computed(() => props.error?.statusCode || 500)
 const isNotFound = computed(() => statusCode.value === 404)
+
+const flightLayer = ref(null)
 
 const homePath = computed(() => localePath('/'))
 const contactPath = computed(() => localePath('/contact'))
