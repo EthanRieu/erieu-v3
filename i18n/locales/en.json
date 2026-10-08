@@ -544,6 +544,7 @@
     "title": "Projects",
     "next": "VIEW",
     "toFooter": "FOOTER ↓",
+    "goTo": "Go to project {n}",
     "years": "2024 — 2026"
   },
   "cta": {

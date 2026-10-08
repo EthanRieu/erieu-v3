@@ -1,7 +1,11 @@
 <template>
     <div ref="container" class="notfound-scene relative w-full h-full select-none">
-        <canvas ref="canvas" v-show="ready" class="absolute inset-0 block w-full h-full" role="img"
-            :aria-label="$t('notFound.scene.ariaLabel')"></canvas>
+        <!-- Le canvas peut être déplacé dans une couche plus grande (prop layer) : le bureau reste dans ce bloc,
+             le corbeau vole jusqu'aux bords de la couche -->
+        <Teleport :to="layer" :disabled="!layer">
+            <canvas ref="canvas" v-show="ready" class="notfound-canvas absolute inset-0 block w-full h-full" role="img"
+                :class="{ 'pointer-events-none': layer }" :aria-label="$t('notFound.scene.ariaLabel')"></canvas>
+        </Teleport>
 
         <!-- État initial et repli (WebGL indisponible, chargement échoué, contexte perdu) -->
         <div v-show="!ready"
@@ -38,7 +42,16 @@ import { prefersReducedMotion } from '~/composables/useRevealAnimations'
  * page : chargement direct, sauf en économie de données (au premier tap). La boucle ne tourne que si la scène
  * est visible et l'onglet actif ; tout est libéré au démontage.
  * prefers-reduced-motion : pas d'inclinaison idle (le reste est géré par lib/notfound-desk.js).
+ *
+ * Prop layer : élément (positionné) plus grand que ce bloc, où le canvas est téléporté. La caméra reste cadrée
+ * sur ce bloc et son champ est étendu à la couche (setViewOffset) : le bureau ne bouge pas, le corbeau arrive
+ * et repart depuis les bords de la couche. Le canvas y est en pointer-events: none (le texte reste cliquable) ;
+ * les clics et le survol restent captés par ce bloc.
  */
+
+const props = defineProps({
+    layer: { type: Object, default: null }
+})
 
 const MAX_PIXEL_RATIO = 1.5
 const POINTER_YAW = 0.35
@@ -71,6 +84,8 @@ let loading = false
 let disposed = false
 let intersectionObserver = null
 let resizeObserver = null
+// Dernier cadrage appliqué (bloc + canvas), pour ne recadrer que si l'un d'eux bouge (révélation, resize…)
+let lastFrame = ''
 let contextLostHandler = null
 const listeners = []
 
@@ -98,10 +113,19 @@ const setCursor = (value) => {
 /* Construction                                                        */
 /* ------------------------------------------------------------------ */
 
+// Le canvas est hors de ce bloc (téléporté) : sa position relative change avec la révélation (scale) ou un resize
+const frameOf = () => {
+    const box = container.value.getBoundingClientRect()
+    const view = canvas.value.getBoundingClientRect()
+    return { box, view, key: [box.left - view.left, box.top - view.top, box.width, box.height, view.width, view.height].map(Math.round).join() }
+}
+
 const fitCamera = () => {
-    if (!camera || !container.value) return
-    const width = container.value.clientWidth || 1
-    const height = container.value.clientHeight || 1
+    if (!camera || !container.value || !canvas.value) return
+    const { box, view, key } = frameOf()
+    lastFrame = key
+    const width = box.width || 1
+    const height = box.height || 1
     camera.aspect = width / height
     const { target: [x, y, z], radius, direction: [dx, dy, dz] } = content.view
     const target = new THREE.Vector3(x, y, z)
@@ -111,8 +135,20 @@ const fitCamera = () => {
     const distance = Math.max(radius / Math.sin(verticalFov / 2), radius / Math.sin(horizontalFov / 2))
     camera.position.copy(target).addScaledVector(direction, distance)
     camera.lookAt(target)
-    camera.updateProjectionMatrix()
-    renderer.setSize(width, height, false)
+    if (props.layer && view.width && view.height) {
+        // Image « virtuelle » = ce bloc ; on en rend la fenêtre couverte par le canvas (offsets négatifs autorisés)
+        camera.setViewOffset(width, height, view.left - box.left, view.top - box.top, view.width, view.height)
+        renderer.setSize(view.width, view.height, false)
+    } else {
+        camera.clearViewOffset()
+        renderer.setSize(width, height, false)
+    }
+}
+
+// Hors-champ pour le vol du corbeau : point (repère du bureau) projeté hors du canvas
+const isOffscreen = (point) => {
+    const ndc = content.root.localToWorld(point.clone()).project(camera)
+    return Math.abs(ndc.x) > 1 || Math.abs(ndc.y) > 1
 }
 
 const buildScene = async () => {
@@ -132,6 +168,7 @@ const buildScene = async () => {
     }
     content = created
     actions.value = content.actions
+    content.setFlightBounds?.(isOffscreen)
 
     scene = new THREE.Scene()
     stage = new THREE.Group()
@@ -168,6 +205,7 @@ const buildScene = async () => {
 
     resizeObserver = new ResizeObserver(() => fitCamera())
     resizeObserver.observe(container.value)
+    if (props.layer) resizeObserver.observe(props.layer)
     fitCamera()
 
     ready.value = true
@@ -198,12 +236,14 @@ const interact = (name) => {
 /* ------------------------------------------------------------------ */
 
 const updatePointer = (event) => {
+    // Inclinaison : relative à ce bloc ; lancer de rayon : relatif au canvas (qui peut être plus grand)
     const rect = container.value.getBoundingClientRect()
-    pointerNdc.x = ((event.clientX - rect.left) / rect.width) * 2 - 1
-    pointerNdc.y = -((event.clientY - rect.top) / rect.height) * 2 + 1
-    pointer.x = pointerNdc.x
-    pointer.y = pointerNdc.y
+    pointer.x = ((event.clientX - rect.left) / rect.width) * 2 - 1
+    pointer.y = -((event.clientY - rect.top) / rect.height) * 2 + 1
     pointer.active = true
+    const view = canvas.value.getBoundingClientRect()
+    pointerNdc.x = ((event.clientX - view.left) / view.width) * 2 - 1
+    pointerNdc.y = -((event.clientY - view.top) / view.height) * 2 + 1
 }
 
 // Cible touchée : on remonte du maillage touché jusqu'à l'objet déclaré (le corbeau, l'écran… sont des groupes)
@@ -254,6 +294,9 @@ const tick = (time) => {
     const easing = reducedMotion ? 0.03 : 0.05
     stage.rotation.y += (targetYaw - stage.rotation.y) * easing
     stage.rotation.x += (targetPitch - stage.rotation.x) * easing
+
+    // Canvas téléporté : le bloc peut bouger sans être redimensionné (animation de révélation)
+    if (props.layer && frameOf().key !== lastFrame) fitCamera()
 
     content.update(time)
     if (hoverDirty) {
@@ -335,5 +378,22 @@ onBeforeUnmount(() => {
 <style scoped>
 .notfound-scene {
     touch-action: pan-y;
+}
+
+/* Le canvas téléporté n'hérite plus de l'animation de révélation du bloc : il apparaît en fondu */
+.notfound-canvas {
+    animation: notfound-canvas-in 0.6s ease-out;
+}
+
+@keyframes notfound-canvas-in {
+    from {
+        opacity: 0;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .notfound-canvas {
+        animation: none;
+    }
 }
 </style>

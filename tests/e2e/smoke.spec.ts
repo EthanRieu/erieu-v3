@@ -96,7 +96,8 @@ test.describe('page 404', () => {
       await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', /noindex/);
 
       // La scène 3D est au-dessus de la ligne de flottaison : chargée sans scroll
-      await expect(page.locator('.notfound-scene canvas')).toBeVisible({ timeout: 20_000 });
+      // (canvas téléporté hors de .notfound-scene, dans la couche plein écran du vol du corbeau)
+      await expect(page.locator('canvas.notfound-canvas')).toBeVisible({ timeout: 20_000 });
 
       await page.waitForLoadState('networkidle');
       expect(unexpected(errors)).toEqual([]);
