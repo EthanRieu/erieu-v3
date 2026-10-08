@@ -69,7 +69,7 @@
                 <h2 class="secondary-color text-section mb-12 md:mb-16 reveal-title">
                     {{ $t('home.selectedWorks.line1') }} {{ $t('home.selectedWorks.line2') }}
                 </h2>
-                <div class="w-full h-[2px] divider my-8 reveal-divider"></div>
+                <div class="w-full h-0.5 divider my-8 reveal-divider"></div>
 
                 <!-- Projects Components -->
                 <div v-for="(project, index) in featuredProjects" :key="project.id" :class="'reveal-project-' + index">
@@ -79,7 +79,7 @@
                         :image-width="project.imageWidth" :image-height="project.imageHeight"
                         @project-click="navigateToProject" />
 
-                    <div class="w-full h-[2px] divider lg:my-8 reveal-divider"></div>
+                    <div class="w-full h-0.5 divider lg:my-8 reveal-divider"></div>
                 </div>
 
                 <div class="flex justify-end mt-12 md:mt-16">
@@ -111,7 +111,7 @@
                         {{ $t('home.toolsLink') }} <span aria-hidden="true">→</span>
                     </NuxtLink>
                 </section>
-                <div class="w-full h-[2px] divider reveal-divider"></div>
+                <div class="w-full h-0.5 divider reveal-divider"></div>
 
                 <ContactCta :title="$t('home.contactTitle')" />
             </div>

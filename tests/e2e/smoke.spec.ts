@@ -28,6 +28,7 @@ const pages = [
   { path: '/fr/about', title: /À propos/ },
   { path: '/projects', title: /Projects/ },
   { path: '/projects/agreego', title: /Agreego/i },
+  { path: '/fr/projects/portfolio', title: /ERIEU\.FR/ },
   { path: '/contact', title: /Contact/ },
   { path: '/fr/contact', title: /Contact/ },
   { path: '/legal-notice', title: /Legal notice/ },
@@ -75,6 +76,39 @@ test('la toolbox 3D de la page About se charge', async ({ page }) => {
   await expect(canvas).toBeVisible({ timeout: 20_000 });
 
   expect(errors).toEqual([]);
+});
+
+test.describe('page 404', () => {
+  // Le 404 du document lui-même est loggé par Chrome : attendu ici, toute autre erreur reste signalée
+  const unexpected = (errors: string[]) => errors.filter((error) => !/status of 404/.test(error));
+
+  for (const { path, title, lang } of [
+    { path: '/nope', title: /Page not found/, lang: 'en-US' },
+    { path: '/fr/nope', title: /Page introuvable/, lang: 'fr-FR' },
+  ]) {
+    test(`${path} répond 404 avec la page d'erreur`, async ({ page }) => {
+      const errors = trackErrors(page);
+
+      const response = await page.goto(path);
+      expect(response?.status()).toBe(404);
+      await expect(page).toHaveTitle(title);
+      await expect(page.locator('html')).toHaveAttribute('lang', lang);
+      await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', /noindex/);
+
+      // La scène 3D est au-dessus de la ligne de flottaison : chargée sans scroll
+      await expect(page.locator('.notfound-scene canvas')).toBeVisible({ timeout: 20_000 });
+
+      await page.waitForLoadState('networkidle');
+      expect(unexpected(errors)).toEqual([]);
+    });
+  }
+
+  test('le lien de retour ramène à l’accueil', async ({ page }) => {
+    await page.goto('/nope');
+    await page.getByRole('link', { name: /back to home/i }).click();
+    await expect(page).toHaveURL(/\/$/);
+    await expect(page).toHaveTitle(/Creative full-stack developer/);
+  });
 });
 
 test.describe('formulaire de contact', () => {

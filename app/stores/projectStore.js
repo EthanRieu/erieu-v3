@@ -95,6 +95,34 @@ export const useProjectStore = defineStore('projects', {
         },
         related: 'agreego',
         featured: false
+      },
+      {
+        id: 'portfolio',
+        category: 'personal',
+        annee: '2025-2026',
+        url: 'https://erieu.fr/',
+        repo: 'https://github.com/EthanRieu/erieu-v3',
+        // Pages du site à visiter (chemin préfixé par la langue, libellé dans projects.<id>.links.<label>)
+        pageLinks: [{ path: '/404', label: 'notFound' }],
+        stack: ['Nuxt 4', 'Vue 3.5', 'Tailwind CSS v4', 'Pinia', 'GSAP', 'Three.js', 'Blender', 'Nuxt i18n', 'nuxt-security', 'Resend', 'Playwright', 'GitHub Actions', 'Renovate', 'Vercel'],
+        imageUrl: '/img/projects/portfolio-home.webp',
+        imageSrcset: '/img/projects/portfolio-home-800.webp 800w, /img/projects/portfolio-home.webp 1600w',
+        imageWidth: 1600,
+        imageHeight: 1000,
+        cover: desktopShot('portfolio', 'home'),
+        gallery: [
+          desktopShot('portfolio', 'notfound'),
+          desktopShot('portfolio', 'desk'),
+          desktopShot('portfolio', 'toolbox'),
+          desktopShot('portfolio', 'projects')
+        ],
+        mobileShots: [mobileShot('portfolio', 'notfound'), mobileShot('portfolio', 'home'), mobileShot('portfolio', 'toolbox')],
+        lighthouse: {
+          date: '2026-10-08',
+          mobile: { performance: 96, accessibility: 94, bestPractices: 100, seo: 100 },
+          desktop: { performance: 100, accessibility: 94, bestPractices: 100, seo: 100 }
+        },
+        featured: false
       }
     ],
     // IDs des projets à afficher sur la page d'accueil

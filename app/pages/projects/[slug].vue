@@ -49,6 +49,11 @@
                         {{ $t(link.label) }} <span aria-hidden="true">↗</span>
                         <span class="sr-only">{{ $t('projectPage.newTab') }}</span>
                     </a>
+                    <!-- Lien classique (pas NuxtLink) : chargement complet, la vraie réponse du serveur s'affiche (ex. 404) -->
+                    <a v-for="link in project.pageLinks" :key="link.path" :href="pagePath(link.path)"
+                        class="inline-block text-subtitle secondary-color w-fit smooth-underline-xl reveal-cta">
+                        {{ $t(`${key}.links.${link.label}`) }} <span aria-hidden="true">→</span>
+                    </a>
                 </div>
 
                 <!-- Capture principale dans un cadre de navigateur -->
@@ -287,6 +292,8 @@ const externalLinks = computed(() => [
     project.value.url && { href: project.value.url, label: 'projectPage.visit' },
     project.value.repo && { href: project.value.repo, label: 'projectPage.code' }
 ].filter(Boolean))
+// localePath ne préfixe pas une route inexistante (ex. /404) : on part du préfixe de la langue (« » ou « /fr »)
+const pagePath = (path) => localePath('/').replace(/\/$/, '') + path
 const measuredOn = computed(() =>
     new Date(project.value.lighthouse.date).toLocaleDateString(locale.value, { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' })
 )
