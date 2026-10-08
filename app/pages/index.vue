@@ -89,25 +89,27 @@
                     </NuxtLink>
                 </div>
 
-                <!-- About me Section : titre à gauche, texte + outils à droite -->
-                <section class="my-16 md:my-24 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16"
-                    aria-labelledby="home-about">
-                    <h2 id="home-about" class="secondary-color text-section reveal-title">
+                <!-- About me Section : titre pleine largeur, accroche, puis grille des outils (une phrase chacun) -->
+                <section class="my-16 md:my-24 flex flex-col items-start" aria-labelledby="home-about">
+                    <h2 id="home-about" class="secondary-color text-section lg:text-display reveal-title">
                         {{ $t('home.aboutTitle') }}
                     </h2>
-                    <div class="flex flex-col items-start gap-8">
-                        <p class="primary-color text-xl md:text-2xl xl:text-3xl reveal-text">
-                            {{ $t('home.aboutText') }}
-                        </p>
-                        <div class="reveal-text">
-                            <h3 class="secondary-color font-semibold mb-2">{{ $t('home.toolsTitle') }}</h3>
-                            <p class="primary-color text-lg md:text-xl font-medium">{{ tools.join(' · ') }}</p>
-                        </div>
-                        <NuxtLink :to="localePath('/about')"
-                            class="primary-color font-semibold text-lg smooth-underline reveal-cta">
-                            {{ $t('home.toolsLink') }} <span aria-hidden="true">→</span>
-                        </NuxtLink>
-                    </div>
+                    <p class="primary-color text-lead lg:w-4/5 mt-6 sm:mt-10 lg:mt-12 reveal-text">
+                        {{ $t('home.aboutText') }}
+                    </p>
+
+                    <h3 class="sr-only">{{ $t('home.toolsTitle') }}</h3>
+                    <ul class="primary-color grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-16 gap-y-10 w-full mt-12 md:mt-16">
+                        <li v-for="tool in tools" :key="tool.name" class="reveal-tool">
+                            <h4 class="text-subtitle font-semibold mb-3">{{ tool.name }}</h4>
+                            <p class="text-base md:text-lg">{{ tool.description }}</p>
+                        </li>
+                    </ul>
+
+                    <NuxtLink :to="localePath('/about')"
+                        class="primary-color font-semibold text-lg smooth-underline mt-12 md:mt-16 reveal-cta">
+                        {{ $t('home.toolsLink') }} <span aria-hidden="true">→</span>
+                    </NuxtLink>
                 </section>
                 <div class="w-full h-[2px] divider reveal-divider"></div>
 

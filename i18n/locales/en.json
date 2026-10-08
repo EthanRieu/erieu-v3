@@ -87,12 +87,30 @@
     "aboutTitle": "About me",
     "aboutText": "I'm a creative full-stack developer and I train myself in the latest technologies to create web applications that blend aesthetics, interactivity and practicality.",
     "tools": [
-      "Nuxt.js",
-      "Node.js",
-      "GSAP",
-      "Figma",
-      "TailwindCSS",
-      "PostgreSQL"
+      {
+        "name": "Nuxt.js",
+        "description": "My framework of choice: bilingual SSR websites and applications, like AGREEGO and IntraLab."
+      },
+      {
+        "name": "Node.js",
+        "description": "On the server side: REST APIs, JWT-secured Nitro routes and connected forms."
+      },
+      {
+        "name": "GSAP",
+        "description": "Scroll animations and micro-interactions, without sacrificing performance or accessibility."
+      },
+      {
+        "name": "Figma",
+        "description": "Mockups and design systems, thought through before writing a single line of code."
+      },
+      {
+        "name": "TailwindCSS",
+        "description": "Responsive, consistent interfaces built on a utility-first design system."
+      },
+      {
+        "name": "PostgreSQL",
+        "description": "Data modelling and storage with Prisma, as on IntraLab."
+      }
     ],
     "contactTitle": "Hire me as a work-study student!",
     "toolsTitle": "My tools",
